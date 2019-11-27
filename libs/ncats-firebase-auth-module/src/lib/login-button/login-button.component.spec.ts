@@ -4,7 +4,7 @@ import { LoginButtonComponent } from './login-button.component';
 import {AngularFireAuth} from "@angular/fire/auth";
 import {FIRESTORESTUB} from "../../../../../test/firestore-stub";
 import {AngularFirestore} from "@angular/fire/firestore";
-import {MatDialogRef} from "@angular/material";
+import {MatDialogModule, MatDialogRef} from "@angular/material";
 import {COMMON_CONFIG} from "../../../../../test/test-config";
 import {AngularFireModule} from "@angular/fire";
 import {NcatsMaterialModule} from "../../../../ncats-material-module/src";
@@ -18,6 +18,7 @@ describe('LoginButtonComponent', () => {
       declarations: [ LoginButtonComponent ],
       imports: [
         NcatsMaterialModule,
+        MatDialogModule,
         AngularFireModule.initializeApp(COMMON_CONFIG)
       ],
       providers: [

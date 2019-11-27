@@ -11,6 +11,7 @@
       true,
       "element",
       "ncats-frontend-library",
+      "ncats-fel",
       "kebab-case"
     ]
   }

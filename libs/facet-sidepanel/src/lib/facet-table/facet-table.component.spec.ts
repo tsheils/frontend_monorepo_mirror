@@ -1,30 +1,25 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AppContentComponent } from './app-content.component';
+import { FacetTableComponent } from './facet-table.component';
 import {NcatsMaterialModule} from "@ncats-frontend-library/ncats-material-module";
 import {RouterTestingModule} from "@angular/router/testing";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
-describe('AppContentComponent', () => {
-  let component: AppContentComponent;
-  let fixture: ComponentFixture<AppContentComponent>;
+describe('FacetTableComponent', () => {
+  let component: FacetTableComponent;
+  let fixture: ComponentFixture<FacetTableComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        NcatsMaterialModule,
-        RouterTestingModule,
-        BrowserAnimationsModule
+        NcatsMaterialModule
       ],
-      declarations: [
-        AppContentComponent
-      ]
+      declarations: [ FacetTableComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AppContentComponent);
+    fixture = TestBed.createComponent(FacetTableComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

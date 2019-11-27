@@ -1,0 +1,77 @@
+
+.full-height {
+  min-height: 100%;
+}
+
+.facet-list {
+  width: 25vw;
+  margin-bottom: 25vh;
+}
+
+.full-width {
+  width: 85vw;
+}
+
+.facet-title {
+  margin: 0;
+}
+
+.full-width-field {
+  width: 95%;
+}
+
+.clear-all {
+  margin-right: 1vw;
+}
+
+.grid-list {
+  display: grid;
+  grid-auto-rows: max-content;
+  grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+  grid-template-rows: auto;
+  grid-gap: 1em;
+  padding: 1vw;
+  overflow-x: hidden;
+}
+
+.full-width > .grid-list {
+  display: grid;
+  grid-auto-rows: max-content;
+  grid-template-columns: repeat(auto-fill, minmax(28%, 1fr));
+  grid-template-rows: auto;
+  grid-gap: 1em;
+  padding: 1vw;
+}
+
+.tools-row {
+  margin-left: 1vw;
+  margin-top: 1vh;
+}
+
+@media only screen and (max-width: 960px) {
+  .facet-list {
+    width:50vw;
+  }
+
+  .full-width {
+    width: 95vw;
+  }
+
+  .full-width > .grid-list {
+    grid-template-columns: repeat(auto-fill, minmax(90%, 1fr));
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .facet-list {
+    width: 95vw;
+  }
+
+  .full-width {
+    width: 95vw;
+  }
+
+  .full-width > .grid-list {
+    grid-template-columns: repeat(auto-fill, minmax(90%, 1fr));
+  }
+}

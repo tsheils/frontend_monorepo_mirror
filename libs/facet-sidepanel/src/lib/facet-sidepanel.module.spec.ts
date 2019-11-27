@@ -4,7 +4,9 @@ import { FacetSidepanelModule } from './facet-sidepanel.module';
 describe('FacetSidepanelModule', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FacetSidepanelModule]
+      imports: [
+        FacetSidepanelModule
+      ]
     }).compileComponents();
   }));
 
