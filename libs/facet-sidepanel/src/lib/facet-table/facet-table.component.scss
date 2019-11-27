@@ -1,0 +1,43 @@
+.facet-row {
+  padding-bottom: 1vh;
+  align-items: start;
+  cursor: pointer;
+}
+
+.facet-row:hover {
+  background-color: #f6f6f6;
+}
+
+.field-text {
+  font: 400 15px/24px Roboto,"Helvetica Neue",sans-serif;
+}
+
+.mat-column-select {
+  overflow: visible;
+}
+
+.col10{
+  min-width: 10%;
+}
+
+.mat-row {
+  min-height: 32px;
+  border: none;
+}
+
+.mat-column-label{
+  min-width: 60%;
+  text-align: start;
+  padding-right: 1vw;
+}
+
+.filter-cell.value {
+  padding-right: 0;
+  max-width: 4vw;
+  justify-content: center;
+}
+
+.filter-cell.checkbox {
+  padding-left: 0;
+  max-width: 3vw;
+}

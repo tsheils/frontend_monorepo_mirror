@@ -12,6 +12,7 @@ import {AngularFirestoreModule} from "@angular/fire/firestore";
 import {AngularFireAuthModule} from "@angular/fire/auth";
 import {DynamicAppModule} from "@ncats-frontend-library/dynamic-app";
 import {RouterModule, Routes} from "@angular/router";
+import {FacetSidepanelModule} from "@ncats-frontend-library/facet-sidepanel";
 
 const routes: Routes = [
   {
@@ -29,6 +30,7 @@ const routes: Routes = [
     BrowserAnimationsModule,
     NcatsFirebaseAuthModule,
     IdgTdlIndicatorModule,
+    FacetSidepanelModule,
     DynamicAppModule,
     AngularFireModule.initializeApp(environment.firebase), // imports firebase/app needed for everything
     AngularFirestoreModule, // imports firebase/firestore, only needed for database features

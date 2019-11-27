@@ -1,1 +1,16 @@
-<p>facet-table works!</p>
+<mat-table [dataSource]="dataSource">
+  <ng-container matColumnDef="select">
+    <mat-cell *matCellDef="let row" class="filter-cell checkbox">
+      <mat-checkbox (click)="$event.stopPropagation()"
+                    (change)="$event ? filterSelection.toggle(row.name) : null"
+                    [checked]="filterSelection.isSelected(row.name)">
+      </mat-checkbox>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="{{field}}" *ngFor="let field of fieldColumns">
+    <mat-cell *matCellDef="let row" class="filter-cell {{field}}" ><span class="field-text">{{row[field]}}</span></mat-cell>
+  </ng-container>
+
+  <mat-row *matRowDef="let row; columns: displayColumns;" (click)= "filterSelection.toggle(row.name)" class="facet-row">
+  </mat-row>
+</mat-table>

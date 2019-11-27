@@ -61,8 +61,6 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
    */
   loading = false;
 
-  @Input() data: any = {};
-
   /**
    * subject to unsubscribe on destroy
    * @type {Subject<any>}

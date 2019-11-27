@@ -18,7 +18,6 @@ import { LoginButtonComponent } from './login-button/login-button.component';
     LoginButtonComponent
   ],
   exports: [
-  //  LoginModalComponent,
     LoginButtonComponent
   ]})
 export class NcatsFirebaseAuthModule {}

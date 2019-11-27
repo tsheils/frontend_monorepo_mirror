@@ -15,6 +15,7 @@ import {FIRESTORESTUB} from "../../../../test/firestore-stub";
 import {COMMON_CONFIG} from "../../../../test/test-config";
 import {NcatsMaterialModule} from "@ncats-frontend-library/ncats-material-module";
 import {MatDialogModule} from "@angular/material";
+import {FacetSidepanelModule} from "@ncats-frontend-library/facet-sidepanel";
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -30,6 +31,7 @@ describe('AppComponent', () => {
         DynamicAppModule,
         NcatsMaterialModule,
         MatDialogModule,
+        FacetSidepanelModule,
       AngularFireModule.initializeApp(COMMON_CONFIG),
     ],
       providers: [
