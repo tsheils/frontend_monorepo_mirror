@@ -13,7 +13,7 @@
       "prefix": "ncats-frontend-library",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "ngx-library-assets:browser",
           "options": {
             "outputPath": "dist/apps/ncats-frontend-demo",
             "index": "apps/ncats-frontend-demo/src/index.html",
@@ -61,7 +61,7 @@
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "ngx-library-assets:dev-server",
           "options": {
             "browserTarget": "ncats-frontend-demo:build"
           },
@@ -124,6 +124,164 @@
               "!apps/ncats-frontend-demo-e2e/**"
             ]
           }
+        }
+      }
+    },
+    "ncats-material-module": {
+      "projectType": "library",
+      "root": "libs/ncats-material-module",
+      "sourceRoot": "libs/ncats-material-module/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ncats-material-module/tsconfig.lib.json",
+              "libs/ncats-material-module/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/ncats-material-module/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ncats-material-module/jest.config.js",
+            "tsConfig": "libs/ncats-material-module/tsconfig.spec.json",
+            "setupFile": "libs/ncats-material-module/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "ncats-firebase-auth-module": {
+      "projectType": "library",
+      "root": "libs/ncats-firebase-auth-module",
+      "sourceRoot": "libs/ncats-firebase-auth-module/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ncats-firebase-auth-module/tsconfig.lib.json",
+              "libs/ncats-firebase-auth-module/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/ncats-firebase-auth-module/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ncats-firebase-auth-module/jest.config.js",
+            "tsConfig": "libs/ncats-firebase-auth-module/tsconfig.spec.json",
+            "setupFile": "libs/ncats-firebase-auth-module/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "idg-tdl-indicator": {
+      "projectType": "library",
+      "root": "libs/idg-tdl-indicator",
+      "sourceRoot": "libs/idg-tdl-indicator/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/idg-tdl-indicator/tsconfig.lib.json",
+              "libs/idg-tdl-indicator/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/idg-tdl-indicator/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/idg-tdl-indicator/jest.config.js",
+            "tsConfig": "libs/idg-tdl-indicator/tsconfig.spec.json",
+            "setupFile": "libs/idg-tdl-indicator/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "facet-sidepanel": {
+      "projectType": "library",
+      "root": "libs/facet-sidepanel",
+      "sourceRoot": "libs/facet-sidepanel/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/facet-sidepanel/tsconfig.lib.json",
+              "libs/facet-sidepanel/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/facet-sidepanel/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/facet-sidepanel/jest.config.js",
+            "tsConfig": "libs/facet-sidepanel/tsconfig.spec.json",
+            "setupFile": "libs/facet-sidepanel/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "dynamic-app": {
+      "projectType": "library",
+      "root": "libs/dynamic-app",
+      "sourceRoot": "libs/dynamic-app/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/dynamic-app/tsconfig.lib.json",
+              "libs/dynamic-app/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/dynamic-app/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/dynamic-app/jest.config.js",
+            "tsConfig": "libs/dynamic-app/tsconfig.spec.json",
+            "setupFile": "libs/dynamic-app/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
         }
       }
     }

@@ -15,7 +15,24 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@ncats-frontend-library/firebase-auth": [
+        "libs/firebase-auth/src/index.ts"
+      ],
+      "@ncats-frontend-library/ncats-material-module": [
+        "libs/ncats-material-module/src/index.ts"
+      ],
+      "@ncats-frontend-library/ncats-firebase-auth-module": [
+        "libs/ncats-firebase-auth-module/src/index.ts"
+      ],
+      "@ncats-frontend-library/idg-tdl-indicator": [
+        "libs/idg-tdl-indicator/src/index.ts"
+      ],
+      "@ncats-frontend-library/facet-sidepanel": [
+        "libs/facet-sidepanel/src/index.ts"
+      ],
+      "@ncats-frontend-library/dynamic-app": ["libs/dynamic-app/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

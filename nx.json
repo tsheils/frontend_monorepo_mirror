@@ -13,6 +13,21 @@
     },
     "ncats-frontend-demo": {
       "tags": []
+    },
+    "ncats-material-module": {
+      "tags": []
+    },
+    "ncats-firebase-auth-module": {
+      "tags": []
+    },
+    "idg-tdl-indicator": {
+      "tags": []
+    },
+    "facet-sidepanel": {
+      "tags": []
+    },
+    "dynamic-app": {
+      "tags": []
     }
   }
 }

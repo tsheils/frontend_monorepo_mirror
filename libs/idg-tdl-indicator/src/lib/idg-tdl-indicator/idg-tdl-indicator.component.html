@@ -1,0 +1,4 @@
+<span *ngIf="!disabled; else disabledIcon" class = "tdl mat-title" [ngClass] = level?.toLowerCase()>{{level}}</span>
+<ng-template #disabledIcon>
+  <span class = "tdl mat-title disabled-icon">{{level}}</span>
+</ng-template>
