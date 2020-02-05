@@ -31,7 +31,8 @@
       "@ncats-frontend-library/facet-sidepanel": [
         "libs/facet-sidepanel/src/index.ts"
       ],
-      "@ncats-frontend-library/dynamic-app": ["libs/dynamic-app/src/index.ts"]
+      "@ncats-frontend-library/dynamic-app": ["libs/dynamic-app/src/index.ts"],
+      "@ncats-frontend-library/ncats-form": ["libs/ncats-form/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

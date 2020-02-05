@@ -28,6 +28,21 @@
     },
     "dynamic-app": {
       "tags": []
+    },
+    "gard-curation-e2e": {
+      "tags": []
+    },
+    "gard-curation": {
+      "tags": []
+    },
+    "gard-frontend-e2e": {
+      "tags": []
+    },
+    "gard-frontend": {
+      "tags": []
+    },
+    "ncats-form": {
+      "tags": []
     }
   }
 }

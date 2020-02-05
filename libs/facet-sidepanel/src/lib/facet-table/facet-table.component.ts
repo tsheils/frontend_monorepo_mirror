@@ -49,8 +49,10 @@ export class FacetTableComponent implements OnInit, OnDestroy {
   constructor() { }
 
   ngOnInit() {
-    this.facet.values.forEach(value => value.selected === true ? this.filterSelection.select(value.name) : null);
-    this.dataSource.data = this.facet.values;
+    if (this.facet && this.facet.values) {
+      this.facet.values.forEach(value => value.selected === true ? this.filterSelection.select(value.name) : null);
+      this.dataSource.data = this.facet.values;
+    }
     this.filterSelection.changed
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(change => {

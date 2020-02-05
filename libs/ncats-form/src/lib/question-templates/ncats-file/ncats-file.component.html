@@ -1,0 +1,9 @@
+<div class="ncats-form-field">
+<mat-label>{{question.label}}</mat-label><br>
+<button mat-raised-button (click)="openDialog()"
+        [color]= "'primary'">Load File</button><br>
+<div *ngIf="value">
+  <br>
+  {{value[0].name}} size: {{value[0].size}}
+</div>
+</div>

@@ -1,0 +1,5 @@
+<mat-form-field>
+  <mat-select [id]="question.key" [formControl] = "formControl" [placeholder]="question.label" [(value)]="question.value" multiple>
+    <mat-option *ngFor="let opt of question['options']" [value]="opt.key">{{opt.value}}</mat-option>
+  </mat-select>
+</mat-form-field>

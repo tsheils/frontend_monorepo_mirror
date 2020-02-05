@@ -1,0 +1,7 @@
+<div class="ncats-form-field">
+<mat-form-field>
+<input matInput [formControl]="formControl"
+       [id]="question.key" [type]="question?.type" placeholder= {{question.label}}>
+  <mat-error class="errorMessage" *ngIf="!isValid && isTouched">{{question.label}} is required</mat-error>
+</mat-form-field>
+</div>

@@ -1,15 +1,12 @@
-import { TestBed, async } from '@angular/core/testing';
-import { AppComponent } from './app.component';
+import {async, TestBed} from '@angular/core/testing';
+import {AppComponent} from './app.component';
 import {NcatsFirebaseAuthModule} from "@ncats-frontend-library/ncats-firebase-auth-module";
-import {environment} from "../environments/environment.prod";
-import {RouterModule} from "@angular/router";
 import {DynamicAppModule} from "@ncats-frontend-library/dynamic-app";
-import {BrowserModule} from "@angular/platform-browser";
 import {IdgTdlIndicatorModule} from "@ncats-frontend-library/idg-tdl-indicator";
-import {AngularFireAuth, AngularFireAuthModule} from "@angular/fire/auth";
+import {AngularFireAuth} from "@angular/fire/auth";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {AngularFireModule} from "@angular/fire";
-import {AngularFirestore, AngularFirestoreModule} from "@angular/fire/firestore";
+import {AngularFirestore} from "@angular/fire/firestore";
 import {RouterTestingModule} from "@angular/router/testing";
 import {FIRESTORESTUB} from "../../../../test/firestore-stub";
 import {COMMON_CONFIG} from "../../../../test/test-config";
@@ -20,7 +17,7 @@ import {FacetSidepanelModule} from "@ncats-frontend-library/facet-sidepanel";
 describe('AppComponent', () => {
   beforeEach(async(() => {
     Object.defineProperty(window, "matchMedia", {
-      value: jest.fn(() => { return { matches: true } })
+      value: jest.fn(() => ({matches: true }))
     });
     TestBed.configureTestingModule({
       imports: [

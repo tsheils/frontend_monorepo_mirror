@@ -1,0 +1,46 @@
+<div fxLayout="row" fxLayoutAlign="space-around center">
+  <div fxFlex="90" fxFlexAlign="center">
+  <h1 mat-dialog-title>Data Loader</h1>
+  </div>
+  <div fxFlex = "10" fxFlexAlign="center" class="button-holder">
+    <button mat-icon-button (click)="dialogRef.close()">
+    <mat-icon>clear</mat-icon></button>
+  </div>
+</div>
+
+<div mat-dialog-content>
+
+  <div class="dropzone" appDnd
+       (filesChangeEmitter)="onFilesChange($event)"
+       (filesInvalidEmitter)="onFileInvalids($event)"
+       [allowed_extensions]="['jpg', 'gif']" >
+    <div class="text-wrapper">
+      <div class="centered">Drag file here</div>
+      <div class ="or"> <br>or<br></div>
+    <div class = "choose-file">
+      <button mat-stroked-button (click)="openFileChooser()">
+        <input type="file" #fileInput hidden (change)="onFilesChange($event.srcElement.files)"/>
+        Browse Computer
+      </button></div>
+    </div>
+  </div>
+  <div class="dropzone-list">
+    <ul class="valid">
+      <li *ngFor="let file of fileList">
+        <mat-icon>file</mat-icon>{{ file.name }}
+      </li>
+    </ul>
+    <ul class="invalid">
+      <li *ngFor="let file of invalidFiles">
+        <mat-icon>insert_drive_file</mat-icon>{{ file.name }}
+      </li>
+    </ul>
+  </div>
+
+
+
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button (click)="dialogRef.close(fileList)" [color]="'primary'" [disabled]="fileList.length === 0">Upload</button>
+  <button mat-raised-button (click)="dialogRef.close()" [color]="'warn'">Cancel</button>
+</div>

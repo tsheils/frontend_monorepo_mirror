@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {SidePanelOptions} from "../../../../dynamic-app/src/lib/models/side-panel-options";
 import {Facet} from "../models/facet";
 import {Subject} from "rxjs";
+import {SidePanelOptions} from "@ncats-frontend-library/dynamic-app";
 
 @Component({
   selector: 'ncats-frontend-library-filter-panel',
