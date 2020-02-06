@@ -47,7 +47,6 @@
     "hammerjs": "^2.0.8",
     "material": "^0.4.3",
     "neo4j-driver": "^4.0.1",
-    "neo4j-graphql-js": "^2.12.1",
     "rxjs": "~6.4.0",
     "zone.js": "^0.9.1"
   },
