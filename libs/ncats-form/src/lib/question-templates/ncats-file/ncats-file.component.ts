@@ -13,7 +13,7 @@ export class NcatsFileComponent implements OnInit {
 
   constructor(public dialog: MatDialog) { }
   @Input() question: FileQuestion;
-  @Input() formControl: FormControl;
+  @Input() formControl: FormControl = new FormControl();
   @Input('value') _value: Array<File>;
   onChange: any = () => { };
   onTouched: any = () => { };

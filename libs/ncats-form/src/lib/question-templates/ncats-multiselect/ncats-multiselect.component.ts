@@ -10,7 +10,7 @@ import {FormControl} from "@angular/forms";
 export class NcatsMultiselectComponent implements OnInit {
 
   @Input() question: MultiselectQuestion;
-  @Input() formControl: FormControl;
+  @Input() formControl: FormControl = new FormControl();
 
   get isValid() { return this.formControl.valid; }
   get isTouched() { return this.formControl.touched; }

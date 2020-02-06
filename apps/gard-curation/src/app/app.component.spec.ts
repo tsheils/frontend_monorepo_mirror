@@ -1,11 +1,22 @@
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { RouterTestingModule } from '@angular/router/testing';
+import {NcatsFormModule} from "@ncats-frontend-library/ncats-form";
+import {NcatsMaterialModule} from "@ncats-frontend-library/ncats-material-module";
+import {MatDialogModule} from "@angular/material";
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
+    Object.defineProperty(window, "matchMedia", {
+      value: jest.fn(() => ({matches: true }))
+    });
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
+      imports: [
+        RouterTestingModule,
+        NcatsMaterialModule,
+        NcatsFormModule,
+        MatDialogModule
+      ],
       declarations: [AppComponent]
     }).compileComponents();
   }));

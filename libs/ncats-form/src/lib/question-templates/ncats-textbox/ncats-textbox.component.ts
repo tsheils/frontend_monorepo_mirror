@@ -9,7 +9,7 @@ import {FormControl} from "@angular/forms";
 })
 export class NcatsTextboxComponent implements OnInit {
   @Input() question: TextboxQuestion;
-  @Input() formControl: FormControl;
+  @Input() formControl: FormControl = new FormControl();
   get isValid() { return this.formControl.valid; }
   get isTouched() { return this.formControl.touched; }
   constructor() { }

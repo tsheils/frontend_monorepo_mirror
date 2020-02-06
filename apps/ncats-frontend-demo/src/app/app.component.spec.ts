@@ -13,6 +13,7 @@ import {COMMON_CONFIG} from "../../../../test/test-config";
 import {NcatsMaterialModule} from "@ncats-frontend-library/ncats-material-module";
 import {MatDialogModule} from "@angular/material";
 import {FacetSidepanelModule} from "@ncats-frontend-library/facet-sidepanel";
+import {Neo4jConnectService} from "../../../../utils/neo4j-graphql.service";
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -33,7 +34,8 @@ describe('AppComponent', () => {
     ],
       providers: [
       { provide: AngularFirestore, useValue: FIRESTORESTUB },
-      AngularFireAuth
+      AngularFireAuth,
+        Neo4jConnectService
       ],
       declarations: [
         AppComponent
