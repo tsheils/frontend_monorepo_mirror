@@ -23,4 +23,21 @@ Fields: {{fields | json}}
 <br>
 <br>
 <br>
-{{disease | json}}
+
+<div *ngIf = disease>
+<div *ngFor = 'let field of fields'>
+<mat-card>
+  <mat-card-header>{{field}}</mat-card-header>
+  <mat-card-content>
+    <mat-tab-group>
+      <mat-tab label ='Data'><div [innerHTML] = disease[field]></div></mat-tab>
+      <mat-tab label ='Notes'></mat-tab>
+      <mat-tab label ='References'></mat-tab>
+    </mat-tab-group>
+    <mat-card-actions>
+      <button mat-stroked-button [color]="'primary'">Edit</button>
+    </mat-card-actions>
+  </mat-card-content>
+</mat-card>
+</div>
+</div>
