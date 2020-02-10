@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {DropdownQuestion, FileQuestion, MultiselectQuestion, TextboxQuestion} from "@ncats-frontend-library/ncats-form";
 import {FormGroup} from "@angular/forms";
+import {Neo4jConnectService} from "../../../../utils/neo4j-graphql.service";
 
 @Component({
   selector: 'ncats-frontend-library-root',
@@ -12,73 +13,37 @@ export class AppComponent {
   form: FormGroup;
   questions = [
     new TextboxQuestion({
-      key: 'firstName',
-      label: 'First name',
+      key: 'url',
+      label: 'Database Url',
+      value: 'bolt://disease.ncats.io:80/',
       required: true
     }),
 
     new TextboxQuestion({
-      key: 'lastName',
-      label: 'Last name',
+      key: 'user',
+      label: 'User',
+      value: 'neo4j',
       required: true
     }),
 
     new TextboxQuestion({
-      key: 'school',
-      label: 'School',
-      required: true
-    }),
-
-    new TextboxQuestion({
-      key: 'major',
-      label: 'Major'
-    }),
-
-    new TextboxQuestion({
-      key: 'title',
-      label: 'Poster Title',
-      required: true
-    }),
-    // todo service to generate years
-    new DropdownQuestion({
-      key: 'year',
-      label: 'Internship Year',
-      options: [
-        {key: '2016', value: '2016'},
-        {key: '2017', value: '2017'},
-        {key: '2018', value: '2018'}
-      ],
-      required: true
-    }),
-    // todo dynamic service to retrieve names from ldap
-    new MultiselectQuestion({
-      key: 'mentors',
-      label: 'Mentors',
-      options: [
-        {key: 'Trung', value: 'Trung'},
-        {key: 'Alexy', value: 'Alexy'},
-        {key: 'Tyler', value: 'Tyler'}
-      ],
-      required: true
-    }),
-
-    new FileQuestion({
-      key: 'mugshot',
-      label: 'Profile Photo',
-      type: 'file'
-    }),
-
-    new FileQuestion({
-      key: 'poster',
-      label: 'Poster',
-      type: 'file'
+      key: 'password',
+      label: 'Password',
+      type: 'password'
     })
-
   ];
 
-  constructor(){}
-  ngOnItit(){}
+  disease;
 
+  fields: string[];
+
+  connected = false;
+
+  constructor(
+    private neo4jConnectService: Neo4jConnectService
+  ){}
+
+  ngOnInit(): void {}
   /**
    * form can be set to a value here for curation, but it needs to be targetted to a specific
    * form if multiple forms are loaded
@@ -94,8 +59,26 @@ export class AppComponent {
     this.form.reset();
   }
 
-  saveForm(form?: string): void {
+  connect(form?: string): void {
     const formVals = this.form.value;
     console.log(formVals);
+    console.log(this);
+
+    this.neo4jConnectService.connect(formVals).subscribe(res=> {
+      console.log(res);
+      this.connected = res;
+      if(this.connected) {
+        this.neo4jConnectService.fetch('match p=(n:`S_GARD`)-[]-(:DATA) return p limit 20').subscribe(res => {
+          this.disease = res._fields[0].segments[0].end.properties;
+          this.fields = Object.keys(this.disease);
+        })
+      }
+    });
+  }
+
+  disconnect():void {
+    this.neo4jConnectService.close();
+    this.disease = null;
+    this.connected = false;
   }
 }

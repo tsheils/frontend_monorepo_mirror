@@ -1,15 +1,26 @@
+<div>
 <h1>Welcome to {{title}}!</h1>
-
-<div fxLayout="row" fxLayoutAlign="space-around center">
-  <div fxFlex="95">
+<div *ngIf="connected">
+  Connected
+  <button mat-flat-button [color]="'primary'" (click)="disconnect()">Disconnect</button>
+</div>
+</div>
+<div fxLayout="row" fxLayoutAlign="space-around center" *ngIf = "!connected">
+  <div fxFlex="50">
     <ncats-fel-form
       [questions]="questions"
       (formReturner)="setForm($event)"
       ></ncats-fel-form>
     <br>
-    <button mat-raised-button (click)="saveForm('questions1')">Save</button>&nbsp;
+    <button mat-raised-button (click)="connect('questions1')" [disabled]="!form.valid">Connect</button>&nbsp;
     <button mat-raised-button (click)="clearForm('questions1')" [color]="'warn'">Clear</button>
     <br>
     <br>
   </div>
 </div>
+
+Fields: {{fields | json}}
+<br>
+<br>
+<br>
+{{disease | json}}

@@ -11,11 +11,10 @@ session: RxSession;
 
   constructor() { }
 
-  connect():Observable<boolean> {
+  connect(params: any):Observable<boolean> {
     this.driver = neo4j.driver(
-      'bolt://disease.ncats.io:80/',
-      neo4j.auth.basic('neo4j', ''),
-      {encrypted: true}
+      params.url,
+      neo4j.auth.basic(params.user, params.password ? params.password : '')
     );
     return fromPromise(this.driver.verifyConnectivity()
       .then(() => {
