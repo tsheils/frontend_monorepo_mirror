@@ -2,9 +2,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NcatsDropdownComponent } from './ncats-dropdown.component';
 import {ReactiveFormsModule} from "@angular/forms";
-import {NcatsMaterialModule} from "@ncats-frontend-library/ncats-material-module";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {DropdownQuestion} from "@ncats-frontend-library/ncats-form";
+import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
 
 describe('NcatsDropdownComponent', () => {
   let component: NcatsDropdownComponent;
@@ -16,7 +16,7 @@ describe('NcatsDropdownComponent', () => {
       imports: [
         ReactiveFormsModule,
         BrowserAnimationsModule,
-        NcatsMaterialModule
+        CustomMaterialModule
       ]
     })
     .compileComponents();

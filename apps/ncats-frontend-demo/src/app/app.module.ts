@@ -1,9 +1,8 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
 
-import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {NcatsMaterialModule} from "@ncats-frontend-library/ncats-material-module";
+import {AppComponent} from './app.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NcatsFirebaseAuthModule} from "@ncats-frontend-library/ncats-firebase-auth-module";
 import {IdgTdlIndicatorModule} from "@ncats-frontend-library/idg-tdl-indicator";
 import {AngularFireModule} from "@angular/fire";
@@ -12,8 +11,6 @@ import {AngularFirestoreModule} from "@angular/fire/firestore";
 import {AngularFireAuthModule} from "@angular/fire/auth";
 import {DynamicAppModule} from "@ncats-frontend-library/dynamic-app";
 import {RouterModule, Routes} from "@angular/router";
-import {FacetSidepanelModule} from "@ncats-frontend-library/facet-sidepanel";
-import {Neo4jConnectService} from "../../../../utils/neo4j-graphql.service";
 
 const routes: Routes = [
   {
@@ -31,15 +28,10 @@ const routes: Routes = [
     BrowserAnimationsModule,
     NcatsFirebaseAuthModule,
     IdgTdlIndicatorModule,
-    FacetSidepanelModule,
     DynamicAppModule,
     AngularFireModule.initializeApp(environment.firebase), // imports firebase/app needed for everything
     AngularFirestoreModule, // imports firebase/firestore, only needed for database features
     AngularFireAuthModule, // imports firebase/auth, only needed for auth features,
-
-  ],
-  providers: [
-    Neo4jConnectService
   ],
   bootstrap: [AppComponent]
 })

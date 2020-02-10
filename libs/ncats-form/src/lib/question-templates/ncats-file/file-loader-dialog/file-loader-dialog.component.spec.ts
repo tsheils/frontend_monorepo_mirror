@@ -2,10 +2,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FileLoaderDialogComponent } from './file-loader-dialog.component';
 import {ReactiveFormsModule} from "@angular/forms";
-import {NcatsMaterialModule} from "@ncats-frontend-library/ncats-material-module";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {DndDirective} from "./dnd.directive";
 import {MatDialogRef} from "@angular/material";
+import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
 
 describe('FileLoaderDialogComponent', () => {
   let component: FileLoaderDialogComponent;
@@ -20,7 +20,7 @@ describe('FileLoaderDialogComponent', () => {
       imports: [
         ReactiveFormsModule,
         BrowserAnimationsModule,
-        NcatsMaterialModule
+        CustomMaterialModule
       ],
       providers: [
         {provide: MatDialogRef, useValue: {}},

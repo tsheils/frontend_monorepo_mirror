@@ -2,10 +2,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NcatsFileComponent } from './ncats-file.component';
 import {ReactiveFormsModule} from "@angular/forms";
-import {NcatsMaterialModule} from "@ncats-frontend-library/ncats-material-module";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatDialogModule} from "@angular/material";
 import {FileQuestion} from "@ncats-frontend-library/ncats-form";
+import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
 
 describe('NcatsFileComponent', () => {
   let component: NcatsFileComponent;
@@ -17,7 +17,7 @@ describe('NcatsFileComponent', () => {
       imports: [
         ReactiveFormsModule,
         BrowserAnimationsModule,
-        NcatsMaterialModule,
+        CustomMaterialModule,
         MatDialogModule
       ]
     })

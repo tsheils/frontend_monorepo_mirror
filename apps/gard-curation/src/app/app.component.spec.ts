@@ -2,8 +2,9 @@ import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import {NcatsFormModule} from "@ncats-frontend-library/ncats-form";
-import {NcatsMaterialModule} from "@ncats-frontend-library/ncats-material-module";
 import {MatDialogModule} from "@angular/material";
+import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
+import {Neo4jConnectService} from "@ncats-frontend-library/common/data-access/neo4j-connector";
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -13,9 +14,12 @@ describe('AppComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
-        NcatsMaterialModule,
+        CustomMaterialModule,
         NcatsFormModule,
         MatDialogModule
+      ],
+      providers: [
+        Neo4jConnectService
       ],
       declarations: [AppComponent]
     }).compileComponents();

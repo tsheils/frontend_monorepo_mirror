@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {NcatsMaterialModule} from "@ncats-frontend-library/ncats-material-module";
 import {LoginModalComponent} from "./login-modal/login-modal.component";
 import { LoginButtonComponent } from './login-button/login-button.component';
+import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
 
 @NgModule({
   imports: [
     CommonModule,
-    NcatsMaterialModule
+    CustomMaterialModule
   ],
   declarations: [
     LoginModalComponent,

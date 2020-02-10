@@ -1,0 +1,28 @@
+@import '../../../ncats-theme';
+
+.sidenav-panel {
+padding: 1vw;
+}
+
+.close-button {
+  margin-top: 1vh;
+}
+
+.toc-wrapper {
+  padding-left: .3vw;
+  margin-right: 1vw;
+}
+
+.list-button {
+  cursor: pointer;
+  font-weight: 300;
+}
+
+.active {
+  border-left: 8px solid mat-color($pharos-app-primary);
+}
+
+.mat-list-item {
+  margin-bottom: 1vh;
+}
+

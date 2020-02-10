@@ -1,12 +1,8 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { AppContentComponent } from './app-content/app-content.component';
-import {DynamicPanelConfig} from "./models/dynamic-panel-config";
-import {DynamicAPIConfig} from "./models/dynamic-apiconfig";
-import {NavHeaderConfig} from "./models/nav-header-config";
-import {SidePanelOptions} from "./models/side-panel-options";
-import {NcatsMaterialModule} from "@ncats-frontend-library/ncats-material-module";
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {AppContentComponent} from './app-content/app-content.component';
 import {RouterModule} from "@angular/router";
+import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
 
 @NgModule({
   imports: [
@@ -14,7 +10,7 @@ import {RouterModule} from "@angular/router";
     RouterModule.forChild([
        {path: '', pathMatch: 'full', component: AppContentComponent}
     ]),
-    NcatsMaterialModule
+    CustomMaterialModule
   ],
   declarations: [AppContentComponent],
   exports: [

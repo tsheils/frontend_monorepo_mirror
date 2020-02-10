@@ -7,7 +7,7 @@ import {MatDialogRef} from "@angular/material";
 import {AngularFirestore} from "@angular/fire/firestore";
 import {FIRESTORESTUB} from "../../../../../test/firestore-stub";
 import {AngularFireAuth} from "@angular/fire/auth";
-import {NcatsMaterialModule} from "@ncats-frontend-library/ncats-material-module";
+import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
 
 describe('LoginModalComponent', () => {
   let component: LoginModalComponent;
@@ -17,7 +17,7 @@ describe('LoginModalComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ LoginModalComponent ],
       imports: [
-        NcatsMaterialModule,
+        CustomMaterialModule,
         AngularFireModule.initializeApp(COMMON_CONFIG)
       ],
       providers: [

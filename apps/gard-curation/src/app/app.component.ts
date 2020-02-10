@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {DropdownQuestion, FileQuestion, MultiselectQuestion, TextboxQuestion} from "@ncats-frontend-library/ncats-form";
 import {FormGroup} from "@angular/forms";
-import {Neo4jConnectService} from "../../../../utils/neo4j-graphql.service";
+import {Neo4jConnectService} from "../../../../libs/common/data-access/neo4j-connector/src/lib/neo4j-connect.service";
 
 @Component({
   selector: 'ncats-frontend-library-root',
@@ -68,7 +68,11 @@ export class AppComponent {
       console.log(res);
       this.connected = res;
       if(this.connected) {
-        this.neo4jConnectService.fetch('match p=(n:`S_GARD`)-[]-(:DATA) return p limit 20').subscribe(res => {
+        this.neo4jConnectService.fetch(
+          `match p=(n:S_GARD)-[]-(:DATA) where 'CYSTIC FIBROSIS' in n.N_Name return p`
+//        'match p=(n:`S_GARD`)-[]-(:DATA) return p limit 20'
+        ).subscribe(res => {
+          console.log(res);
           this.disease = res._fields[0].segments[0].end.properties;
           this.fields = Object.keys(this.disease);
         })

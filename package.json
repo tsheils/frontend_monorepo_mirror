@@ -48,7 +48,8 @@
     "material": "^0.4.3",
     "neo4j-driver": "^4.0.1",
     "rxjs": "~6.5.4",
-    "zone.js": "^0.9.1"
+    "zone.js": "^0.9.1",
+    "@ncats-frontend-library/ncats-material-module": "latest"
   },
   "devDependencies": {
     "@angular-devkit/architect": "0.803.23",

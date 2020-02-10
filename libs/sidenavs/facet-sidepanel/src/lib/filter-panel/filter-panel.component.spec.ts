@@ -1,0 +1,41 @@
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { FilterPanelComponent } from './filter-panel.component';
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FacetTableComponent} from "../facet-table/facet-table.component";
+import {CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA} from "@angular/core";
+import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
+
+describe('FilterPanelComponent', () => {
+  let component: FilterPanelComponent;
+  let fixture: ComponentFixture<FilterPanelComponent>;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        CustomMaterialModule,
+        FormsModule,
+        ReactiveFormsModule,
+      ],
+      declarations: [
+        FilterPanelComponent,
+        FacetTableComponent
+      ],
+      schemas: [
+        CUSTOM_ELEMENTS_SCHEMA,
+        NO_ERRORS_SCHEMA
+      ]
+    })
+    .compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(FilterPanelComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

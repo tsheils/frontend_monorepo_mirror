@@ -127,37 +127,7 @@
         }
       }
     },
-    "ncats-material-module": {
-      "projectType": "library",
-      "root": "libs/ncats-material-module",
-      "sourceRoot": "libs/ncats-material-module/src",
-      "prefix": "ncats-frontend-library",
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/ncats-material-module/tsconfig.lib.json",
-              "libs/ncats-material-module/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/ncats-material-module/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/ncats-material-module/jest.config.js",
-            "tsConfig": "libs/ncats-material-module/tsconfig.spec.json",
-            "setupFile": "libs/ncats-material-module/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "styleext": "scss"
-        }
-      }
-    },
+
     "ncats-firebase-auth-module": {
       "projectType": "library",
       "root": "libs/ncats-firebase-auth-module",
@@ -214,37 +184,6 @@
             "jestConfig": "libs/idg-tdl-indicator/jest.config.js",
             "tsConfig": "libs/idg-tdl-indicator/tsconfig.spec.json",
             "setupFile": "libs/idg-tdl-indicator/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "styleext": "scss"
-        }
-      }
-    },
-    "facet-sidepanel": {
-      "projectType": "library",
-      "root": "libs/facet-sidepanel",
-      "sourceRoot": "libs/facet-sidepanel/src",
-      "prefix": "ncats-frontend-library",
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/facet-sidepanel/tsconfig.lib.json",
-              "libs/facet-sidepanel/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/facet-sidepanel/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/facet-sidepanel/jest.config.js",
-            "tsConfig": "libs/facet-sidepanel/tsconfig.spec.json",
-            "setupFile": "libs/facet-sidepanel/src/test-setup.ts"
           }
         }
       },
@@ -553,6 +492,176 @@
             "jestConfig": "libs/ncats-form/jest.config.js",
             "tsConfig": "libs/ncats-form/tsconfig.spec.json",
             "setupFile": "libs/ncats-form/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "sidenavs-navigation-sidepanel": {
+      "projectType": "library",
+      "root": "libs/sidenavs/navigation-sidepanel",
+      "sourceRoot": "libs/sidenavs/navigation-sidepanel/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/sidenavs/navigation-sidepanel/tsconfig.lib.json",
+              "libs/sidenavs/navigation-sidepanel/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/sidenavs/navigation-sidepanel/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/sidenavs/navigation-sidepanel/jest.config.js",
+            "tsConfig": "libs/sidenavs/navigation-sidepanel/tsconfig.spec.json",
+            "setupFile": "libs/sidenavs/navigation-sidepanel/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "sidenavs-curation-sidepanel": {
+      "projectType": "library",
+      "root": "libs/sidenavs/curation-sidepanel",
+      "sourceRoot": "libs/sidenavs/curation-sidepanel/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/sidenavs/curation-sidepanel/tsconfig.lib.json",
+              "libs/sidenavs/curation-sidepanel/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/sidenavs/curation-sidepanel/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/sidenavs/curation-sidepanel/jest.config.js",
+            "tsConfig": "libs/sidenavs/curation-sidepanel/tsconfig.spec.json",
+            "setupFile": "libs/sidenavs/curation-sidepanel/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "sidenavs-facet-sidepanel": {
+      "projectType": "library",
+      "root": "libs/sidenavs/facet-sidepanel",
+      "sourceRoot": "libs/sidenavs/facet-sidepanel/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/sidenavs/facet-sidepanel/tsconfig.lib.json",
+              "libs/sidenavs/facet-sidepanel/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/sidenavs/facet-sidepanel/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/sidenavs/facet-sidepanel/jest.config.js",
+            "tsConfig": "libs/sidenavs/facet-sidepanel/tsconfig.spec.json",
+            "setupFile": "libs/sidenavs/facet-sidepanel/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "common-ui-custom-material": {
+      "projectType": "library",
+      "root": "libs/common/ui/custom-material",
+      "sourceRoot": "libs/common/ui/custom-material/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/common/ui/custom-material/tsconfig.lib.json",
+              "libs/common/ui/custom-material/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/common/ui/custom-material/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/common/ui/custom-material/jest.config.js",
+            "tsConfig": "libs/common/ui/custom-material/tsconfig.spec.json",
+            "setupFile": "libs/common/ui/custom-material/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "common-data-access-neo4j-connector": {
+      "projectType": "library",
+      "root": "libs/common/data-access/neo4j-connector",
+      "sourceRoot": "libs/common/data-access/neo4j-connector/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/common/data-access/neo4j-connector/tsconfig.lib.json",
+              "libs/common/data-access/neo4j-connector/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/common/data-access/neo4j-connector/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/common/data-access/neo4j-connector/jest.config.js",
+            "tsConfig": "libs/common/data-access/neo4j-connector/tsconfig.spec.json",
+            "setupFile": "libs/common/data-access/neo4j-connector/src/test-setup.ts"
           }
         }
       },

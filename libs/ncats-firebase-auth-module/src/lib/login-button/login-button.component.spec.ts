@@ -7,7 +7,7 @@ import {AngularFirestore} from "@angular/fire/firestore";
 import {MatDialogModule, MatDialogRef} from "@angular/material";
 import {COMMON_CONFIG} from "../../../../../test/test-config";
 import {AngularFireModule} from "@angular/fire";
-import {NcatsMaterialModule} from "../../../../ncats-material-module/src";
+import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
 
 describe('LoginButtonComponent', () => {
   let component: LoginButtonComponent;
@@ -17,7 +17,7 @@ describe('LoginButtonComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ LoginButtonComponent ],
       imports: [
-        NcatsMaterialModule,
+        CustomMaterialModule,
         MatDialogModule,
         AngularFireModule.initializeApp(COMMON_CONFIG)
       ],

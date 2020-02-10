@@ -1,11 +1,10 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { NcatsMultiselectComponent } from './ncats-multiselect.component';
+import {NcatsMultiselectComponent} from './ncats-multiselect.component';
 import {ReactiveFormsModule} from "@angular/forms";
-import {NcatsMaterialModule} from "@ncats-frontend-library/ncats-material-module";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {MatDialogModule} from "@angular/material";
 import {MultiselectQuestion} from "@ncats-frontend-library/ncats-form";
+import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
 
 describe('NcatsMultiselectComponent', () => {
   let component: NcatsMultiselectComponent;
@@ -17,7 +16,7 @@ describe('NcatsMultiselectComponent', () => {
       imports: [
         ReactiveFormsModule,
         BrowserAnimationsModule,
-        NcatsMaterialModule
+        CustomMaterialModule
       ]
     })
     .compileComponents();

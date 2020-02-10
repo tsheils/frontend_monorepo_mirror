@@ -1,18 +1,20 @@
 import {Component, OnInit} from '@angular/core';
-import {Facet} from "@ncats-frontend-library/facet-sidepanel";
-import {Neo4jConnectService} from "../../../../utils/neo4j-graphql.service";
+import {Neo4jConnectService} from "@ncats-frontend-library/common/data-access/neo4j-connector";
 
 @Component({
   selector: 'ncats-frontend-library-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  providers: [
+    Neo4jConnectService
+  ]
 })
 export class AppComponent implements OnInit{
   title = 'ncats-frontend-demo';
 
 
 
-  facets: Facet[] =  [new Facet({
+/*  facets: Facet[] =  [new Facet({
     "facet": "Target Development Level",
     "values": [
       {
@@ -35,7 +37,7 @@ export class AppComponent implements OnInit{
         "selected": true
       }
       ]
-  })];
+  })];*/
 
   disease: any;
 
@@ -48,7 +50,7 @@ export class AppComponent implements OnInit{
   ngOnInit(): void {
     console.log(this);
 
-    this.neo4jConnectService.connect().subscribe(res=> {
+   /* this.neo4jConnectService.connect().subscribe(res=> {
       console.log(res);
       this.connected = res;
 
@@ -56,7 +58,7 @@ export class AppComponent implements OnInit{
           this.disease = res._fields[0].segments[0].end.properties;
         }
       )
-    });
+    });*/
 /*
 
     this.driver.verifyConnectivity().then(res=> console.log(res));
