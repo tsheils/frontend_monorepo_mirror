@@ -5,6 +5,8 @@ import {NcatsFormModule} from "@ncats-frontend-library/ncats-form";
 import {MatDialogModule} from "@angular/material";
 import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
 import {Neo4jConnectService} from "@ncats-frontend-library/common/data-access/neo4j-connector";
+import {UiGardDataDisplayModule} from "@ncats-frontend-library/ui/gard/data-display";
+import {CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA} from "@angular/core";
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -16,12 +18,17 @@ describe('AppComponent', () => {
         RouterTestingModule,
         CustomMaterialModule,
         NcatsFormModule,
-        MatDialogModule
+        MatDialogModule,
+        UiGardDataDisplayModule
       ],
       providers: [
         Neo4jConnectService
       ],
-      declarations: [AppComponent]
+      declarations: [AppComponent],
+      schemas: [
+        CUSTOM_ELEMENTS_SCHEMA,
+        NO_ERRORS_SCHEMA
+      ]
     }).compileComponents();
   }));
 

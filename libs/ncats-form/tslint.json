@@ -6,14 +6,20 @@
       "attribute",
       "ncatsFrontendLibrary",
       "ncats-fel",
-      "camelCase"
+      "camelCase",
+      "ncats",
+      "gard",
+      "fel"
     ],
     "component-selector": [
       true,
       "element",
       "ncats-frontend-library",
       "ncats-fel",
-      "kebab-case"
+      "kebab-case",
+      "ncats",
+      "gard",
+      "fel"
     ]
   }
 }

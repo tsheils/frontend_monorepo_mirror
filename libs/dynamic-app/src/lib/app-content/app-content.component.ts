@@ -25,7 +25,7 @@ export class AppContentComponent implements OnInit, OnDestroy {
   /**
    * left sidenav panel instance
    */
-  @ViewChild('leftpanel', {static: true}) leftPanelInstance: MatSidenav;
+  @ViewChild('leftpanel') leftPanelInstance: MatSidenav;
   /**
    * right sidenav panel instance
    */

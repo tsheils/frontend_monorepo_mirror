@@ -9,6 +9,7 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "nx workspace-lint && ng lint",
+    "lint-fix": "nx workspace-lint && ng lint --fix",
     "e2e": "ng e2e",
     "affected:apps": "nx affected:apps",
     "affected:libs": "nx affected:libs",
@@ -48,8 +49,7 @@
     "material": "^0.4.3",
     "neo4j-driver": "^4.0.1",
     "rxjs": "~6.5.4",
-    "zone.js": "^0.9.1",
-    "@ncats-frontend-library/ncats-material-module": "latest"
+    "zone.js": "^0.9.1"
   },
   "devDependencies": {
     "@angular-devkit/architect": "0.803.23",

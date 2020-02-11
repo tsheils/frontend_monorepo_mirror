@@ -6,7 +6,7 @@ import {MatTableDataSource} from "@angular/material";
 import {takeUntil} from "rxjs/internal/operators";
 
 @Component({
-  selector: 'ncats-fel-facet-table',
+  selector: 'fel-facet-table',
   templateUrl: './facet-table.component.html',
   styleUrls: ['./facet-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

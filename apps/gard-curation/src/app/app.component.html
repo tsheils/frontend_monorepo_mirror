@@ -12,25 +12,29 @@
       (formReturner)="setForm($event)"
       ></ncats-fel-form>
     <br>
-    <button mat-raised-button (click)="connect('questions1')" [disabled]="!form.valid">Connect</button>&nbsp;
-    <button mat-raised-button (click)="clearForm('questions1')" [color]="'warn'">Clear</button>
+    <button mat-raised-button (click)="connect()" [disabled]="!form.valid">Connect</button>&nbsp;
+    <button mat-raised-button (click)="clearForm()" [color]="'warn'">Clear</button>
     <br>
     <br>
   </div>
 </div>
+<ncats-fel-app-content></ncats-fel-app-content>
 
-Fields: {{fields | json}}
-<br>
-<br>
-<br>
-
-<div *ngIf = disease>
-<div *ngFor = 'let field of fields'>
+<div *ngIf = disease fxLayout="row">
+  <h1>{{disease.name}}</h1>
+</div>
+<div *ngIf = disease fxLayout ="row wrap" fxLayoutAlign="space-around start">
+<div *ngFor = 'let field of fields' fxFlex="60">
 <mat-card>
-  <mat-card-header>{{field}}</mat-card-header>
+  <mat-card-header>{{field | titlecase}}</mat-card-header>
   <mat-card-content>
     <mat-tab-group>
-      <mat-tab label ='Data'><div [innerHTML] = disease[field]></div></mat-tab>
+      <mat-tab label ='Data'>
+        <gard-data-display [property]= disease[field]></gard-data-display>
+<!--
+        <div [innerHTML] = disease[field]></div>
+-->
+      </mat-tab>
       <mat-tab label ='Notes'></mat-tab>
       <mat-tab label ='References'></mat-tab>
     </mat-tab-group>

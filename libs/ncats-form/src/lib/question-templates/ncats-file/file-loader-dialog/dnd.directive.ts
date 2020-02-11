@@ -27,14 +27,14 @@ export class DndDirective {
     evt.preventDefault();
     evt.stopPropagation();
     this.background = '#eee';
-    let files = evt.dataTransfer.files;
-    let valid_files : Array<File> = [];
-    let invalid_files : Array<File> = [];
+    const files = evt.dataTransfer.files;
+    const valid_files : Array<File> = [];
+    const invalid_files : Array<File> = [];
     if(files.length > 0){
       console.log(files);
-      for (let file of files) {
-        let ext = file.name.split('.')[file.name.split('.').length - 1];
-        if (this.allowed_extensions.lastIndexOf(ext) != -1) {
+      for (const file of files) {
+        const ext = file.name.split('.')[file.name.split('.').length - 1];
+        if (this.allowed_extensions.lastIndexOf(ext) !== -1) {
           valid_files.push(file);
         } else {
           invalid_files.push(file);

@@ -1,14 +1,15 @@
-import { Component } from '@angular/core';
-import {DropdownQuestion, FileQuestion, MultiselectQuestion, TextboxQuestion} from "@ncats-frontend-library/ncats-form";
+import {Component, OnInit} from '@angular/core';
+import {TextboxQuestion} from "@ncats-frontend-library/ncats-form";
 import {FormGroup} from "@angular/forms";
-import {Neo4jConnectService} from "../../../../libs/common/data-access/neo4j-connector/src/lib/neo4j-connect.service";
+import {Disease, DiseaseSerializer} from "../../../../models/disease";
+import {Neo4jConnectService} from "@ncats-frontend-library/common/data-access/neo4j-connector";
 
 @Component({
   selector: 'ncats-frontend-library-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'gard-curation';
   form: FormGroup;
   questions = [
@@ -33,7 +34,8 @@ export class AppComponent {
     })
   ];
 
-  disease;
+  disease: Disease;
+  diseaseSerializer: DiseaseSerializer = new DiseaseSerializer();
 
   fields: string[];
 
@@ -59,7 +61,7 @@ export class AppComponent {
     this.form.reset();
   }
 
-  connect(form?: string): void {
+  connect(): void {
     const formVals = this.form.value;
     console.log(formVals);
     console.log(this);
@@ -71,9 +73,9 @@ export class AppComponent {
         this.neo4jConnectService.fetch(
           `match p=(n:S_GARD)-[]-(:DATA) where 'CYSTIC FIBROSIS' in n.N_Name return p`
 //        'match p=(n:`S_GARD`)-[]-(:DATA) return p limit 20'
-        ).subscribe(res => {
-          console.log(res);
-          this.disease = res._fields[0].segments[0].end.properties;
+        ).subscribe(data => {
+          console.log(data);
+          this.disease = this.diseaseSerializer.fromJson(data._fields[0].segments[0].end.properties);
           this.fields = Object.keys(this.disease);
         })
       }

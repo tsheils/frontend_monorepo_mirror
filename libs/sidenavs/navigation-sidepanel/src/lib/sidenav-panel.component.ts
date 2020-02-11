@@ -10,7 +10,7 @@ import {Location, ViewportScroller} from '@angular/common';
  * panel that lists available sections of the details page, with jump to section navigation
  */
 @Component({
-  selector: 'pharos-sidenav-panel',
+  selector: 'fel-sidenav-panel',
   templateUrl: './sidenav-panel.component.html',
   styleUrls: ['./sidenav-panel.component.scss']
 })

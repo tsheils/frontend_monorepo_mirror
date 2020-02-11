@@ -41,6 +41,9 @@
       ],
       "@ncats-frontend-library/common/data-access/neo4j-connector": [
         "libs/common/data-access/neo4j-connector/src/index.ts"
+      ],
+      "@ncats-frontend-library/ui/gard/data-display": [
+        "libs/ui/gard/data-display/src/index.ts"
       ]
     }
   },

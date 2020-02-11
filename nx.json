@@ -44,12 +44,6 @@
     "ncats-form": {
       "tags": []
     },
-    "navigation-sidepanel": {
-      "tags": []
-    },
-    "curation-sidepanel": {
-      "tags": []
-    },
     "sidenavs-navigation-sidepanel": {
       "tags": []
     },
@@ -63,6 +57,9 @@
       "tags": []
     },
     "common-data-access-neo4j-connector": {
+      "tags": []
+    },
+    "ui-gard-data-display": {
       "tags": []
     }
   }

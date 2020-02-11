@@ -127,7 +127,6 @@
         }
       }
     },
-
     "ncats-firebase-auth-module": {
       "projectType": "library",
       "root": "libs/ncats-firebase-auth-module",
@@ -662,6 +661,37 @@
             "jestConfig": "libs/common/data-access/neo4j-connector/jest.config.js",
             "tsConfig": "libs/common/data-access/neo4j-connector/tsconfig.spec.json",
             "setupFile": "libs/common/data-access/neo4j-connector/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "ui-gard-data-display": {
+      "projectType": "library",
+      "root": "libs/ui/gard/data-display",
+      "sourceRoot": "libs/ui/gard/data-display/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ui/gard/data-display/tsconfig.lib.json",
+              "libs/ui/gard/data-display/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/ui/gard/data-display/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ui/gard/data-display/jest.config.js",
+            "tsConfig": "libs/ui/gard/data-display/tsconfig.spec.json",
+            "setupFile": "libs/ui/gard/data-display/src/test-setup.ts"
           }
         }
       },

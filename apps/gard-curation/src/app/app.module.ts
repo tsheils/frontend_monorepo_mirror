@@ -6,6 +6,8 @@ import {RouterModule} from '@angular/router';
 import {NcatsFormModule} from "@ncats-frontend-library/ncats-form";
 import {Neo4jConnectService} from "@ncats-frontend-library/common/data-access/neo4j-connector";
 import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
+import {UiGardDataDisplayModule} from "@ncats-frontend-library/ui/gard/data-display";
+import {DynamicAppModule} from "@ncats-frontend-library/dynamic-app";
 
 @NgModule({
   declarations: [AppComponent],
@@ -13,7 +15,9 @@ import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-mat
     BrowserModule,
     RouterModule.forRoot([], { initialNavigation: 'enabled' }),
     NcatsFormModule,
-    CustomMaterialModule
+    CustomMaterialModule,
+    UiGardDataDisplayModule,
+    DynamicAppModule
   ],
   providers: [
     Neo4jConnectService
