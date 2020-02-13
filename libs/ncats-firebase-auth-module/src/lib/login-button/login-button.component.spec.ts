@@ -4,7 +4,7 @@ import { LoginButtonComponent } from './login-button.component';
 import {AngularFireAuth} from "@angular/fire/auth";
 import {FIRESTORESTUB} from "../../../../../test/firestore-stub";
 import {AngularFirestore} from "@angular/fire/firestore";
-import {MatDialogModule, MatDialogRef} from "@angular/material";
+import { MatDialogModule, MatDialogRef } from "@angular/material/dialog";
 import {COMMON_CONFIG} from "../../../../../test/test-config";
 import {AngularFireModule} from "@angular/fire";
 import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";

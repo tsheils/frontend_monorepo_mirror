@@ -3,7 +3,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {LoginModalComponent} from './login-modal.component';
 import {AngularFireModule} from "@angular/fire";
 import {COMMON_CONFIG} from "../../../../../test/test-config";
-import {MatDialogRef} from "@angular/material";
+import { MatDialogRef } from "@angular/material/dialog";
 import {AngularFirestore} from "@angular/fire/firestore";
 import {FIRESTORESTUB} from "../../../../../test/firestore-stub";
 import {AngularFireAuth} from "@angular/fire/auth";

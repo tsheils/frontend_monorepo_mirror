@@ -242,7 +242,7 @@
             "main": "apps/gard-curation/src/main.ts",
             "polyfills": "apps/gard-curation/src/polyfills.ts",
             "tsConfig": "apps/gard-curation/tsconfig.app.json",
-            "aot": false,
+            "aot": true,
             "assets": [
               "apps/gard-curation/src/favicon.ico",
               "apps/gard-curation/src/assets"
@@ -263,7 +263,6 @@
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -365,7 +364,7 @@
             "main": "apps/gard-frontend/src/main.ts",
             "polyfills": "apps/gard-frontend/src/polyfills.ts",
             "tsConfig": "apps/gard-frontend/tsconfig.app.json",
-            "aot": false,
+            "aot": true,
             "assets": [
               "apps/gard-frontend/src/favicon.ico",
               "apps/gard-frontend/src/assets"
@@ -386,7 +385,6 @@
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -466,37 +464,6 @@
             "tsConfig": ["apps/gard-frontend-e2e/tsconfig.e2e.json"],
             "exclude": ["**/node_modules/**", "!apps/gard-frontend-e2e/**"]
           }
-        }
-      }
-    },
-    "ncats-form": {
-      "projectType": "library",
-      "root": "libs/ncats-form",
-      "sourceRoot": "libs/ncats-form/src",
-      "prefix": "ncats-frontend-library",
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/ncats-form/tsconfig.lib.json",
-              "libs/ncats-form/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/ncats-form/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/ncats-form/jest.config.js",
-            "tsConfig": "libs/ncats-form/tsconfig.spec.json",
-            "setupFile": "libs/ncats-form/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "styleext": "scss"
         }
       }
     },
@@ -692,6 +659,71 @@
             "jestConfig": "libs/ui/gard/data-display/jest.config.js",
             "tsConfig": "libs/ui/gard/data-display/tsconfig.spec.json",
             "setupFile": "libs/ui/gard/data-display/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "common-ui-neo4j-connection-form": {
+      "projectType": "library",
+      "root": "libs/common/ui/neo4j-connection-form",
+      "sourceRoot": "libs/common/ui/neo4j-connection-form/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/common/ui/neo4j-connection-form/tsconfig.lib.json",
+              "libs/common/ui/neo4j-connection-form/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/common/ui/neo4j-connection-form/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/common/ui/neo4j-connection-form/jest.config.js",
+            "tsConfig": "libs/common/ui/neo4j-connection-form/tsconfig.spec.json",
+            "setupFile": "libs/common/ui/neo4j-connection-form/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "shared-ui-ncats-form": {
+      "projectType": "library",
+      "root": "libs/shared/ui/ncats-form",
+      "sourceRoot": "libs/shared/ui/ncats-form/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/ui/ncats-form/tsconfig.lib.json",
+              "libs/shared/ui/ncats-form/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/ui/ncats-form/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/ui/ncats-form/jest.config.js",
+            "tsConfig": "libs/shared/ui/ncats-form/tsconfig.spec.json",
+            "setupFile": "libs/shared/ui/ncats-form/src/test-setup.ts"
           }
         }
       },

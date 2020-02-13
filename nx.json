@@ -41,9 +41,6 @@
     "gard-frontend": {
       "tags": []
     },
-    "ncats-form": {
-      "tags": []
-    },
     "sidenavs-navigation-sidepanel": {
       "tags": []
     },
@@ -60,6 +57,12 @@
       "tags": []
     },
     "ui-gard-data-display": {
+      "tags": []
+    },
+    "common-ui-neo4j-connection-form": {
+      "tags": []
+    },
+    "shared-ui-ncats-form": {
       "tags": []
     }
   }

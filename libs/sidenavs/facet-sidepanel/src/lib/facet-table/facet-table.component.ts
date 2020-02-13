@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@ang
 import {Facet, Field} from "../models/facet";
 import {Subject} from "rxjs";
 import {SelectionModel} from "@angular/cdk/collections";
-import {MatTableDataSource} from "@angular/material";
+import { MatTableDataSource } from "@angular/material/table";
 import {takeUntil} from "rxjs/internal/operators";
 
 @Component({

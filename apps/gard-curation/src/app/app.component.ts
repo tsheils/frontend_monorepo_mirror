@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {TextboxQuestion} from "@ncats-frontend-library/ncats-form";
 import {FormGroup} from "@angular/forms";
 import {Disease, DiseaseSerializer} from "../../../../models/disease";
 import {Neo4jConnectService} from "@ncats-frontend-library/common/data-access/neo4j-connector";
+import {TextboxQuestion} from "@ncats-frontend-library/shared/ui/ncats-form";
 
 @Component({
   selector: 'ncats-frontend-library-root',

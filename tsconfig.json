@@ -44,6 +44,12 @@
       ],
       "@ncats-frontend-library/ui/gard/data-display": [
         "libs/ui/gard/data-display/src/index.ts"
+      ],
+      "@ncats-frontend-library/common/ui/neo4j-connection-form": [
+        "libs/common/ui/neo4j-connection-form/src/index.ts"
+      ],
+      "@ncats-frontend-library/shared/ui/ncats-form": [
+        "libs/shared/ui/ncats-form/src/index.ts"
       ]
     }
   },

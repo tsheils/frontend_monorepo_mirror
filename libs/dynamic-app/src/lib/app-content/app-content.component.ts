@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentRef, Injector, Input, OnDestroy, OnInit, Type,
   ViewChild
 } from '@angular/core';
-import {MatSidenav} from "@angular/material";
+import { MatSidenav } from "@angular/material/sidenav";
 import {CdkPortalOutlet, ComponentPortal} from "@angular/cdk/portal";
 import {DynamicPanelConfig} from "../models/dynamic-panel-config";
 import {Subject} from "rxjs";
@@ -25,7 +25,7 @@ export class AppContentComponent implements OnInit, OnDestroy {
   /**
    * left sidenav panel instance
    */
-  @ViewChild('leftpanel') leftPanelInstance: MatSidenav;
+  @ViewChild('leftpanel', {static: true}) leftPanelInstance: MatSidenav;
   /**
    * right sidenav panel instance
    */
