@@ -11,7 +11,7 @@ import {NcatsAutocompleteComponent} from "./question-templates/ncats-autocomplet
 import {DynamicContentDirective} from "./directives/dynamic-content.directive";
 import {DndDirective} from "./question-templates/ncats-file/file-loader-dialog/dnd.directive";
 import {FileLoaderDialogComponent} from "./question-templates/ncats-file/file-loader-dialog/file-loader-dialog.component";
-import {NcatsFormComponent} from "@ncats-frontend-library/shared/ui/ncats-form";
+import {NcatsFormComponent} from "./ncats-form.component";
 
 @NgModule({
   imports: [

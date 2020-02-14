@@ -57,7 +57,13 @@ export class AppContentComponent implements OnInit, OnDestroy {
   /**
    * list of dynamic panel component objects
    */
-  components: DynamicPanelConfig[];
+  @Input() components: DynamicPanelConfig[];
+
+  /**
+   * data object
+   * @type {{}}
+   */
+  @Input() data: any = {};
 
   /**
    * track loaded and injected components
@@ -71,11 +77,6 @@ export class AppContentComponent implements OnInit, OnDestroy {
    */
   autosize = true;
 
-  /**
-   * data object
-   * @type {{}}
-   */
-  @Input() data: any = {};
   /**
    * Behaviour subject to allow extending class to unsubscribe on destroy
    * @type {Subject<any>}
@@ -113,8 +114,12 @@ export class AppContentComponent implements OnInit, OnDestroy {
    */
   ngOnInit() {
     this.isSmallScreen = this.breakpointObserver.isMatched('(max-width: 599px)');
-    this.data = this._route.snapshot.data;
-    this.components = this.data.components;
+    if (this._route && this._route.snapshot.data) {
+      this.data = this._route.snapshot.data;
+     if (this.data && this.data.components) {
+       this.components = this.data.components;
+     }
+    }
     this.makeComponents();
 
     this.router.events

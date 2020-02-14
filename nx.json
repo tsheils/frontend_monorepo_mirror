@@ -64,6 +64,15 @@
     },
     "shared-ui-ncats-form": {
       "tags": []
+    },
+    "common-ui-full-page-search": {
+      "tags": []
+    },
+    "shared-ui-search-bar": {
+      "tags": []
+    },
+    "shared-ui-curation-matrix": {
+      "tags": []
     }
   }
 }

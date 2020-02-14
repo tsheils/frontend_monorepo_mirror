@@ -1,0 +1,46 @@
+<div fxLayout="row">
+  <div fxFlex = 90>
+<table mat-table [dataSource]="data" class = "data-table">
+  <ng-container matColumnDef="display">
+    <th mat-header-cell *matHeaderCellDef [style.width]="'3vw'"> Display </th>
+    <td mat-cell *matCellDef="let row" [style.max-width]="'3vw'">
+      <mat-checkbox (click)="$event.stopPropagation()"
+                    (change)="$event ? filterSelection.toggle(row) : null"
+                    [checked]="filterSelection.isSelected(row)">
+      </mat-checkbox>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="value">
+    <th mat-header-cell *matHeaderCellDef > Value </th>
+    <td mat-cell *matCellDef="let row"> {{row.value}} </td>
+  </ng-container>
+  <ng-container [matColumnDef]="column" *ngFor="let column of columns">
+    <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+    <td mat-cell *matCellDef="let element"> {{element.references.includes(column) ? 'X' : ''}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayColumns;"></tr>
+</table>
+  </div>
+</div>
+
+synonyms: {{selectedValues | json}}
+
+
+<h2>Synonyms: </h2> <h4>drag to reorder</h4>
+<div class="draggable-list"
+  cdkDropList
+  (cdkDropListDropped)="drop($event)">
+  <mat-card *ngFor="let value of selectedValues" class="draggable-box" cdkDrag>
+
+    {{value.value}}
+    <span *ngIf="value.references">
+      &nbsp;
+    <span *ngFor = "let ref of value.references">
+      <sup><a href="" >{{ref}}</a></sup>
+            &nbsp;
+    </span>
+    </span>
+  </mat-card>
+</div>

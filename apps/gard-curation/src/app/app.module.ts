@@ -8,10 +8,11 @@ import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-mat
 import {UiGardDataDisplayModule} from "@ncats-frontend-library/ui/gard/data-display";
 import {DynamicAppModule} from "@ncats-frontend-library/dynamic-app";
 import {SharedUiNcatsFormModule} from "@ncats-frontend-library/shared/ui/ncats-form";
+import {SharedUiCurationMatrixModule} from "@ncats-frontend-library/shared/ui/curation-matrix";
 
-const routes: Routes = [
- // {
-/*    path: 'login',
+const routes: Routes = [/*
+ {
+    path: 'login',
     loadChildren: () =>
       import('@ncats-frontend-library/dynamic-app').then(m => m.DynamicAppModule)
   }*/
@@ -22,11 +23,12 @@ const routes: Routes = [
   declarations: [AppComponent],
   imports: [
     BrowserModule,
-    RouterModule.forRoot([], { initialNavigation: 'enabled' }),
+    RouterModule.forRoot([], {initialNavigation: 'enabled'}),
     SharedUiNcatsFormModule,
     CustomMaterialModule,
     UiGardDataDisplayModule,
-    DynamicAppModule
+    DynamicAppModule,
+    SharedUiCurationMatrixModule
   ],
   providers: [
     Neo4jConnectService

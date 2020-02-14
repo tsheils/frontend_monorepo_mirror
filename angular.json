@@ -732,6 +732,105 @@
           "styleext": "scss"
         }
       }
+    },
+    "common-ui-full-page-search": {
+      "projectType": "library",
+      "root": "libs/common/ui/full-page-search",
+      "sourceRoot": "libs/common/ui/full-page-search/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/common/ui/full-page-search/tsconfig.lib.json",
+              "libs/common/ui/full-page-search/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/common/ui/full-page-search/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/common/ui/full-page-search/jest.config.js",
+            "tsConfig": "libs/common/ui/full-page-search/tsconfig.spec.json",
+            "setupFile": "libs/common/ui/full-page-search/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "shared-ui-search-bar": {
+      "projectType": "library",
+      "root": "libs/shared/ui/search-bar",
+      "sourceRoot": "libs/shared/ui/search-bar/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/ui/search-bar/tsconfig.lib.json",
+              "libs/shared/ui/search-bar/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/ui/search-bar/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/ui/search-bar/jest.config.js",
+            "tsConfig": "libs/shared/ui/search-bar/tsconfig.spec.json",
+            "setupFile": "libs/shared/ui/search-bar/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "shared-ui-curation-matrix": {
+      "projectType": "library",
+      "root": "libs/shared/ui/curation-matrix",
+      "sourceRoot": "libs/shared/ui/curation-matrix/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/ui/curation-matrix/tsconfig.lib.json",
+              "libs/shared/ui/curation-matrix/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/ui/curation-matrix/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/ui/curation-matrix/jest.config.js",
+            "tsConfig": "libs/shared/ui/curation-matrix/tsconfig.spec.json",
+            "setupFile": "libs/shared/ui/curation-matrix/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
     }
   },
   "cli": {
