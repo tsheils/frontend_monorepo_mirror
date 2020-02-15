@@ -1,46 +1,58 @@
-<div fxLayout="row">
-  <div fxFlex = 90>
-<table mat-table [dataSource]="data" class = "data-table">
-  <ng-container matColumnDef="display">
-    <th mat-header-cell *matHeaderCellDef [style.width]="'3vw'"> Display </th>
-    <td mat-cell *matCellDef="let row" [style.max-width]="'3vw'">
-      <mat-checkbox (click)="$event.stopPropagation()"
-                    (change)="$event ? filterSelection.toggle(row) : null"
-                    [checked]="filterSelection.isSelected(row)">
-      </mat-checkbox>
-    </td>
-  </ng-container>
-  <ng-container matColumnDef="value">
-    <th mat-header-cell *matHeaderCellDef > Value </th>
-    <td mat-cell *matCellDef="let row"> {{row.value}} </td>
-  </ng-container>
-  <ng-container [matColumnDef]="column" *ngFor="let column of columns">
-    <th mat-header-cell *matHeaderCellDef> {{column}} </th>
-    <td mat-cell *matCellDef="let element"> {{element.references.includes(column) ? 'X' : ''}} </td>
-  </ng-container>
+<div fxLayout="row" fxLayoutAlign="space-around center">
+  <div fxFlex=50>
+    <mat-form-field class="full-width-form">
+      <mat-label>Filter {{field}}</mat-label>
+      <input matInput (keyup)="applyFilter($event)">
+    </mat-form-field>
+  </div>
+  <div fxFlex=45>
+    <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+  </div>
+</div>
+<div fxLayout="row" fxLayoutAlign="space-around center">
+  <div fxFlex=90>
+    <table mat-table
+           [dataSource]="dataSource"
+           class="data-table"
+           matSort>
+      <ng-container matColumnDef="display">
+        <th mat-header-cell *matHeaderCellDef [style.width]="'3vw'"></th>
+        <td mat-cell *matCellDef="let row" [style.max-width]="'3vw'">
+          <mat-checkbox (click)="$event.stopPropagation()"
+                        (change)="$event ? filterSelection.toggle(row) : null"
+                        [checked]="filterSelection.isSelected(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="value">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Value</th>
+        <td mat-cell *matCellDef="let row"> {{row.value}} </td>
+      </ng-container>
+      <ng-container [matColumnDef]="column" *ngFor="let column of columns">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column}} </th>
+        <td mat-cell *matCellDef="let element"> {{element.references.includes(column) ? 'X' : ''}} </td>
+      </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayColumns;"></tr>
-</table>
+      <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayColumns;"></tr>
+    </table>
   </div>
 </div>
 
-synonyms: {{selectedValues | json}}
-
-
-<h2>Synonyms: </h2> <h4>drag to reorder</h4>
+<h4>{{field}}: </h4> <h5>drag to reorder</h5>
 <div class="draggable-list"
-  cdkDropList
-  (cdkDropListDropped)="drop($event)">
+     cdkDropList
+     (cdkDropListDropped)="drop($event)">
   <mat-card *ngFor="let value of selectedValues" class="draggable-box" cdkDrag>
-
     {{value.value}}
     <span *ngIf="value.references">
       &nbsp;
-    <span *ngFor = "let ref of value.references">
-      <sup><a href="" >{{ref}}</a></sup>
+    <span *ngFor="let ref of value.references">
+      <sup><a href="">{{ref}}</a></sup>
             &nbsp;
     </span>
     </span>
   </mat-card>
 </div>
+
+{{field}}: {{selectedValues | json}}

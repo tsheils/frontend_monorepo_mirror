@@ -3,9 +3,6 @@
 
 
 
-
-  <ncats-frontend-library-curation-matrix></ncats-frontend-library-curation-matrix>
-
 <div *ngIf="connected">
   Connected
   <button mat-flat-button [color]="'primary'" (click)="disconnect()">Disconnect</button>
@@ -24,19 +21,66 @@
     <br>
   </div>
 </div>
+<!--
 <ncats-fel-app-content></ncats-fel-app-content>
+-->
 
 <div *ngIf = disease fxLayout="row">
   <h1>{{disease.name}}</h1>
 </div>
 <div *ngIf = disease fxLayout ="row wrap" fxLayoutAlign="space-around start">
+  <div fxFlex="60">
+    <mat-card >
+      <mat-card-header>{{"test" | titlecase}}</mat-card-header>
+      <mat-card-content>
+        <mat-tab-group>
+          <mat-tab label ='Data'>
+            <div *ngIf = "editing !== 'test'">
+              <gard-data-display [property] = "newTestData ? newTestData : testdata"></gard-data-display>
+            </div>
+            <div *ngIf="editing === 'test'">
+              <ncats-frontend-library-curation-matrix
+                [field] = "'test'"
+                [data] = testdata
+                [currentObject] = newTestData
+                (curatedObjectChange)="setCuratedObject($event, 'test')">
+              </ncats-frontend-library-curation-matrix>
+            </div>
+            <!--
+                    <div [innerHTML] = disease[field]></div>
+            -->
+          </mat-tab>
+          <mat-tab label ='Notes'></mat-tab>
+          <mat-tab label ='References'></mat-tab>
+        </mat-tab-group>
+        <mat-card-actions fxLayoutAlign="end center">
+          <div *ngIf = "editing !== 'test'">
+            <button mat-stroked-button [color]="'primary'" (click) = "editing = 'test'">Edit</button>
+          </div>
+          <div *ngIf = "editing === 'test'">
+            <button mat-stroked-button [color]="'warn'" (click) = "editing = null">Cancel</button>
+            <button mat-stroked-button [color]="'primary'" (click) = "setObject('test')">Save</button>
+          </div>
+        </mat-card-actions>
+      </mat-card-content>
+    </mat-card>
+  </div>
 <div *ngFor = 'let field of fields' fxFlex="60">
 <mat-card>
   <mat-card-header>{{field | titlecase}}</mat-card-header>
   <mat-card-content>
     <mat-tab-group>
       <mat-tab label ='Data'>
-        <gard-data-display [property]= disease[field]></gard-data-display>
+        <div *ngIf = "editing !== field">
+          <gard-data-display [property] = disease[field]></gard-data-display>
+        </div>
+        <div *ngIf="editing === field">
+        <ncats-frontend-library-curation-matrix
+          [field] = "field"
+          [data] = testdata
+          (curatedObjectChange)="setCuratedObject($event, field)">
+        </ncats-frontend-library-curation-matrix>
+        </div>
 <!--
         <div [innerHTML] = disease[field]></div>
 -->
@@ -44,8 +88,14 @@
       <mat-tab label ='Notes'></mat-tab>
       <mat-tab label ='References'></mat-tab>
     </mat-tab-group>
-    <mat-card-actions>
-      <button mat-stroked-button [color]="'primary'">Edit</button>
+    <mat-card-actions fxLayoutAlign="end center">
+      <div *ngIf = "editing !== field">
+      <button mat-stroked-button [color]="'primary'" (click) = "editing = field">Edit</button>
+      </div>
+      <div *ngIf = "editing === field">
+      <button mat-stroked-button [color]="'warn'" (click) = "editing = null">Cancel</button>
+      <button mat-stroked-button [color]="'primary'" (click) = setObject(field)>Save</button>
+      </div>
     </mat-card-actions>
   </mat-card-content>
 </mat-card>

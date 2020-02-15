@@ -39,7 +39,30 @@ export class AppComponent implements OnInit {
 
   fields: string[];
 
+  editing: string;
+
   connected = false;
+
+  curatedObject: {} = {};
+
+  testdata = [
+    {value: 'synonym1', references: ['ref1', 'ref2', 'ref3', 'ref4']},
+    {value: 'synonym2', references: ['ref1', 'ref12', 'ref13', 'ref4']},
+    {value: 'synonym3', references: ['ref6', 'ref4', 'ref3', 'ref5']},
+    {value: 'synonym4', references: ['ref1', 'ref2', 'ref8', 'ref9']},
+    {value: 'synonym5', references: ['ref1', 'ref2', 'ref3', 'ref4']},
+    {value: 'synonym6', references: ['ref9', 'ref6', 'ref10', 'ref4']},
+    {value: 'synonym7', references: ['ref10', 'ref12', 'ref13']},
+    {value: 'synonym8', references: ['ref1']},
+    {value: 'synonym80', references: []},
+    {
+      value: 'synonym9',
+      references: ['ref1', 'ref2', 'ref3', 'ref4', 'ref5', 'ref6', 'ref7', 'ref8', 'ref9', 'ref10', 'ref11', 'ref12', 'ref13', 'ref14']
+    },
+    {value: 'synonym10', references: ['ref10', 'ref12', 'ref13', 'ref14']}
+  ];
+
+  newTestData: any[];
 
   constructor(
     private neo4jConnectService: Neo4jConnectService
@@ -86,5 +109,18 @@ export class AppComponent implements OnInit {
     this.neo4jConnectService.close();
     this.disease = null;
     this.connected = false;
+  }
+
+  setCuratedObject(object, field): void {
+    console.log(object);
+    console.log(field);
+    this.curatedObject[field] = object;
+  }
+
+  setObject(field: string): void {
+    console.log(field);
+    this.disease[field] = this.curatedObject[field];
+    this.newTestData = this.curatedObject[field];
+    this.editing = null;
   }
 }
