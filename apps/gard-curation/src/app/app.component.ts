@@ -1,8 +1,26 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, InjectionToken, OnInit} from '@angular/core';
 import {FormGroup} from "@angular/forms";
-import {Disease, DiseaseSerializer} from "../../../../models/disease";
+import {Disease, DiseaseSerializer} from "../../../../models/gard/disease";
 import {Neo4jConnectService} from "@ncats-frontend-library/common/data-access/neo4j-connector";
 import {TextboxQuestion} from "@ncats-frontend-library/shared/ui/ncats-form";
+import {PanelConfig, Position} from "@ncats-frontend-library/shared/ui/dynamic-app-skeleton";
+
+
+export const CURATION_SIDEPANEL_COMPONENT = new InjectionToken<string>('SideNavComponent');
+
+/**
+ * this sets up the basic skeleton/sections of the app
+ * todo move to config file
+ */
+const GARD_CURATION_SIDENAV: PanelConfig = {
+  token: CURATION_SIDEPANEL_COMPONENT,
+  section: Position.Left
+};
+
+
+
+
+
 
 @Component({
   selector: 'ncats-frontend-library-root',
@@ -64,6 +82,17 @@ export class AppComponent implements OnInit {
 
   newTestData: any[];
 
+  components: PanelConfig[] =
+  [
+    {
+      token: CURATION_SIDEPANEL_COMPONENT,
+      section: Position.Left,
+      data: this.fields
+  }
+  ];
+
+
+
   constructor(
     private neo4jConnectService: Neo4jConnectService
   ){}
@@ -99,7 +128,8 @@ export class AppComponent implements OnInit {
         ).subscribe(data => {
           console.log(data);
           this.disease = this.diseaseSerializer.fromJson(data._fields[0].segments[0].end.properties);
-          this.fields = Object.keys(this.disease);
+        //  this.fields = Object.keys(this.disease);
+          this.fields = Disease.displayFields();
         })
       }
     });

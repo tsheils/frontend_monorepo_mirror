@@ -1,5 +1,5 @@
 import {Address} from "./address";
-import {GardBase} from "../libs/ui/gard/data-display/src/lib/models/gard-base";
+import {GardBase} from "./gard/gard-base";
 
 export class Organization extends GardBase {
   name: string;

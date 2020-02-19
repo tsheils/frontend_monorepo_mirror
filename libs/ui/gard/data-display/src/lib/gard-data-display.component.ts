@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {GardDataProperty} from "./models/gard-base";
+import {GardDataProperty} from "../../../../../../models/gard/gard-base";
 
 /**
  * component to display a property, primarily in a table

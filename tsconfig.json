@@ -59,6 +59,15 @@
       ],
       "@ncats-frontend-library/shared/ui/curation-matrix": [
         "libs/shared/ui/curation-matrix/src/index.ts"
+      ],
+      "@ncats-frontend-library/ui/gard/curation-sidepanel": [
+        "libs/ui/gard/curation-sidepanel/src/index.ts"
+      ],
+      "@ncats-frontend-library/shared/ui/dynamic-app-skeleton": [
+        "libs/shared/ui/dynamic-app-skeleton/src/index.ts"
+      ],
+      "@ncats-frontend-library/ui/gard/gard-data-viewer": [
+        "libs/ui/gard/gard-data-viewer/src/index.ts"
       ]
     }
   },

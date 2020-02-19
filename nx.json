@@ -24,9 +24,6 @@
     "idg-tdl-indicator": {
       "tags": []
     },
-    "dynamic-app": {
-      "tags": []
-    },
     "gard-curation-e2e": {
       "tags": [],
       "implicitDependencies": ["gard-curation"]
@@ -42,9 +39,6 @@
       "tags": []
     },
     "sidenavs-navigation-sidepanel": {
-      "tags": []
-    },
-    "sidenavs-curation-sidepanel": {
       "tags": []
     },
     "sidenavs-facet-sidepanel": {
@@ -72,6 +66,15 @@
       "tags": []
     },
     "shared-ui-curation-matrix": {
+      "tags": []
+    },
+    "ui-gard-curation-sidepanel": {
+      "tags": []
+    },
+    "shared-ui-dynamic-app-skeleton": {
+      "tags": []
+    },
+    "ui-gard-gard-data-viewer": {
       "tags": []
     }
   }

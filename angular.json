@@ -192,37 +192,6 @@
         }
       }
     },
-    "dynamic-app": {
-      "projectType": "library",
-      "root": "libs/dynamic-app",
-      "sourceRoot": "libs/dynamic-app/src",
-      "prefix": "ncats-frontend-library",
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/dynamic-app/tsconfig.lib.json",
-              "libs/dynamic-app/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/dynamic-app/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/dynamic-app/jest.config.js",
-            "tsConfig": "libs/dynamic-app/tsconfig.spec.json",
-            "setupFile": "libs/dynamic-app/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "styleext": "scss"
-        }
-      }
-    },
     "gard-curation": {
       "projectType": "application",
       "schematics": {
@@ -492,40 +461,6 @@
             "jestConfig": "libs/sidenavs/navigation-sidepanel/jest.config.js",
             "tsConfig": "libs/sidenavs/navigation-sidepanel/tsconfig.spec.json",
             "setupFile": "libs/sidenavs/navigation-sidepanel/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "styleext": "scss"
-        }
-      }
-    },
-    "sidenavs-curation-sidepanel": {
-      "projectType": "library",
-      "root": "libs/sidenavs/curation-sidepanel",
-      "sourceRoot": "libs/sidenavs/curation-sidepanel/src",
-      "prefix": "ncats-frontend-library",
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/sidenavs/curation-sidepanel/tsconfig.lib.json",
-              "libs/sidenavs/curation-sidepanel/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/sidenavs/curation-sidepanel/**"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/sidenavs/curation-sidepanel/jest.config.js",
-            "tsConfig": "libs/sidenavs/curation-sidepanel/tsconfig.spec.json",
-            "setupFile": "libs/sidenavs/curation-sidepanel/src/test-setup.ts"
           }
         }
       },
@@ -823,6 +758,108 @@
             "jestConfig": "libs/shared/ui/curation-matrix/jest.config.js",
             "tsConfig": "libs/shared/ui/curation-matrix/tsconfig.spec.json",
             "setupFile": "libs/shared/ui/curation-matrix/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "ui-gard-curation-sidepanel": {
+      "projectType": "library",
+      "root": "libs/ui/gard/curation-sidepanel",
+      "sourceRoot": "libs/ui/gard/curation-sidepanel/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ui/gard/curation-sidepanel/tsconfig.lib.json",
+              "libs/ui/gard/curation-sidepanel/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/ui/gard/curation-sidepanel/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ui/gard/curation-sidepanel/jest.config.js",
+            "tsConfig": "libs/ui/gard/curation-sidepanel/tsconfig.spec.json",
+            "setupFile": "libs/ui/gard/curation-sidepanel/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "shared-ui-dynamic-app-skeleton": {
+      "projectType": "library",
+      "root": "libs/shared/ui/dynamic-app-skeleton",
+      "sourceRoot": "libs/shared/ui/dynamic-app-skeleton/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/ui/dynamic-app-skeleton/tsconfig.lib.json",
+              "libs/shared/ui/dynamic-app-skeleton/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/ui/dynamic-app-skeleton/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/ui/dynamic-app-skeleton/jest.config.js",
+            "tsConfig": "libs/shared/ui/dynamic-app-skeleton/tsconfig.spec.json",
+            "setupFile": "libs/shared/ui/dynamic-app-skeleton/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "ui-gard-gard-data-viewer": {
+      "projectType": "library",
+      "root": "libs/ui/gard/gard-data-viewer",
+      "sourceRoot": "libs/ui/gard/gard-data-viewer/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ui/gard/gard-data-viewer/tsconfig.lib.json",
+              "libs/ui/gard/gard-data-viewer/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/ui/gard/gard-data-viewer/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ui/gard/gard-data-viewer/jest.config.js",
+            "tsConfig": "libs/ui/gard/gard-data-viewer/tsconfig.spec.json",
+            "setupFile": "libs/ui/gard/gard-data-viewer/src/test-setup.ts"
           }
         }
       },
