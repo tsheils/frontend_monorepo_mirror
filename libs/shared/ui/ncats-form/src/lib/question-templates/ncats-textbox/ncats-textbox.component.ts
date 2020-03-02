@@ -5,7 +5,7 @@ import {FormControl} from "@angular/forms";
 @Component({
   selector: 'lib-ncats-textbox',
   templateUrl: './ncats-textbox.component.html',
-  styleUrls: ['./ncats-textbox.component.css']
+  styleUrls: ['./ncats-textbox.component.scss']
 })
 export class NcatsTextboxComponent implements OnInit {
   @Input() question: TextboxQuestion;

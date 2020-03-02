@@ -71,10 +71,32 @@
     "ui-gard-curation-sidepanel": {
       "tags": []
     },
-    "shared-ui-dynamic-app-skeleton": {
+    "shared-ui-dynamic-app-layout": {
       "tags": []
     },
     "ui-gard-gard-data-viewer": {
+      "tags": []
+    },
+    "ui-gard-gard-header": {
+      "tags": []
+    },
+    "ui-gard-gard-disease-header": {
+      "tags": []
+    },
+    "ui-gard-gard-footer": {
+      "tags": []
+    },
+    "mapper": {
+      "tags": []
+    },
+    "mapper-e2e": {
+      "tags": [],
+      "implicitDependencies": ["mapper"]
+    },
+    "shared-ui-mapper-ui": {
+      "tags": []
+    },
+    "shared-ui-object-tree": {
       "tags": []
     }
   }

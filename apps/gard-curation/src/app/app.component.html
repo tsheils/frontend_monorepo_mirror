@@ -1,36 +1,81 @@
-<div>
-<h1>Welcome to {{title}}!</h1>
+<!--
+<ncats-frontend-library-dynamic-app-content [components]="components"></ncats-frontend-library-dynamic-app-content>
+-->
+
+<ncats-frontend-library-connection-form (connection)="setConnection($event)"></ncats-frontend-library-connection-form>
 
 
 
-<div *ngIf="connected">
-  Connected
-  <button mat-flat-button [color]="'primary'" (click)="disconnect()">Disconnect</button>
+<!--<div *ngFor="let field of sources">
+  <div>{{field}}</div>
 </div>
+<br>
+<br>   <br>
+<br>-->
+<!--
+
+
+
+
+
+
+{{synonyms.length}}
+<div *ngFor="let field of synonyms">
+  <div>{{field}}</div>
 </div>
-<div fxLayout="row" fxLayoutAlign="space-around center" *ngIf = "!connected">
-  <div fxFlex="50">
-    <form>
-    <ncats-fel-form
-      [questions]="questions"
-      (formReturner)="setForm($event)"
-      ></ncats-fel-form>
-    </form>
-    <br>
-    <button mat-raised-button (click)="connect()" [disabled]="!form.valid">Connect</button>&nbsp;
-    <button mat-raised-button (click)="clearForm()" [color]="'warn'">Clear</button>
-    <br>
-    <br>
-  </div>
+<br>
+<br>   <br>
+<br>
+
+<div *ngFor="let field of fields">
+  <div>{{field}}</div>
+  <div>{{disease[field] | json}}</div>
 </div>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<div *ngFor="let field of fields">
+  <div>{{field}}</div>
+  <div>{{tempdisease[field] | json}}</div>
+</div>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<div *ngIf="tempdisease">
+  <div>{{tempdisease | json}}</div>
+</div>-->
+<ncats-frontend-library-curation-matrix
+  [field] = "'test'"
+  [data] = curationData
+  [currentObject] = newTestData
+  (curatedObjectChange)="setCuratedObject($event, 'test')"
+*ngIf="curationData.length > 0">
+</ncats-frontend-library-curation-matrix>
+<div *ngIf = "editing !== 'test'">
+  <button mat-stroked-button [color]="'primary'" (click) = "editing = 'test'">Edit</button>
+</div>
+<div *ngIf = "editing === 'test'">
+  <button mat-stroked-button [color]="'warn'" (click) = "editing = null">Cancel</button>
+  <button mat-stroked-button [color]="'primary'" (click) = "setObject('test')">Save</button>
+</div>
+
 <!--
 <ncats-fel-app-content></ncats-fel-app-content>
 -->
-
+<!--
 <div *ngIf = disease fxLayout="row">
   <h1>{{disease.name}}</h1>
 </div>
-<ncats-frontend-library-dynamic-app-content [components]="components" data="disEASE"></ncats-frontend-library-dynamic-app-content>
 <div *ngIf = disease fxLayout ="row wrap" fxLayoutAlign="space-around start">
   <div fxFlex="60">
     <mat-card >
@@ -42,16 +87,16 @@
               <gard-data-display [property] = "newTestData ? newTestData : testdata"></gard-data-display>
             </div>
             <div *ngIf="editing === 'test'">
-              <ncats-frontend-library-curation-matrix
+             &lt;!&ndash; <ncats-frontend-library-curation-matrix
                 [field] = "'test'"
                 [data] = testdata
                 [currentObject] = newTestData
                 (curatedObjectChange)="setCuratedObject($event, 'test')">
-              </ncats-frontend-library-curation-matrix>
+              </ncats-frontend-library-curation-matrix>&ndash;&gt;
             </div>
-            <!--
+            &lt;!&ndash;
                     <div [innerHTML] = disease[field]></div>
-            -->
+            &ndash;&gt;
           </mat-tab>
           <mat-tab label ='Notes'></mat-tab>
           <mat-tab label ='References'></mat-tab>
@@ -62,17 +107,16 @@
           </div>
           <div *ngIf = "editing === 'test'">
             <button mat-stroked-button [color]="'warn'" (click) = "editing = null">Cancel</button>
+&lt;!&ndash;
             <button mat-stroked-button [color]="'primary'" (click) = "setObject('test')">Save</button>
+&ndash;&gt;
           </div>
         </mat-card-actions>
       </mat-card-content>
     </mat-card>
   </div>
-<div *ngFor = 'let field of fields' fxFlex="60">
+&lt;!&ndash;<div *ngFor = 'let field of fields' fxFlex="60">
   <ncats-frontend-library-data-panel
-    [field]="field"
-    [object]="disease"
-    [data]="testdata"
   ></ncats-frontend-library-data-panel>
-</div>
-</div>
+</div>&ndash;&gt;
+</div>-->

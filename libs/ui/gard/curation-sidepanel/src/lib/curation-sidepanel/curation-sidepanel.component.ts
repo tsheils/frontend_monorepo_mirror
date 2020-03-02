@@ -1,11 +1,20 @@
-import {Component, EventEmitter, InjectionToken, Input, OnInit, Output} from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  InjectionToken,
+  Input,
+  OnChanges,
+  OnInit,
+  Output
+} from '@angular/core';
 
 @Component({
   selector: 'ncats-frontend-library-curation-sidepanel',
   templateUrl: './curation-sidepanel.component.html',
   styleUrls: ['./curation-sidepanel.component.scss']
 })
-export class CurationSidepanelComponent implements OnInit {
+export class CurationSidepanelComponent implements OnInit, OnChanges {
   /**
    * close the filter panel
    * @type {EventEmitter<boolean>}
@@ -23,7 +32,7 @@ export class CurationSidepanelComponent implements OnInit {
    * @type {any[]}
    * todo: should be PharosPanel
    */
-  @Input() sections: any[] = [];
+  @Input() data: any[];
 
   /**
    * boolean to toggle mobile views and parameters
@@ -41,12 +50,17 @@ export class CurationSidepanelComponent implements OnInit {
     role: 'directory'
   };
 
-  constructor() { }
+  constructor(
+    private changeRef: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     console.log(this);
   }
 
+  ngOnChanges(change) {
+    console.log(change);
+  }
   /**
    * close the filter panel
    */

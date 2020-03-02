@@ -801,31 +801,31 @@
         }
       }
     },
-    "shared-ui-dynamic-app-skeleton": {
+    "shared-ui-dynamic-app-layout": {
       "projectType": "library",
-      "root": "libs/shared/ui/dynamic-app-skeleton",
-      "sourceRoot": "libs/shared/ui/dynamic-app-skeleton/src",
+      "root": "libs/shared/ui/dynamic-app-layout",
+      "sourceRoot": "libs/shared/ui/dynamic-app-layout/src",
       "prefix": "ncats-frontend-library",
       "architect": {
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/shared/ui/dynamic-app-skeleton/tsconfig.lib.json",
-              "libs/shared/ui/dynamic-app-skeleton/tsconfig.spec.json"
+              "libs/shared/ui/dynamic-app-layout/tsconfig.lib.json",
+              "libs/shared/ui/dynamic-app-layout/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**",
-              "!libs/shared/ui/dynamic-app-skeleton/**"
+              "!libs/shared/ui/dynamic-app-layout/**"
             ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/shared/ui/dynamic-app-skeleton/jest.config.js",
-            "tsConfig": "libs/shared/ui/dynamic-app-skeleton/tsconfig.spec.json",
-            "setupFile": "libs/shared/ui/dynamic-app-skeleton/src/test-setup.ts"
+            "jestConfig": "libs/shared/ui/dynamic-app-layout/jest.config.js",
+            "tsConfig": "libs/shared/ui/dynamic-app-layout/tsconfig.spec.json",
+            "setupFile": "libs/shared/ui/dynamic-app-layout/src/test-setup.ts"
           }
         }
       },
@@ -860,6 +860,283 @@
             "jestConfig": "libs/ui/gard/gard-data-viewer/jest.config.js",
             "tsConfig": "libs/ui/gard/gard-data-viewer/tsconfig.spec.json",
             "setupFile": "libs/ui/gard/gard-data-viewer/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "ui-gard-gard-header": {
+      "projectType": "library",
+      "root": "libs/ui/gard/gard-header",
+      "sourceRoot": "libs/ui/gard/gard-header/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ui/gard/gard-header/tsconfig.lib.json",
+              "libs/ui/gard/gard-header/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/ui/gard/gard-header/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ui/gard/gard-header/jest.config.js",
+            "tsConfig": "libs/ui/gard/gard-header/tsconfig.spec.json",
+            "setupFile": "libs/ui/gard/gard-header/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "ui-gard-gard-disease-header": {
+      "projectType": "library",
+      "root": "libs/ui/gard/gard-disease-header",
+      "sourceRoot": "libs/ui/gard/gard-disease-header/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ui/gard/gard-disease-header/tsconfig.lib.json",
+              "libs/ui/gard/gard-disease-header/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/ui/gard/gard-disease-header/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ui/gard/gard-disease-header/jest.config.js",
+            "tsConfig": "libs/ui/gard/gard-disease-header/tsconfig.spec.json",
+            "setupFile": "libs/ui/gard/gard-disease-header/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "ui-gard-gard-footer": {
+      "projectType": "library",
+      "root": "libs/ui/gard/gard-footer",
+      "sourceRoot": "libs/ui/gard/gard-footer/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ui/gard/gard-footer/tsconfig.lib.json",
+              "libs/ui/gard/gard-footer/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/ui/gard/gard-footer/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ui/gard/gard-footer/jest.config.js",
+            "tsConfig": "libs/ui/gard/gard-footer/tsconfig.spec.json",
+            "setupFile": "libs/ui/gard/gard-footer/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "mapper": {
+      "projectType": "application",
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/mapper",
+      "sourceRoot": "apps/mapper/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/mapper",
+            "index": "apps/mapper/src/index.html",
+            "main": "apps/mapper/src/main.ts",
+            "polyfills": "apps/mapper/src/polyfills.ts",
+            "tsConfig": "apps/mapper/tsconfig.app.json",
+            "aot": true,
+            "assets": ["apps/mapper/src/favicon.ico", "apps/mapper/src/assets"],
+            "styles": ["apps/mapper/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/mapper/src/environments/environment.ts",
+                  "with": "apps/mapper/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "mapper:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "mapper:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "mapper:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/mapper/tsconfig.app.json",
+              "apps/mapper/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/mapper/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/mapper/jest.config.js",
+            "tsConfig": "apps/mapper/tsconfig.spec.json",
+            "setupFile": "apps/mapper/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "mapper-e2e": {
+      "root": "apps/mapper-e2e",
+      "sourceRoot": "apps/mapper-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/mapper-e2e/cypress.json",
+            "tsConfig": "apps/mapper-e2e/tsconfig.e2e.json",
+            "devServerTarget": "mapper:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "mapper:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["apps/mapper-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/mapper-e2e/**"]
+          }
+        }
+      }
+    },
+    "shared-ui-mapper-ui": {
+      "projectType": "library",
+      "root": "libs/shared/ui/mapper-ui",
+      "sourceRoot": "libs/shared/ui/mapper-ui/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/ui/mapper-ui/tsconfig.lib.json",
+              "libs/shared/ui/mapper-ui/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/ui/mapper-ui/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/ui/mapper-ui/jest.config.js",
+            "tsConfig": "libs/shared/ui/mapper-ui/tsconfig.spec.json",
+            "setupFile": "libs/shared/ui/mapper-ui/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "shared-ui-object-tree": {
+      "projectType": "library",
+      "root": "libs/shared/ui/object-tree",
+      "sourceRoot": "libs/shared/ui/object-tree/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/ui/object-tree/tsconfig.lib.json",
+              "libs/shared/ui/object-tree/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/ui/object-tree/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/ui/object-tree/jest.config.js",
+            "tsConfig": "libs/shared/ui/object-tree/tsconfig.spec.json",
+            "setupFile": "libs/shared/ui/object-tree/src/test-setup.ts"
           }
         }
       },

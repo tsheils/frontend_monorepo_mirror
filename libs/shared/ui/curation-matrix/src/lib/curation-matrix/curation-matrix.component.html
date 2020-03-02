@@ -6,7 +6,7 @@
     </mat-form-field>
   </div>
   <div fxFlex=45>
-    <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+    <mat-paginator [pageSizeOptions]="[10, 25, 100]" [pageSize]="25"></mat-paginator>
   </div>
 </div>
 <div fxLayout="row" fxLayoutAlign="space-around center">
@@ -30,7 +30,13 @@
       </ng-container>
       <ng-container [matColumnDef]="column" *ngFor="let column of columns">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column}} </th>
-        <td mat-cell *matCellDef="let element"> {{element.references.includes(column) ? 'X' : ''}} </td>
+        <td mat-cell *matCellDef="let element">
+          <ng-container *ngIf="element.references.includes(column); then checked">
+          </ng-container>
+          <ng-template #checked>
+            <mat-icon class="check-arrow">done</mat-icon>
+          </ng-template>
+        </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>

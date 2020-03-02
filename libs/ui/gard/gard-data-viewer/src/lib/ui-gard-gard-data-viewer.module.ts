@@ -12,7 +12,9 @@ import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-mat
     SharedUiCurationMatrixModule,
     CustomMaterialModule
   ],
-  declarations: [DataPanelComponent],
+  declarations: [
+    DataPanelComponent
+  ],
   exports: [
     DataPanelComponent
   ]

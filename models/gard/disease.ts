@@ -126,7 +126,7 @@ export class DiseaseSerializer implements Serializer {
   }
 
   fromJson(json: any): Disease {
-    console.log(json);
+  //  console.log(json);
     const obj = new Disease();
     Object.entries((json)).forEach((prop) => obj[prop[0]] = prop[1]);
 
@@ -152,8 +152,8 @@ export class DiseaseSerializer implements Serializer {
     }
 
     if (json.created) {
-      console.log(json.created);
-      console.log(new Date(json.created.low));
+    //  console.log(json.created);
+    //  console.log(new Date(json.created.low));
       obj.created = new Date(json.created.low).toString();
     }
 
@@ -180,7 +180,7 @@ export class DiseaseSerializer implements Serializer {
 
     //  const objFields = this._mapField(json);
     //   console.log(objFields);
-    console.log(obj);
+ //   console.log(obj);
     return obj;
   }
 

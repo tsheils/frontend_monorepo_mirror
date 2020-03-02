@@ -1,0 +1,78 @@
+<div fxLayout="row" fxLayoutAlign="space-around start" cdkDropListGroup>
+  <div fxFlex="33">
+    <h2>All Sources</h2>
+    <div
+      #optionsList = "cdkDropList"
+      cdkDropList
+      [cdkDropListData]="options"
+      [cdkDropListConnectedTo] = "[mappedList]"
+      [cdkDropListEnterPredicate]="sourcePredicate"
+      class="mapper-list"
+      (cdkDropListDropped)="drop($event)">
+      <div class="mapper-box"
+           *ngFor="let item of options"
+           [cdkDragData]="item"
+           cdkDrag>
+        {{item.name}} ({{item.fields.length}} fields)
+      </div>
+    </div>
+  </div>
+
+  <div fxFlex="33">
+    <h2>Selected Sources</h2>
+    <div
+        #mappedList = "cdkDropList"
+        cdkDropList
+      [cdkDropListData]="mapped"
+      [cdkDropListConnectedTo] = "[optionsList]"
+        [cdkDropListEnterPredicate]="sourcePredicate"
+        class="mapper-list"
+      (cdkDropListDropped)="drop($event)">
+      <div class="mapper-box"
+           *ngFor="let item of mapped"
+           [cdkDragData]="item"
+           cdkDrag>
+        <mat-expansion-panel class="full-width" [expanded]="true">
+          <mat-expansion-panel-header>
+            {{item.name}}
+<!--
+            <button mat-icon-button (click) = "remove($event, item)"><mat-icon>close</mat-icon></button>
+-->
+          </mat-expansion-panel-header>
+          <div class="mapper-box"
+               *ngFor="let field of item.fields">
+            <mat-checkbox (change)="selectField($event, item.name, field)">{{field}}</mat-checkbox>
+          </div>
+        </mat-expansion-panel>
+      </div>
+    </div>
+  </div>
+  <div fxFlex="33" class = "selectedFields">
+    <h2>Selected Fields</h2>
+    <div
+      cdkDropList
+      #mappedFieldsList = "cdkDropList"
+      [cdkDropListData]="mappedFields"
+      [cdkDropListConnectedTo] = "[mappedList]"
+      class="mapper-list"
+      id="mappedFieldsList"
+      (cdkDropListDropped)="dropField($event)">
+      <div class=""
+           *ngFor="let item of mappedFields"
+           [cdkDragData]="item"
+           cdkDrag
+      >
+        <div fxLayout="row">
+          {{item.name}}
+        </div>
+        <div fxLayout = "row wrap" fxLayoutAlign = "space-around start">
+          <div fxFlex = 100 *ngFor = "let field of item.fields">{{field}}</div><br>
+        </div>
+        <br>
+<!--
+        <button mat-icon-button (click) = "remove($event, item)"><mat-icon>close</mat-icon></button>
+-->
+      </div>
+    </div>
+  </div>
+</div>
