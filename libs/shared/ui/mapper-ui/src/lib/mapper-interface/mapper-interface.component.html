@@ -1,5 +1,5 @@
-<div fxLayout="row" fxLayoutAlign="space-around start" cdkDropListGroup>
-  <div fxFlex="33">
+<div class="data-source-grid" cdkDropListGroup >
+  <div>
     <h2>All Sources</h2>
     <div
       #optionsList = "cdkDropList"
@@ -18,7 +18,7 @@
     </div>
   </div>
 
-  <div fxFlex="33">
+  <div>
     <h2>Selected Sources</h2>
     <div
         #mappedList = "cdkDropList"
@@ -47,7 +47,7 @@
       </div>
     </div>
   </div>
-  <div fxFlex="33" class = "selectedFields">
+  <div class = "selectedFields">
     <h2>Selected Fields</h2>
     <div
       cdkDropList

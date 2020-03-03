@@ -26,14 +26,30 @@ $ncats-frontend-demo-theme: mat-light-theme($ncats-frontend-demo-primary, $ncats
 // that you are using.
 @include angular-material-theme($ncats-frontend-demo-theme);
 
-/* You can add global styles to this file, and also import other style files */
+.mapper-interface {
+ // height: 20vh;
+ // overflow-y: scroll;
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.data-source-grid {
+  display: grid;
+  grid-auto-rows: max-content;
+  grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));
+  grid-gap: 1em;
+}
+
+.data-source-grid > div {
+  margin-bottom: 2em;
+  margin-top: 2em;
+  //  min-height: 100%;
+}
+
 
 .mapper-list {
   border: solid 1px #ccc;
   min-height: 60px;
+  height: 100%;
   background: white;
   border-radius: 4px;
   overflow: hidden;
@@ -82,7 +98,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   min-width: 100%;
 }
 
-.selectedFields {
+.selectedFields > .mapper-box{
+  padding: 0 10px 10px 10px;
+  border: none;
 }
 
 
