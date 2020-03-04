@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
   curatedObject: {} = {};
 
   testdata = [
-    {value: 'synonym1', references: ['ref1', 'ref2', 'ref3', 'ref4']},
+    {value: 'synonym1', references: ['hpo', 'OMIM', 'ref3', 'ref4']},
     {value: 'synonym2', references: ['ref1', 'ref12', 'ref13', 'ref4']},
     {value: 'synonym3', references: ['ref6', 'ref4', 'ref3', 'ref5']},
     {value: 'synonym4', references: ['ref1', 'ref2', 'ref8', 'ref9']},
@@ -55,7 +55,89 @@ export class AppComponent implements OnInit {
     {value: 'synonym10', references: ['ref10', 'ref12', 'ref13', 'ref14']}
   ];
 
+  testdata2 = [
+    {value: 'Autosomal Dominant', references: ['HPO', 'OMIM']},
+    {value: 'X-Linked Dominant', references: ['ORPHANET']},
+  ];
+
   newTestData: any[];
+
+
+  orphanet: string[] = [
+    'autosomal dominant',
+    'autosomal recessive',
+    'multigenic/multifactorial',
+    'X-linked recessive',
+    'mitochondrial',
+    'X-linked dominant',
+    'oligogenic',
+    'semi-dominant',
+    'Y-linked',
+    'unknown inheritance',
+    'no inheritance data available',
+    'not genetically inherited'
+  ];
+
+  hpo: string[] = [
+    'Autosomal dominant inheritance',
+    'Gonosomal inheritance',
+    'Multifactorial inheritance',
+    'Uniparental disomy',
+    'Somatic mutation',
+    'Contiguous gene syndrome',
+    'Autosomal recessive inheritance',
+    'Genetic anticipation',
+    'Heterogeneous',
+    'Sporadic',
+    'Mitochondrial inheritance',
+    'Semidominant mode of inheritance'
+  ];
+
+omim: string[] = [
+  'X-LINKED RECESSIVE X-LINKED DOMINANT (1 FAMILY)',
+  'X-LINKED (FEMALE LIMITED)',
+  'MITOCHONDRIAL',
+  'DIGENIC',
+  'AUTOSOMAL DOMINANT (ANOTHER ALLELE IN TRANS MAY BE REQUIRED)',
+  'AUTOSOMAL DOMINANT (IN ONE RP53 FAMILY)',
+  'AUTOSOMAL DOMINANT (LOSS OF PATERNAL ALLELE)',
+  'AUTOSOMAL RECESSIVE (IN 1 PATIENT)',
+  'AUTOSOMAL RECESSIVE (IN SOME FAMILIES)',
+  'AUTOSOMAL DOMINANT (INCOMPLETE PENETRANCE)',
+  'X-LINKED RECESSIVE',
+  'AUTOSOMAL DOMINANT AUTOSOMAL RECESSIVE',
+  'PSEUDOAUTOSOMAL DOMINANT',
+  'AUTOSOMAL DOMINANT (LOSS OF MATERNAL ALLELE)',
+  'INHERITED CHROMOSOMAL IMBALANCE',
+  'AUTOSOMAL DOMINANT',
+  'AUTOSOMAL RECESSIVE',
+  'AUTOSOMAL DOMINANT (MILDER PHENOTYPE)',
+  'DIGENIC RECESSIVE',
+  'SOMATIC MOSAICISM',
+  'AUTOSOMAL DOMINANT (SEE MISCELLANEOUS BELOW)',
+  'PSEUDOAUTOSOMAL RECESSIVE',
+  'DIGENIC (SEE MISCELLANEOUS)',
+  'AUTOSOMAL DOMINANT (FROM PATERNAL ALLELE)',
+  'AUTOSOMAL RECESSIVE (NULL PHENOTYPE)',
+  'SOMATIC MOSAICISM (IN MALES)',
+  'AUTOSOMAL DOMINANT (SEE QUALIFIER BELOW)',
+  'ISOLATED CASES',
+  'AUTOSOMAL RECESSIVE (RARE)',
+  'SOMATIC MOSAIC',
+  'AUTOSOMAL RECESSIVE (1 FAMILY)',
+  'AUTOSOMAL DOMINANT (1 FAMILY)',
+  'AUTOSOMAL DOMINANT (DE NOVO IN SOME PATIENTS)',
+  'X-LINKED',
+  'AUTOSOMAL RECESSIVE.',
+  'AUTOSOMAL RECESSIVE (IN 2 PATIENTS)',
+  'AUTOSOMAL DOMINANT (IN 1 PATIENT)',
+  'X-LINKED DOMINANT',
+  'AUTOSOMAL RECESSIVE (IN SOME PATIENTS)',
+  'MULTIFACTORIAL',
+  'AUTOSOMAL RECESSIVE (ONE FAMILY)',
+  'Y-LINKED',
+  'AUTOSOMAL RECESSIVE (IN 1 FAMILY)',
+];
 
   /**
    * RxJs subject to broadcast data changes
@@ -133,7 +215,9 @@ export class AppComponent implements OnInit {
     console.log(connection);
     this.connection = connection;
     this.connection.fetch(
-      `match p = (n:ENTITY)-[]-(:DATA) where n._N_Name contains 'CYSTIC FIBROSIS' return p`
+    //  `match p = (n:ENTITY)-[]-(:DATA) where n._N_Name contains 'CYSTIC FIBROSIS' return p`
+      `match p = (n:S_ORDO_ORPHANET)-[]-(:DATA) where n._N_Name contains 'CYSTIC FIBROSIS '
+      AND match q = (n:S_OMIM)-[]-(:DATA) where n._N_Name contains 'CYSTIC FIBROSIS' return p,q`
 //        'match p=(n:`S_GARD`)-[]-(:DATA) return p limit 20'
     ).subscribe({
       next: data => {
