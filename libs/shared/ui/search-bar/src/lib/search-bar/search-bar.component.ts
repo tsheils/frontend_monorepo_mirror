@@ -8,7 +8,7 @@ import {Observable} from "rxjs";
 @Component({
   selector: 'ncats-frontend-library-search-bar',
   templateUrl: './search-bar.component.html',
-  styleUrls: ['./search-bar.component.css']
+  styleUrls: ['./search-bar.component.scss']
 })
 export class SearchBarComponent implements OnInit {
   @ViewChild(MatAutocompleteTrigger, {static: true}) autocomplete: MatAutocompleteTrigger;
@@ -17,11 +17,13 @@ export class SearchBarComponent implements OnInit {
    */
   @Input() placeholderStr?: string;
 
+  @Input() disabled = false;
+
   /**
    * form control for text input
    * @type {FormControl}
    */
-  typeaheadCtrl: FormControl = new FormControl();
+  typeaheadCtrl: FormControl;
 
   /**
    * observable list of returned responses
@@ -31,7 +33,7 @@ export class SearchBarComponent implements OnInit {
 
 
   @Output() query: EventEmitter<string> = new EventEmitter<string>();
-  @Output() autocompleteEvent: EventEmitter<string> = new EventEmitter<string>();
+  @Output() inputChangeEvent: EventEmitter<string> = new EventEmitter<string>();
 
 
   /**
@@ -52,9 +54,17 @@ export class SearchBarComponent implements OnInit {
    * // todo: should unsubscribe
    */
   ngOnInit() {
+   this.typeaheadCtrl = new FormControl({value: '', disabled: false});
     if (!this.placeholderStr) {
-      this.placeholderStr = 'Search for targets (e.g., \'ITK\') or diseases (e.g., \'asthma\')';
+      this.placeholderStr = 'Search';
     }
+
+    this.typeaheadCtrl.valueChanges
+      .pipe(
+        debounceTime(400),
+        distinctUntilChanged()
+        )
+      .subscribe(term => this.inputChangeEvent.emit(term));
 
     /*if (this.autocomplete) {
       this.filteredGroups = this.typeaheadCtrl.valueChanges

@@ -8,6 +8,7 @@ import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-mat
 import {SharedUiNcatsFormModule} from "@ncats-frontend-library/shared/ui/ncats-form";
 import {SharedUiMapperUiModule} from "@ncats-frontend-library/shared/ui/mapper-ui";
 import {SharedUiObjectTreeModule} from "@ncats-frontend-library/shared/ui/object-tree";
+import {SharedUiSearchBarModule} from "@ncats-frontend-library/shared/ui/search-bar";
 
 @NgModule({
   declarations: [AppComponent],
@@ -18,7 +19,9 @@ import {SharedUiObjectTreeModule} from "@ncats-frontend-library/shared/ui/object
     SharedUiNcatsFormModule,
     CommonUiNeo4jConnectionFormModule,
     SharedUiMapperUiModule,
-    SharedUiObjectTreeModule
+    SharedUiObjectTreeModule,
+    SharedUiSearchBarModule
+
   ],
   providers: [],
   bootstrap: [AppComponent]

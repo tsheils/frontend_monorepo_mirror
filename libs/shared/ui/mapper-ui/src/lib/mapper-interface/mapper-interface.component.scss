@@ -106,3 +106,8 @@ $ncats-frontend-demo-theme: mat-light-theme($ncats-frontend-demo-primary, $ncats
 
 .sourceColumn {
 }
+
+span.search-highlight {
+  font-weight: bold;
+  text-decoration: underline;
+}

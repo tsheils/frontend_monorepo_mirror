@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {CdkDrag, copyArrayItem, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {SelectionModel} from "@angular/cdk/collections";
 import {MatCheckboxChange} from "@angular/material/checkbox";
@@ -6,12 +6,14 @@ import {MatCheckboxChange} from "@angular/material/checkbox";
 @Component({
   selector: 'ncats-frontend-library-mapper-interface',
   templateUrl: './mapper-interface.component.html',
-  styleUrls: ['./mapper-interface.component.scss']
+  styleUrls: ['./mapper-interface.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class MapperInterfaceComponent implements OnInit {
-
+  @Input() allSourcesLoading = false;
   @Input() options: any[] = [];
   @Input() mapped: any[] = [];
+  @Input() searchTerm: string;
   @Input() mappedFieldsMap: Map<string, string[]> = new Map<string, string[]>();
   @Input() mappedFields: any[] = [];
   @Output() mappedObjectChange: EventEmitter<any> = new EventEmitter<any>();
@@ -24,7 +26,7 @@ export class MapperInterfaceComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  drop(event) {
+/*  drop(event) {
     console.log(event);
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
@@ -58,14 +60,14 @@ export class MapperInterfaceComponent implements OnInit {
     this.mappedFieldsMap.delete(item);
   }
 
-  /** Predicate function that only allows fields without a name property to be dropped into a list. */
+  /!** Predicate function that only allows fields without a name property to be dropped into a list. *!/
   noSourcePredicate(item: CdkDrag<any>) {
     console.log(item);
     console.log(item.data);
     return !item.data.name;
   }
 
-  /** Predicate function that only allows fields with a name property to be dropped into a list. */
+  /!** Predicate function that only allows fields with a name property to be dropped into a list. *!/
   sourcePredicate(item: CdkDrag<any>) {
     return item.data.name;
   }
@@ -73,7 +75,7 @@ export class MapperInterfaceComponent implements OnInit {
   dragStarrt(event, item) {
     console.log(event);
     console.log(item);
-  }
+  }*/
 
   selectField(event: MatCheckboxChange, name: string, field: string) {
     console.log(event);
@@ -114,4 +116,5 @@ export class MapperInterfaceComponent implements OnInit {
         this.mappedFields.push({name: source[0], fields: source[1]});
       });
   }
+
 }

@@ -1,5 +1,17 @@
 <ncats-frontend-library-connection-form (connection)="setConnection($event)"></ncats-frontend-library-connection-form>
 <ncats-frontend-library-object-tree></ncats-frontend-library-object-tree>
 <div class="mapper-holder">
-<ncats-frontend-library-mapper-interface [options]="sources" (mappedObjectChange)="setFields($event)"></ncats-frontend-library-mapper-interface>
+  <div fxLayout = "row" fxLayoutAlign="space-around center">
+    <div fxFlex = "75">
+      <ncats-frontend-library-search-bar
+        (inputChangeEvent)="filter($event)"
+        [disabled]=" allSourcesLoading"
+      ></ncats-frontend-library-search-bar>
+    </div>
+  </div>
+<ncats-frontend-library-mapper-interface
+  [options]="filteredSources"
+  [allSourcesLoading] = allSourcesLoading
+  [searchTerm] = searchTerm
+  (mappedObjectChange)="setFields($event)"></ncats-frontend-library-mapper-interface>
 </div>

@@ -5,6 +5,7 @@
            aria-label="Search"
            [matAutocomplete]="auto"
            [formControl]="typeaheadCtrl"
+           [ncatsFrontendLibraryDisableControl] = disabled
            class ="input-field">
     <mat-label class="search-label">{{placeholderStr}}</mat-label>
     <mat-autocomplete #auto="matAutocomplete" (optionSelected) = "search()">
