@@ -7,7 +7,7 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class GardHeaderComponent implements OnInit {
 
-  @Input() data: any;
+  @Input() links: any[] =  [{link:'target'}, {link: 'api', label: 'API'}];
 
   constructor() { }
 

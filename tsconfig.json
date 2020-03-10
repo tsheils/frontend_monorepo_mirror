@@ -83,6 +83,9 @@
       ],
       "@ncats-frontend-library/shared/ui/object-tree": [
         "libs/shared/ui/object-tree/src/index.ts"
+      ],
+      "@ncats-frontend-library/shared/ui/header-template": [
+        "libs/shared/ui/header-template/src/index.ts"
       ]
     }
   },

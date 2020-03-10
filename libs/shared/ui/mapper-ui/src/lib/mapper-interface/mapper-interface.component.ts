@@ -115,6 +115,9 @@ export class MapperInterfaceComponent implements OnInit {
       .forEach(source => {
         this.mappedFields.push({name: source[0], fields: source[1]});
       });
+
+    this.mappedObjectChange.emit(this.mappedFieldsMap);
+
   }
 
 }

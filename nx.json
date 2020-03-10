@@ -98,6 +98,9 @@
     },
     "shared-ui-object-tree": {
       "tags": []
+    },
+    "shared-ui-header-template": {
+      "tags": []
     }
   }
 }

@@ -13,10 +13,13 @@ export class AppComponent implements OnDestroy {
   title = 'mapper';
   searchTerm: string;
   session: RxSession;
+  objectFields: any;
 
   sources: any[] = []; //['OMIM', 'ORPHANET'];
+  selectedFields: any[] = [] //Map<string, string[]> = new Map<string, string[]>(); //['OMIM', 'ORPHANET'];
   filteredSources: any[] = []; //['OMIM', 'ORPHANET'];
-  allSources: any[] = ["S_GARD", "S_GHR", "S_NORD", "S_DOID", "S_HP", "S_MEDLINEPLUS", "S_MESH", "S_OMIM", "S_ICD10CM", "S_ORDO_ORPHANET", "S_THESAURUS", "S_MONDO", "S_VANDF", "S_BTO", "S_CLO", "S_CL", "S_DDIEM", "S_UBERON", "S_GO", "S_GENO", "S_OGG", "S_PW", "S_MP", "S_OAE", "S_RXNO", "S_OGMS", "S_PATO", "S_FMA", "S_EFO", "S_CHEBI", "`S_RANCHO-DISEASE-DRUG_2018-12-18_13-30`", "S_FDAORPHANGARD_20190216", "S_HPO_ANNOTATION_100918", "S_MEDGEN"]; //['OMIM', 'ORPHANET'];
+  allSources: any[] = ["S_GARD", "S_GHR", "S_OMIM","S_ORDO_ORPHANET", "S_HP"]; //, "S_HP", "S_MEDLINEPLUS", "S_MESH", "S_OMIM", "S_ICD10CM", "S_ORDO_ORPHANET", "S_THESAURUS", "S_MONDO", "S_VANDF", "S_BTO", "S_CLO", "S_CL", "S_DDIEM", "S_UBERON", "S_GO", "S_GENO", "S_OGG", "S_PW", "S_MP", "S_OAE", "S_RXNO", "S_OGMS", "S_PATO", "S_FMA", "S_EFO", "S_CHEBI", "`S_RANCHO-DISEASE-DRUG_2018-12-18_13-30`", "S_FDAORPHANGARD_20190216", "S_HPO_ANNOTATION_100918", "S_MEDGEN"]; //['OMIM', 'ORPHANET'];
+ // allSources: any[] = ["S_GARD", "S_GHR", "S_NORD", "S_DOID"] //, "S_HP", "S_MEDLINEPLUS", "S_MESH", "S_OMIM", "S_ICD10CM", "S_ORDO_ORPHANET", "S_THESAURUS", "S_MONDO", "S_VANDF", "S_BTO", "S_CLO", "S_CL", "S_DDIEM", "S_UBERON", "S_GO", "S_GENO", "S_OGG", "S_PW", "S_MP", "S_OAE", "S_RXNO", "S_OGMS", "S_PATO", "S_FMA", "S_EFO", "S_CHEBI", "`S_RANCHO-DISEASE-DRUG_2018-12-18_13-30`", "S_FDAORPHANGARD_20190216", "S_HPO_ANNOTATION_100918", "S_MEDGEN"]; //['OMIM', 'ORPHANET'];
   allSourcesLoading = false;
 
   getData(call: string) {
@@ -58,13 +61,44 @@ export class AppComponent implements OnDestroy {
         });
   }
 
-  setFields(event: any) {
+  setObjectFields(event: any) {
+    console.log(event);
+    this.objectFields = event;
+  }
 
+  setFields(event: any) {
+    console.log(event);
+    this.selectedFields = [...event.entries()].map(entry => entry = {source: entry[0], fields: entry[1]});
+    console.log(this.selectedFields);
+    // event.keys().forEach(key => this.selectedFields.push({key: event.get(key)}))
+  }
+
+  search(event: any) {
+      console.log(event);
   }
 
   filter(term: string) {
     this.searchTerm = term;
     this.filteredSources = this.sources.filter(option => JSON.stringify(option).toLowerCase().includes(term.toLowerCase()));
+  }
+
+  runQuery() {
+
+/*    match p = (n:S_GARD)-[r:R_rel]-(m:`S_HP`)-[]-(d:DATA)
+    where n._N_Name contains "CYSTIC FIBROSIS"
+    AND EXISTS(r.`HPO-ID`)
+    AND "inheritance_type_of" IN m.R_rel
+    RETURN p AS inheritance
+    UNION
+    match q = (n:S_ORDO_ORPHANET)-[r:R_rel]-(m:`S_HP`)-[]-(d:DATA)
+    where n._N_Name contains "CYSTIC FIBROSIS"
+    AND EXISTS(r.`HPO-ID`)
+    AND "inheritance_type_of" IN m.R_rel
+    return q AS inheritance*/
+
+
+
+
   }
 
   ngOnDestroy() {

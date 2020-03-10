@@ -9,6 +9,7 @@ import {SharedUiNcatsFormModule} from "@ncats-frontend-library/shared/ui/ncats-f
 import {SharedUiMapperUiModule} from "@ncats-frontend-library/shared/ui/mapper-ui";
 import {SharedUiObjectTreeModule} from "@ncats-frontend-library/shared/ui/object-tree";
 import {SharedUiSearchBarModule} from "@ncats-frontend-library/shared/ui/search-bar";
+import {UiGardGardHeaderModule} from "@ncats-frontend-library/ui/gard/gard-header";
 
 @NgModule({
   declarations: [AppComponent],
@@ -20,7 +21,8 @@ import {SharedUiSearchBarModule} from "@ncats-frontend-library/shared/ui/search-
     CommonUiNeo4jConnectionFormModule,
     SharedUiMapperUiModule,
     SharedUiObjectTreeModule,
-    SharedUiSearchBarModule
+    SharedUiSearchBarModule,
+    UiGardGardHeaderModule
 
   ],
   providers: [],
