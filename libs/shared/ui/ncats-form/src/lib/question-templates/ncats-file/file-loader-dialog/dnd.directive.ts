@@ -31,7 +31,6 @@ export class DndDirective {
     const valid_files : Array<File> = [];
     const invalid_files : Array<File> = [];
     if(files.length > 0){
-      console.log(files);
       for (const file of files) {
         const ext = file.name.split('.')[file.name.split('.').length - 1];
         if (this.allowed_extensions.lastIndexOf(ext) !== -1) {

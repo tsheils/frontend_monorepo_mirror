@@ -25,13 +25,10 @@ export class DataPanelComponent implements OnInit {
   }
 
   setCuratedObject(object, field): void {
-    console.log(object);
-    console.log(field);
     this.returnObject[field] = object;
   }
 
   setObject(field: string): void {
-    console.log(field);
     this.object[field] = this.returnObject[field];
    // this.data = this.returnObject[field];
     this.editing = null;

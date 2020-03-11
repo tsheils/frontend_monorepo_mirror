@@ -114,7 +114,6 @@ export class DynamicAppContentComponent implements OnInit, OnDestroy {
    * subsctibe to router change events and re-generate components and reset data
    */
   ngOnInit() {
-    console.log(this);
     this.isSmallScreen = this.breakpointObserver.isMatched('(max-width: 599px)');
     /*if (this._route && this._route.snapshot.data) {
       this.data = this._route.snapshot.data;

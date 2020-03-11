@@ -55,11 +55,9 @@ export class CurationSidepanelComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit(): void {
-    console.log(this);
   }
 
   ngOnChanges(change) {
-    console.log(change);
   }
   /**
    * close the filter panel

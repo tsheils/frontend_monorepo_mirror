@@ -19,14 +19,12 @@ export class NcatsFormService {
 
 
   createForm(questions: QuestionBase<any>[] ): Observable<FormGroup> {
-    console.log(questions);
     const group: any = {};
 
     questions.forEach(question => {
       group[question.key] = question.required ? new FormControl(question.value || '', Validators.required)
         : new FormControl(question.value || '');
     });
-    console.log("pushing new form");
      return of(new FormGroup(group));
   }
 }

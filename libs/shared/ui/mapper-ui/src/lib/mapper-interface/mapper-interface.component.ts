@@ -78,10 +78,6 @@ export class MapperInterfaceComponent implements OnInit {
   }*/
 
   selectField(event: MatCheckboxChange, name: string, field: string) {
-    console.log(event);
-    console.log(name);
-    console.log(field);
-    console.log(this.mappedFields);
     this.mappedFields = [];
     const fieldName = this.mappedFields.filter(field => field.name === name);
     if (this.mappedFieldsMap.has(name)) {

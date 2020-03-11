@@ -207,12 +207,10 @@ omim: string[] = [
   ){}
 
   ngOnInit(): void {
-    console.log(this);
    // this.connect();
   }
 
   setConnection(connection: Neo4jConnectService) {
-    console.log(connection);
     this.connection = connection;
     this.connection.fetch(
     //  `match p = (n:ENTITY)-[]-(:DATA) where n._N_Name contains 'CYSTIC FIBROSIS' return p`
@@ -223,22 +221,16 @@ omim: string[] = [
       next: data => {
         const source = data._fields[0].start.labels.filter(label => label.includes('S_'))
           .map(source => source.replace('S_', ''));
-        console.log(data);
-        console.log(source);
-        //  console.log(data);
         this.sources.push(data._fields[0].start.labels.filter(label => label.includes('S_')));
         const names = data._fields[0].start.properties.N_Name;
-        console.log(names);
         if (Array.isArray(names)) {
           names.forEach(name => {
             if (this.synonymsMap.has(name)) {
               let arr: string[] = this.synonymsMap.get(name);
               arr.concat(source);
-              console.log(arr);
               arr = Array.from(new Set(arr));
               this.synonymsMap.set(name, arr);
             } else {
-              console.log(source);
               this.synonymsMap.set(name, source);
             }
           });
@@ -259,20 +251,16 @@ omim: string[] = [
         Array.from(this.synonymsMap.entries()).forEach(entry => {
           this.curationData.push({value: entry[0], references: entry[1]})
         });
-        console.log(this);
         this.changeRef.detectChanges();
       }
     });
   }
 
   setCuratedObject(object, field): void {
-    console.log(object);
-    console.log(field);
     this.curatedObject[field] = object;
   }
 
   setObject(field: string): void {
-    console.log(field);
     this.disease[field] = this.curatedObject[field];
     this.newTestData = this.curatedObject[field];
     this.editing = null;

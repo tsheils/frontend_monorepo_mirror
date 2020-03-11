@@ -1,7 +1,8 @@
-import { HeaderConfig } from './nav-header-config';
+import {NavHeaderConfig} from "./nav-header-config";
 
-describe('HeaderConfig', () => {
-  it('should create an instance', () => {
-    expect(new HeaderConfig()).toBeTruthy();
+describe('NavHeaderConfig', () => {
+  it('should create a NavHeaderConfig', () => {
+    const temp = {} as NavHeaderConfig;
+    expect(new NavHeaderConfig()).toBeTruthy();
   });
 });

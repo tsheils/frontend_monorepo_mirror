@@ -23,7 +23,6 @@ import {UiGardGardHeaderModule} from "@ncats-frontend-library/ui/gard/gard-heade
     SharedUiObjectTreeModule,
     SharedUiSearchBarModule,
     UiGardGardHeaderModule
-
   ],
   providers: [],
   bootstrap: [AppComponent]

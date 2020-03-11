@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DynamicAppContentComponent } from './dynamic-app-content.component';
+import {RouterTestingModule} from "@angular/router/testing";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
 
 describe('DynamicAppContentComponent', () => {
   let component: DynamicAppContentComponent;
@@ -8,6 +11,11 @@ describe('DynamicAppContentComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        RouterTestingModule,
+        BrowserAnimationsModule,
+        CustomMaterialModule
+      ],
       declarations: [ DynamicAppContentComponent ]
     })
     .compileComponents();

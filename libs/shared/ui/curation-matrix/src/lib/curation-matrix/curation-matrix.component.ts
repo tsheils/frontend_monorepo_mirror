@@ -44,7 +44,6 @@ export class CurationMatrixComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this);
     this.dataSource.data = this.data.sort((a,b) => {
       return b.references.length - a.references.length;
     });

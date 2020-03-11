@@ -1,7 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Facet} from "../models/facet";
 import {Subject} from "rxjs";
-import {SidePanelOptions} from "@ncats-frontend-library/dynamic-app";
 
 @Component({
   selector: 'ncats-frontend-library-filter-panel',
@@ -10,7 +9,7 @@ import {SidePanelOptions} from "@ncats-frontend-library/dynamic-app";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterPanelComponent implements OnInit, OnDestroy {
-  panelOptions: SidePanelOptions = {
+  panelOptions: any = {
     mode : 'side',
     class : 'filters-panel',
     opened: true,
