@@ -1,4 +1,4 @@
-import {GardBase} from "./gard-base";
+import {GardBase} from "./gard/gard-base";
 import {Publication} from "./publication";
 
 enum ENUM_SOURCE_TYPE {

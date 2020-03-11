@@ -1,0 +1,19 @@
+<div *ngIf="connected">
+  Connected
+  <button mat-flat-button [color]="'primary'" (click)="disconnect()">Disconnect</button>
+</div>
+<div fxLayout="row" fxLayoutAlign="space-around center" *ngIf = "!connected">
+  <div fxFlex="50">
+    <form>
+      <ncats-fel-form
+        [questions]="questions"
+        (formReturner)="setForm($event)"
+      ></ncats-fel-form>
+    </form>
+    <br>
+    <button mat-raised-button (click)="connect()" [disabled]="!form || !form.valid">Connect</button>&nbsp;
+    <button mat-raised-button (click)="clearForm()" [color]="'warn'">Clear</button>
+    <br>
+    <br>
+  </div>
+</div>

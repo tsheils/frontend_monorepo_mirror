@@ -127,7 +127,6 @@
         }
       }
     },
-
     "ncats-firebase-auth-module": {
       "projectType": "library",
       "root": "libs/ncats-firebase-auth-module",
@@ -193,37 +192,6 @@
         }
       }
     },
-    "dynamic-app": {
-      "projectType": "library",
-      "root": "libs/dynamic-app",
-      "sourceRoot": "libs/dynamic-app/src",
-      "prefix": "ncats-frontend-library",
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/dynamic-app/tsconfig.lib.json",
-              "libs/dynamic-app/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/dynamic-app/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/dynamic-app/jest.config.js",
-            "tsConfig": "libs/dynamic-app/tsconfig.spec.json",
-            "setupFile": "libs/dynamic-app/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "styleext": "scss"
-        }
-      }
-    },
     "gard-curation": {
       "projectType": "application",
       "schematics": {
@@ -243,7 +211,7 @@
             "main": "apps/gard-curation/src/main.ts",
             "polyfills": "apps/gard-curation/src/polyfills.ts",
             "tsConfig": "apps/gard-curation/tsconfig.app.json",
-            "aot": false,
+            "aot": true,
             "assets": [
               "apps/gard-curation/src/favicon.ico",
               "apps/gard-curation/src/assets"
@@ -264,7 +232,6 @@
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -366,7 +333,7 @@
             "main": "apps/gard-frontend/src/main.ts",
             "polyfills": "apps/gard-frontend/src/polyfills.ts",
             "tsConfig": "apps/gard-frontend/tsconfig.app.json",
-            "aot": false,
+            "aot": true,
             "assets": [
               "apps/gard-frontend/src/favicon.ico",
               "apps/gard-frontend/src/assets"
@@ -387,7 +354,6 @@
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -470,37 +436,6 @@
         }
       }
     },
-    "ncats-form": {
-      "projectType": "library",
-      "root": "libs/ncats-form",
-      "sourceRoot": "libs/ncats-form/src",
-      "prefix": "ncats-frontend-library",
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/ncats-form/tsconfig.lib.json",
-              "libs/ncats-form/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/ncats-form/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/ncats-form/jest.config.js",
-            "tsConfig": "libs/ncats-form/tsconfig.spec.json",
-            "setupFile": "libs/ncats-form/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "styleext": "scss"
-        }
-      }
-    },
     "sidenavs-navigation-sidepanel": {
       "projectType": "library",
       "root": "libs/sidenavs/navigation-sidepanel",
@@ -526,40 +461,6 @@
             "jestConfig": "libs/sidenavs/navigation-sidepanel/jest.config.js",
             "tsConfig": "libs/sidenavs/navigation-sidepanel/tsconfig.spec.json",
             "setupFile": "libs/sidenavs/navigation-sidepanel/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "styleext": "scss"
-        }
-      }
-    },
-    "sidenavs-curation-sidepanel": {
-      "projectType": "library",
-      "root": "libs/sidenavs/curation-sidepanel",
-      "sourceRoot": "libs/sidenavs/curation-sidepanel/src",
-      "prefix": "ncats-frontend-library",
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/sidenavs/curation-sidepanel/tsconfig.lib.json",
-              "libs/sidenavs/curation-sidepanel/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/sidenavs/curation-sidepanel/**"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/sidenavs/curation-sidepanel/jest.config.js",
-            "tsConfig": "libs/sidenavs/curation-sidepanel/tsconfig.spec.json",
-            "setupFile": "libs/sidenavs/curation-sidepanel/src/test-setup.ts"
           }
         }
       },
@@ -662,6 +563,614 @@
             "jestConfig": "libs/common/data-access/neo4j-connector/jest.config.js",
             "tsConfig": "libs/common/data-access/neo4j-connector/tsconfig.spec.json",
             "setupFile": "libs/common/data-access/neo4j-connector/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "ui-gard-data-display": {
+      "projectType": "library",
+      "root": "libs/ui/gard/data-display",
+      "sourceRoot": "libs/ui/gard/data-display/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ui/gard/data-display/tsconfig.lib.json",
+              "libs/ui/gard/data-display/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/ui/gard/data-display/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ui/gard/data-display/jest.config.js",
+            "tsConfig": "libs/ui/gard/data-display/tsconfig.spec.json",
+            "setupFile": "libs/ui/gard/data-display/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "common-ui-neo4j-connection-form": {
+      "projectType": "library",
+      "root": "libs/common/ui/neo4j-connection-form",
+      "sourceRoot": "libs/common/ui/neo4j-connection-form/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/common/ui/neo4j-connection-form/tsconfig.lib.json",
+              "libs/common/ui/neo4j-connection-form/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/common/ui/neo4j-connection-form/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/common/ui/neo4j-connection-form/jest.config.js",
+            "tsConfig": "libs/common/ui/neo4j-connection-form/tsconfig.spec.json",
+            "setupFile": "libs/common/ui/neo4j-connection-form/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "shared-ui-ncats-form": {
+      "projectType": "library",
+      "root": "libs/shared/ui/ncats-form",
+      "sourceRoot": "libs/shared/ui/ncats-form/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/ui/ncats-form/tsconfig.lib.json",
+              "libs/shared/ui/ncats-form/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/ui/ncats-form/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/ui/ncats-form/jest.config.js",
+            "tsConfig": "libs/shared/ui/ncats-form/tsconfig.spec.json",
+            "setupFile": "libs/shared/ui/ncats-form/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "common-ui-full-page-search": {
+      "projectType": "library",
+      "root": "libs/common/ui/full-page-search",
+      "sourceRoot": "libs/common/ui/full-page-search/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/common/ui/full-page-search/tsconfig.lib.json",
+              "libs/common/ui/full-page-search/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/common/ui/full-page-search/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/common/ui/full-page-search/jest.config.js",
+            "tsConfig": "libs/common/ui/full-page-search/tsconfig.spec.json",
+            "setupFile": "libs/common/ui/full-page-search/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "shared-ui-search-bar": {
+      "projectType": "library",
+      "root": "libs/shared/ui/search-bar",
+      "sourceRoot": "libs/shared/ui/search-bar/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/ui/search-bar/tsconfig.lib.json",
+              "libs/shared/ui/search-bar/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/ui/search-bar/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/ui/search-bar/jest.config.js",
+            "tsConfig": "libs/shared/ui/search-bar/tsconfig.spec.json",
+            "setupFile": "libs/shared/ui/search-bar/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "shared-ui-curation-matrix": {
+      "projectType": "library",
+      "root": "libs/shared/ui/curation-matrix",
+      "sourceRoot": "libs/shared/ui/curation-matrix/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/ui/curation-matrix/tsconfig.lib.json",
+              "libs/shared/ui/curation-matrix/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/ui/curation-matrix/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/ui/curation-matrix/jest.config.js",
+            "tsConfig": "libs/shared/ui/curation-matrix/tsconfig.spec.json",
+            "setupFile": "libs/shared/ui/curation-matrix/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "ui-gard-curation-sidepanel": {
+      "projectType": "library",
+      "root": "libs/ui/gard/curation-sidepanel",
+      "sourceRoot": "libs/ui/gard/curation-sidepanel/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ui/gard/curation-sidepanel/tsconfig.lib.json",
+              "libs/ui/gard/curation-sidepanel/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/ui/gard/curation-sidepanel/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ui/gard/curation-sidepanel/jest.config.js",
+            "tsConfig": "libs/ui/gard/curation-sidepanel/tsconfig.spec.json",
+            "setupFile": "libs/ui/gard/curation-sidepanel/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "shared-ui-dynamic-app-layout": {
+      "projectType": "library",
+      "root": "libs/shared/ui/dynamic-app-layout",
+      "sourceRoot": "libs/shared/ui/dynamic-app-layout/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/ui/dynamic-app-layout/tsconfig.lib.json",
+              "libs/shared/ui/dynamic-app-layout/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/ui/dynamic-app-layout/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/ui/dynamic-app-layout/jest.config.js",
+            "tsConfig": "libs/shared/ui/dynamic-app-layout/tsconfig.spec.json",
+            "setupFile": "libs/shared/ui/dynamic-app-layout/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "ui-gard-gard-data-viewer": {
+      "projectType": "library",
+      "root": "libs/ui/gard/gard-data-viewer",
+      "sourceRoot": "libs/ui/gard/gard-data-viewer/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ui/gard/gard-data-viewer/tsconfig.lib.json",
+              "libs/ui/gard/gard-data-viewer/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/ui/gard/gard-data-viewer/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ui/gard/gard-data-viewer/jest.config.js",
+            "tsConfig": "libs/ui/gard/gard-data-viewer/tsconfig.spec.json",
+            "setupFile": "libs/ui/gard/gard-data-viewer/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "ui-gard-gard-header": {
+      "projectType": "library",
+      "root": "libs/ui/gard/gard-header",
+      "sourceRoot": "libs/ui/gard/gard-header/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ui/gard/gard-header/tsconfig.lib.json",
+              "libs/ui/gard/gard-header/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/ui/gard/gard-header/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ui/gard/gard-header/jest.config.js",
+            "tsConfig": "libs/ui/gard/gard-header/tsconfig.spec.json",
+            "setupFile": "libs/ui/gard/gard-header/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "ui-gard-gard-disease-header": {
+      "projectType": "library",
+      "root": "libs/ui/gard/gard-disease-header",
+      "sourceRoot": "libs/ui/gard/gard-disease-header/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ui/gard/gard-disease-header/tsconfig.lib.json",
+              "libs/ui/gard/gard-disease-header/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/ui/gard/gard-disease-header/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ui/gard/gard-disease-header/jest.config.js",
+            "tsConfig": "libs/ui/gard/gard-disease-header/tsconfig.spec.json",
+            "setupFile": "libs/ui/gard/gard-disease-header/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "ui-gard-gard-footer": {
+      "projectType": "library",
+      "root": "libs/ui/gard/gard-footer",
+      "sourceRoot": "libs/ui/gard/gard-footer/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ui/gard/gard-footer/tsconfig.lib.json",
+              "libs/ui/gard/gard-footer/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/ui/gard/gard-footer/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ui/gard/gard-footer/jest.config.js",
+            "tsConfig": "libs/ui/gard/gard-footer/tsconfig.spec.json",
+            "setupFile": "libs/ui/gard/gard-footer/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "mapper": {
+      "projectType": "application",
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/mapper",
+      "sourceRoot": "apps/mapper/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/mapper",
+            "index": "apps/mapper/src/index.html",
+            "main": "apps/mapper/src/main.ts",
+            "polyfills": "apps/mapper/src/polyfills.ts",
+            "tsConfig": "apps/mapper/tsconfig.app.json",
+            "aot": true,
+            "assets": ["apps/mapper/src/favicon.ico", "apps/mapper/src/assets"],
+            "styles": ["apps/mapper/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/mapper/src/environments/environment.ts",
+                  "with": "apps/mapper/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "mapper:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "mapper:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "mapper:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/mapper/tsconfig.app.json",
+              "apps/mapper/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/mapper/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/mapper/jest.config.js",
+            "tsConfig": "apps/mapper/tsconfig.spec.json",
+            "setupFile": "apps/mapper/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "mapper-e2e": {
+      "root": "apps/mapper-e2e",
+      "sourceRoot": "apps/mapper-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/mapper-e2e/cypress.json",
+            "tsConfig": "apps/mapper-e2e/tsconfig.e2e.json",
+            "devServerTarget": "mapper:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "mapper:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["apps/mapper-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/mapper-e2e/**"]
+          }
+        }
+      }
+    },
+    "shared-ui-mapper-ui": {
+      "projectType": "library",
+      "root": "libs/shared/ui/mapper-ui",
+      "sourceRoot": "libs/shared/ui/mapper-ui/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/ui/mapper-ui/tsconfig.lib.json",
+              "libs/shared/ui/mapper-ui/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/ui/mapper-ui/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/ui/mapper-ui/jest.config.js",
+            "tsConfig": "libs/shared/ui/mapper-ui/tsconfig.spec.json",
+            "setupFile": "libs/shared/ui/mapper-ui/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "shared-ui-object-tree": {
+      "projectType": "library",
+      "root": "libs/shared/ui/object-tree",
+      "sourceRoot": "libs/shared/ui/object-tree/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/ui/object-tree/tsconfig.lib.json",
+              "libs/shared/ui/object-tree/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/ui/object-tree/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/ui/object-tree/jest.config.js",
+            "tsConfig": "libs/shared/ui/object-tree/tsconfig.spec.json",
+            "setupFile": "libs/shared/ui/object-tree/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "shared-ui-header-template": {
+      "projectType": "library",
+      "root": "libs/shared/ui/header-template",
+      "sourceRoot": "libs/shared/ui/header-template/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/ui/header-template/tsconfig.lib.json",
+              "libs/shared/ui/header-template/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/ui/header-template/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/ui/header-template/jest.config.js",
+            "tsConfig": "libs/shared/ui/header-template/tsconfig.spec.json",
+            "setupFile": "libs/shared/ui/header-template/src/test-setup.ts"
           }
         }
       },

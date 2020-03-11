@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {LoginModalComponent} from "../login-modal/login-modal.component";
-import {MatDialog} from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 import {FirebaseProfileService} from "../firebase-profile.service";
 
 @Component({

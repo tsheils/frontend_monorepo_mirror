@@ -1,0 +1,20 @@
+<div class ="search-row">
+  <mat-form-field class = "typeahead-field search" [floatLabel] = "'never'">
+    <input matInput
+           (keyup.enter)="search()"
+           aria-label="Search"
+           [matAutocomplete]="auto"
+           [formControl]="typeaheadCtrl"
+           [ncatsFrontendLibraryDisableControl] = disabled
+           class ="input-field">
+    <mat-label class="search-label">{{placeholderStr}}</mat-label>
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected) = "search()">
+      <mat-optgroup *ngFor="let group of filteredGroups | async" [label]="group.name">
+        <mat-option *ngFor="let option of group.options" [value]="option.key">
+          <div [innerHTML]= "option.key  | highlight : typeaheadCtrl.value"></div>
+        </mat-option>
+      </mat-optgroup>
+    </mat-autocomplete>
+    <button mat-button mat-icon-button matSuffix aria-label="search"(click)="search()"><mat-icon>search</mat-icon></button>
+  </mat-form-field>
+</div>

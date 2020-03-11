@@ -1,4 +1,4 @@
-import {GardBase} from "./gard-base";
+import {GardBase} from "./gard/gard-base";
 import {Source} from "./source";
 import {Publication} from "./publication";
 import {GroupProperty} from "./group-property";

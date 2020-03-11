@@ -1,4 +1,4 @@
-import {GardBase} from "./gard-base";
+import {GardBase} from "./gard/gard-base";
 import {Organization} from "./organization";
 import {Principal} from "./principal";
 

@@ -24,9 +24,6 @@
     "idg-tdl-indicator": {
       "tags": []
     },
-    "dynamic-app": {
-      "tags": []
-    },
     "gard-curation-e2e": {
       "tags": [],
       "implicitDependencies": ["gard-curation"]
@@ -41,19 +38,7 @@
     "gard-frontend": {
       "tags": []
     },
-    "ncats-form": {
-      "tags": []
-    },
-    "navigation-sidepanel": {
-      "tags": []
-    },
-    "curation-sidepanel": {
-      "tags": []
-    },
     "sidenavs-navigation-sidepanel": {
-      "tags": []
-    },
-    "sidenavs-curation-sidepanel": {
       "tags": []
     },
     "sidenavs-facet-sidepanel": {
@@ -63,6 +48,58 @@
       "tags": []
     },
     "common-data-access-neo4j-connector": {
+      "tags": []
+    },
+    "ui-gard-data-display": {
+      "tags": []
+    },
+    "common-ui-neo4j-connection-form": {
+      "tags": []
+    },
+    "shared-ui-ncats-form": {
+      "tags": []
+    },
+    "common-ui-full-page-search": {
+      "tags": []
+    },
+    "shared-ui-search-bar": {
+      "tags": []
+    },
+    "shared-ui-curation-matrix": {
+      "tags": []
+    },
+    "ui-gard-curation-sidepanel": {
+      "tags": []
+    },
+    "shared-ui-dynamic-app-layout": {
+      "tags": []
+    },
+    "ui-gard-gard-data-viewer": {
+      "tags": []
+    },
+    "ui-gard-gard-header": {
+      "tags": []
+    },
+    "ui-gard-gard-disease-header": {
+      "tags": []
+    },
+    "ui-gard-gard-footer": {
+      "tags": []
+    },
+    "mapper": {
+      "tags": []
+    },
+    "mapper-e2e": {
+      "tags": [],
+      "implicitDependencies": ["mapper"]
+    },
+    "shared-ui-mapper-ui": {
+      "tags": []
+    },
+    "shared-ui-object-tree": {
+      "tags": []
+    },
+    "shared-ui-header-template": {
       "tags": []
     }
   }

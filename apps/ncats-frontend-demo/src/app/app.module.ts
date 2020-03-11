@@ -9,8 +9,8 @@ import {AngularFireModule} from "@angular/fire";
 import {environment} from "../environments/environment.prod";
 import {AngularFirestoreModule} from "@angular/fire/firestore";
 import {AngularFireAuthModule} from "@angular/fire/auth";
-import {DynamicAppModule} from "@ncats-frontend-library/dynamic-app";
 import {RouterModule, Routes} from "@angular/router";
+import {DynamicAppModule} from "@ncats-frontend-library/dynamic-app";
 
 const routes: Routes = [
   {
@@ -28,10 +28,11 @@ const routes: Routes = [
     BrowserAnimationsModule,
     NcatsFirebaseAuthModule,
     IdgTdlIndicatorModule,
-    DynamicAppModule,
     AngularFireModule.initializeApp(environment.firebase), // imports firebase/app needed for everything
     AngularFirestoreModule, // imports firebase/firestore, only needed for database features
-    AngularFireAuthModule, // imports firebase/auth, only needed for auth features,
+    AngularFireAuthModule,
+    DynamicAppModule,
+    // imports firebase/auth, only needed for auth features,
   ],
   bootstrap: [AppComponent]
 })

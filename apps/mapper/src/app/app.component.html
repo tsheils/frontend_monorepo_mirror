@@ -1,0 +1,109 @@
+<ncats-frontend-library-gard-header></ncats-frontend-library-gard-header>
+<div class="main-content">
+  <div class="spacer"></div>
+<mat-vertical-stepper [linear] = true #stepper>
+  <mat-step [completed] = session>
+      <ng-template matStepLabel>Connect to datasource</ng-template>
+    <ncats-frontend-library-connection-form (connection)="setConnection($event)"></ncats-frontend-library-connection-form>
+      <div>
+        <button mat-raised-button matStepperNext>Next</button>
+      </div>
+  </mat-step>
+  <mat-step [completed] = objectFields>
+    <ng-template matStepLabel>Select object field to map</ng-template>
+    <ncats-frontend-library-object-tree
+    (fieldSelectChange) = "setObjectFields($event)"
+    ></ncats-frontend-library-object-tree>
+    <div>
+      <button mat-raised-button [color] = "'warn'" matStepperPrevious>Back</button>
+      <button mat-raised-button matStepperNext>Next</button>
+    </div>
+  </mat-step>
+  <mat-step [completed] = "selectedFields.length > 0">
+    <ng-template matStepLabel>Select datasources and fields</ng-template>
+
+    <div class="mapper-holder">
+      <div fxLayout = "row" fxLayoutAlign="space-around center">
+        <div fxFlex = "75">
+          <ncats-frontend-library-search-bar
+            (inputChangeEvent)="filter($event)"
+            [disabled]=" allSourcesLoading"
+            [placeholderStr]="'Filter Sources'"
+          ></ncats-frontend-library-search-bar>
+        </div>
+      </div>
+      <div fxLayout = "row" fxLayoutAlign="space-around center">
+        <div fxFlex = "95">
+          <ncats-frontend-library-mapper-interface
+            [options]="filteredSources"
+            [allSourcesLoading] = allSourcesLoading
+            [searchTerm] = searchTerm
+            (mappedObjectChange)="setFields($event)"></ncats-frontend-library-mapper-interface>
+          <div>
+            <button mat-raised-button [color] = "'warn'" matStepperPrevious>Back</button>
+            <button mat-raised-button matStepperNext>Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-step>
+  <mat-step [optional]="true">
+    <ng-template matStepLabel>Test by disease</ng-template>
+    <div fxLayout = "row" fxLayoutAlign="space-around center">
+      <div fxFlex = "75">
+        You are mapping:<br>
+        <div fxLayout="row">
+        <div fxFlex = 20>
+          <div *ngFor = "let entry of selectedFields">
+          <div *ngFor = "let field of entry.fields">
+            {{entry.source}}: {{field}}
+          </div>
+          </div>
+        </div>
+          <div fxFlex="5" fxFlexAlign="center">
+            To
+          </div>
+          <div fxFlex = 20>
+            <div *ngFor = "let entry of objectFields">
+             Disease: {{entry.field}}
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+        <div fxLayout = "row" fxLayoutAlign="space-around center">
+      <div fxFlex = "75">
+        <ncats-frontend-library-search-bar
+          (inputChangeEvent)="search($event)"
+          [disabled]=" allSourcesLoading"
+          [placeholderStr]="'Fetch by disease'"
+        ></ncats-frontend-library-search-bar>
+      </div>
+    </div>
+    <div>
+      <button mat-raised-button [color] = "'warn'" matStepperPrevious>Back</button>
+      <button mat-raised-button matStepperNext>Next</button>
+    </div>
+  </mat-step>
+  <mat-step [optional]="true" >
+    <ng-template matStepLabel>Test by disease set</ng-template>
+    <button mat-raised-button (click)="runQuery()">Fetch data</button>
+    <div>
+      <button mat-raised-button [color] = "'warn'" matStepperPrevious>Back</button>
+      <button mat-raised-button matStepperNext>Next</button>
+    </div>
+  </mat-step>
+  <mat-step [completed] = "selectedFields.length > 0">
+    <ng-template matStepLabel>Build</ng-template>
+    This may take a while.
+    <input matInput type ="email" placeholder="Enter your email for updates"/>
+    <button mat-raised-button (click)="runQuery()">Build</button>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext>Next</button>
+    </div>
+  </mat-step>
+</mat-vertical-stepper>
+</div>
+
+

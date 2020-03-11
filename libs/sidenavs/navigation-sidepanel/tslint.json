@@ -5,13 +5,19 @@
       true,
       "attribute",
       "ncatsFrontendLibrary",
-      "camelCase"
+      "camelCase",
+      "ncats",
+      "gard",
+      "fel"
     ],
     "component-selector": [
       true,
       "element",
       "ncats-frontend-library",
-      "kebab-case"
+      "kebab-case",
+      "ncats",
+      "gard",
+      "fel"
     ]
   }
 }

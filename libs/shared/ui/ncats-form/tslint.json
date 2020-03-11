@@ -1,0 +1,19 @@
+{
+  "extends": "../../../../tslint.json",
+  "rules": {
+    "directive-selector": [
+      true,
+      "attribute",
+      "ncatsFrontendLibrary",
+      "camelCase",
+      "ncats"
+    ],
+    "component-selector": [
+      true,
+      "element",
+      "ncats-frontend-library",
+      "kebab-case",
+      "ncats"
+    ]
+  }
+}
