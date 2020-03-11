@@ -59,7 +59,7 @@ pipeline {
                                 docker.withRegistry("https://registry.ncats.nih.gov:5000", "564b9230-c7e3-482d-b004-8e79e5e9720a") {
                                     def image = docker.build(
                                         "${env.IMAGE_NAME}:${env.BUILD_VERSION}",
-                                        "--no-cache --build-arg SOURCE_FOLDER=./dist ."
+                                        "--no-cache --build-arg SOURCE_FOLDER=./dist/apps/mapper ."
                                     )
                                     // Push the image to the registry
                                     image.push("${env.BUILD_VERSION}")
