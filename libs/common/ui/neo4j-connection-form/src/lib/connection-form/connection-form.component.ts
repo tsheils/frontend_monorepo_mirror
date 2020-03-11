@@ -16,19 +16,20 @@ export class ConnectionFormComponent implements OnInit {
     new TextboxQuestion({
       key: 'url',
       label: 'Database Url',
-      value: 'bolt://disease.ncats.io:80/',
+      value: 'bolt://gard-dev-neo4j.ncats.nih.gov:7687/',
       // value: 'bolt://ifxdev3.ncats.nih.gov:9005/',
       required: true
     }),
     new TextboxQuestion({
       key: 'user',
       label: 'User',
-      required: true
+      required: true,
+      value: 'neo4j'
     }),
     new TextboxQuestion({
       key: 'password',
       label: 'Password',
-      type: 'password',
+      type: 'password'
     })
   ];
 
@@ -53,7 +54,6 @@ export class ConnectionFormComponent implements OnInit {
    */
   setForm(form: FormGroup) {
     this.form = form;
-    //  this.connect();
   }
 
   clearForm(): void {
@@ -62,10 +62,7 @@ export class ConnectionFormComponent implements OnInit {
 
   connect(): void {
     const formVals = this.form.value;
-    // console.log(formVals);
-    console.log(this);
     this.neo4jConnectService.connect(formVals).subscribe(res => {
-      console.log(res);
       this.connected = res;
       this.connection.emit(this.neo4jConnectService)
     });

@@ -4,7 +4,9 @@ import { SharedUiNcatsFormModule } from './shared-ui-ncats-form.module';
 describe('SharedUiNcatsFormModule', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [SharedUiNcatsFormModule]
+      imports: [
+        SharedUiNcatsFormModule
+      ]
     }).compileComponents();
   }));
 

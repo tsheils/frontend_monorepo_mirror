@@ -32,7 +32,18 @@ import {NcatsFormComponent} from "./ncats-form.component";
     FileLoaderDialogComponent
   ],
   exports: [
-    NcatsFormComponent
+    NcatsFormComponent,
+    NcatsFileComponent,
+    NcatsMultiselectComponent,
+    NcatsDropdownComponent,
+    NcatsTextboxComponent,
+    NcatsAutocompleteComponent,
+    DynamicContentDirective,
+    DndDirective,
+    FileLoaderDialogComponent
+  ],
+  entryComponents: [
+    NcatsTextboxComponent
   ]
 })
 export class SharedUiNcatsFormModule {}

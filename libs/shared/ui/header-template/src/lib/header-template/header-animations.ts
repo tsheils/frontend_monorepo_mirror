@@ -8,7 +8,7 @@ import { trigger, state, style, transition,
 export const slideInOutAnimation = [
   trigger('slideInOut', [
     state('in', style({
-      'background-color': 'whitesmoke',
+      //'background-color': 'whitesmoke',
       color: 'black'
 })),
     state('out', style({

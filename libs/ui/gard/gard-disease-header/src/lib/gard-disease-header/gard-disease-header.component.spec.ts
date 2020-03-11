@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GardDiseaseHeaderComponent } from './gard-disease-header.component';
+import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
 
 describe('GardDiseaseHeaderComponent', () => {
   let component: GardDiseaseHeaderComponent;
@@ -8,6 +9,9 @@ describe('GardDiseaseHeaderComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        CustomMaterialModule
+      ],
       declarations: [ GardDiseaseHeaderComponent ]
     })
     .compileComponents();

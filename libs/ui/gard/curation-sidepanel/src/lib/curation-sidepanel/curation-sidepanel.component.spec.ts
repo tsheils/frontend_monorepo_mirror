@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CurationSidepanelComponent } from './curation-sidepanel.component';
+import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
 
 describe('CurationSidepanelComponent', () => {
   let component: CurationSidepanelComponent;
@@ -8,6 +9,9 @@ describe('CurationSidepanelComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        CustomMaterialModule
+      ],
       declarations: [ CurationSidepanelComponent ]
     })
     .compileComponents();

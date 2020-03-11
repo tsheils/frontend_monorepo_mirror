@@ -62,19 +62,15 @@ export class AppComponent implements OnDestroy {
   }
 
   setObjectFields(event: any) {
-    console.log(event);
     this.objectFields = event;
   }
 
   setFields(event: any) {
-    console.log(event);
     this.selectedFields = [...event.entries()].map(entry => entry = {source: entry[0], fields: entry[1]});
-    console.log(this.selectedFields);
     // event.keys().forEach(key => this.selectedFields.push({key: event.get(key)}))
   }
 
   search(event: any) {
-      console.log(event);
   }
 
   filter(term: string) {
@@ -102,7 +98,9 @@ export class AppComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this.session.close();
+    if(this.session) {
+      this.session.close();
+    }
   }
 
 }

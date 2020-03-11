@@ -6,6 +6,9 @@
       "schematics": {
         "@nrwl/angular:component": {
           "style": "scss"
+        },
+        "@schematics/angular:component": {
+          "styleext": "scss"
         }
       },
       "root": "apps/ncats-frontend-demo",
@@ -915,7 +918,7 @@
             ],
             "exclude": [
               "**/node_modules/**",
-              "!libs/ui/gard/gard-disease-header/**"
+              "!libs/ui/gard/gard-dsrcisease-header/**"
             ]
           }
         },
@@ -986,8 +989,11 @@
             "tsConfig": "apps/mapper/tsconfig.app.json",
             "aot": true,
             "assets": ["apps/mapper/src/favicon.ico", "apps/mapper/src/assets"],
-            "styles": ["apps/mapper/src/styles.scss"],
-            "scripts": []
+            "scripts": [],
+            "stylePreprocessorOptions": {
+              "includePaths": ["libs/styles/src/styles/"]
+            },
+            "styles": ["apps/mapper/src/styles.scss"]
           },
           "configurations": {
             "production": {
@@ -1154,6 +1160,9 @@
       "architect": {
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
+          "stylePreprocessorOptions": {
+            "includePaths": ["libs/styles/src/styles/"]
+          },
           "options": {
             "tsConfig": [
               "libs/shared/ui/header-template/tsconfig.lib.json",

@@ -1,14 +1,17 @@
 import { async, TestBed } from '@angular/core/testing';
-import { SharedUiDynamicAppSkeletonModule } from './shared-ui-dynamic-app-layout.module';
+import {SharedUiDynamicAppLayoutModule} from "./shared-ui-dynamic-app-layout.module";
+import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
 
-describe('SharedUiDynamicAppSkeletonModule', () => {
+describe('SharedUiDynamicAppLayoutModule', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [SharedUiDynamicAppSkeletonModule]
+      imports: [
+        CustomMaterialModule,
+        SharedUiDynamicAppLayoutModule]
     }).compileComponents();
   }));
 
   it('should create', () => {
-    expect(SharedUiDynamicAppSkeletonModule).toBeDefined();
+    expect(SharedUiDynamicAppLayoutModule).toBeDefined();
   });
 });
