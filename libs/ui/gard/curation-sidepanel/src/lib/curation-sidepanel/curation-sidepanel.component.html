@@ -1,0 +1,21 @@
+<div class = "sidenav-panel">
+  <div class ="close-button" [dir]="'rtl'">
+    <button mat-icon-button (click)="toggleMenu()" class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="mat-title">Jump to section:</div><br>
+  <div class="toc-wrapper" *ngIf="data">
+    <div class="toc">
+      <mat-nav-list >
+        <a *ngFor="let section of data"
+           mat-list-item
+           class="list-button"
+           (click)="scroll(section.section ? section.section : section )"
+           [ngClass]="{'active': isActive(section.section ? section.section : section)}">
+          {{section.label? section.label : section}}
+        </a>
+      </mat-nav-list>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,49 @@
+
+<div fxLayout = "row" fxLayoutAlign="space-around center">
+  <div fxFlex = "95">
+<div class="data-source-grid">
+  <mat-expansion-panel class="full-width" [expanded] = true [disabled] = "!options.length">
+    <mat-expansion-panel-header>
+    <h2>All Sources {{options.length}}</h2>
+    </mat-expansion-panel-header>
+    <mat-progress-bar mode="indeterminate" *ngIf = "allSourcesLoading"></mat-progress-bar>
+    <div   *ngFor="let item of options">
+      <mat-expansion-panel class="full-width">
+        <mat-expansion-panel-header >
+          <span [innerHTML]= "item.name | highlight : searchTerm"></span>
+        </mat-expansion-panel-header>
+        <ng-template matExpansionPanelContent>
+        <div
+             *ngFor="let field of item.fields">
+          <mat-checkbox (change)="selectField($event, item.name, field)"><span [innerHTML] = "field | highlight:searchTerm"></span></mat-checkbox>
+        </div>
+        </ng-template>
+      </mat-expansion-panel>
+    </div>
+  </mat-expansion-panel>
+  <mat-expansion-panel class="full-width" [expanded] = true [disabled] = "!options.length">
+    <mat-expansion-panel-header>
+    <h2>Selected Fields</h2>
+    </mat-expansion-panel-header>
+    <ng-template matExpansionPanelContent>
+      <div class=""
+           *ngFor="let item of mappedFields"
+           [cdkDragData]="item"
+           cdkDrag
+      >
+        <div fxLayout="row">
+          {{item.name}}
+        </div>
+        <div fxLayout = "row wrap" fxLayoutAlign = "space-around start">
+          <div fxFlex = 100 *ngFor = "let field of item.fields">{{field}}</div><br>
+        </div>
+        <br>
+<!--
+        <button mat-icon-button (click) = "remove($event, item)"><mat-icon>close</mat-icon></button>
+-->
+      </div>
+    </ng-template>
+  </mat-expansion-panel>
+</div>
+</div>
+  </div>

@@ -63,8 +63,24 @@
         "enforceBuildableLibDependency": true
       }
     ],
-    "directive-selector": [true, "attribute", "app", "camelCase"],
-    "component-selector": [true, "element", "app", "kebab-case"],
+    "directive-selector": [
+      true,
+      "attribute",
+      "app",
+      "camelCase",
+      "ncats",
+      "gard",
+      "fel"
+    ],
+    "component-selector": [
+      true,
+      "element",
+      "app",
+      "kebab-case",
+      "ncats",
+      "gard",
+      "fel"
+    ],
     "no-conflicting-lifecycle": true,
     "no-host-metadata-property": true,
     "no-input-rename": true,

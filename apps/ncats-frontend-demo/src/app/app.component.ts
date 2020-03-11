@@ -48,25 +48,5 @@ export class AppComponent implements OnInit{
   ){}
 
   ngOnInit(): void {
-    console.log(this);
-
-   /* this.neo4jConnectService.connect().subscribe(res=> {
-      console.log(res);
-      this.connected = res;
-
-      this.neo4jConnectService.fetch('match p=(n:`S_GARD`)-[]-(:DATA) return p limit 20').subscribe(res => {
-          this.disease = res._fields[0].segments[0].end.properties;
-        }
-      )
-    });*/
-/*
-
-    this.driver.verifyConnectivity().then(res=> console.log(res));
-    const session = this.driver.rxSession();
-    console.log(session);
-
-    session.run('match p=(n:`S_GARD`)-[]-(:DATA) return p limit 20').records().subscribe(res=> {
-      this.disease = res._fields[0].segments[0].end.properties;
-    });*/
     }
 }

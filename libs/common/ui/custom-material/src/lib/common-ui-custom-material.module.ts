@@ -6,11 +6,9 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatSelectModule} from '@angular/material/select';
 import {MatSliderModule} from '@angular/material/slider';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatCardModule} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
-import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -20,7 +18,6 @@ import {MatDividerModule} from '@angular/material/divider';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {LayoutModule} from '@angular/cdk/layout';
 import {MatDialogModule} from '@angular/material/dialog';
-import {DragDropModule} from '@angular/cdk/drag-drop';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatStepperModule} from '@angular/material/stepper';
@@ -33,6 +30,10 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatTreeModule} from '@angular/material/tree';
 import {FlexLayoutModule} from "@angular/flex-layout";
+import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatSidenavModule} from "@angular/material/sidenav";
+import {DragDropModule} from "@angular/cdk/drag-drop";
+
 
 @NgModule({
   imports: [CommonModule, MatButtonModule, MatAutocompleteModule, MatMenuModule, MatToolbarModule,
@@ -45,7 +46,7 @@ import {FlexLayoutModule} from "@angular/flex-layout";
     MatInputModule, MatIconModule, MatListModule, MatSliderModule,
     MatTableModule, MatSortModule, MatSidenavModule, MatSlideToggleModule, MatRadioModule,
     MatTabsModule, MatCheckboxModule, MatCardModule, MatTooltipModule, MatSelectModule, MatExpansionModule, MatPaginatorModule,
-    MatChipsModule, MatGridListModule, MatDividerModule, MatDialogModule, ScrollingModule,
+    MatChipsModule, MatGridListModule, MatDividerModule, MatDialogModule, ScrollingModule,DragDropModule,
     LayoutModule, MatProgressBarModule, MatStepperModule, PortalModule, MatFormFieldModule, MatTreeModule, FlexLayoutModule],
 })
 export class CustomMaterialModule {}
