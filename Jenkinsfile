@@ -52,7 +52,7 @@ pipeline {
                             sh 'git config --global url."git@github.com:".insteadOf "https://github.com/"'
                             sh 'npm i'
                             sh 'npm install -g @angular/cli'
-                            sh 'NODE_OPTIONS=--max_old_space_size=4096 ng build --prod'
+                            sh 'NODE_OPTIONS=--max_old_space_size=4096 ng build mapper --prod'
             
 
                             script {
