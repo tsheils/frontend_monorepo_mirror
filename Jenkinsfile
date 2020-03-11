@@ -53,6 +53,7 @@ pipeline {
                             sh 'npm i'
                             sh 'npm install -g @angular/cli'
                             sh 'NODE_OPTIONS=--max_old_space_size=4096 ng build mapper --prod'
+                            sh 'chmod 644 ./dist/apps/mapper/*'
             
 
                             script {
