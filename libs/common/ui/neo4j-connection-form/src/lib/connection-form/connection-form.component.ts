@@ -23,14 +23,12 @@ export class ConnectionFormComponent implements OnInit {
     new TextboxQuestion({
       key: 'user',
       label: 'User',
-      value: 'neo4j',
       required: true
     }),
     new TextboxQuestion({
       key: 'password',
       label: 'Password',
       type: 'password',
-      value: 'ix'
     })
   ];
 

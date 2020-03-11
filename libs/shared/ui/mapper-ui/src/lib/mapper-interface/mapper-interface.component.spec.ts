@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MapperInterfaceComponent } from './mapper-interface.component';
+import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
 
 describe('MapperInterfaceComponent', () => {
   let component: MapperInterfaceComponent;
@@ -8,6 +9,9 @@ describe('MapperInterfaceComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        CustomMaterialModule
+      ],
       declarations: [ MapperInterfaceComponent ]
     })
     .compileComponents();
