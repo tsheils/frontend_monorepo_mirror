@@ -87,7 +87,18 @@
       "@ncats-frontend-library/shared/ui/header-template": [
         "libs/shared/ui/header-template/src/index.ts"
       ],
-      "@ncats-frontend-library/styles": ["libs/styles/src/index.ts"]
+      "@ncats-frontend-library/styles": ["libs/styles/src/index.ts"],
+      "@ncats-frontend-library/curation": ["libs/curation/src/index.ts"],
+      "@ncats-frontend-library/mapper": ["libs/mapper/src/index.ts"],
+      "@ncats-frontend-library/features/gard-curation/mapper": [
+        "libs/features/gard-curation/mapper/src/index.ts"
+      ],
+      "@ncats-frontend-library/features/gard-curation/curation": [
+        "libs/features/gard-curation/curation/src/index.ts"
+      ],
+      "@ncats-frontend-library/features/gard-curation/dashboard": [
+        "libs/features/gard-curation/dashboard/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -4,7 +4,7 @@
 </div>
 <div fxLayout="row" fxLayoutAlign="space-around center" *ngIf = "!connected">
   <div fxFlex="50">
-    <form>
+    <form (ngSubmit)="connect()">
       <ncats-fel-form
         [questions]="questions"
         (formReturner)="setForm($event)"

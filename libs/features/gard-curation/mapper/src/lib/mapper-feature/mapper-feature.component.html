@@ -1,18 +1,15 @@
-<ncats-frontend-library-gard-header></ncats-frontend-library-gard-header>
-<div class="main-content">
-  <div class="spacer"></div>
 <mat-vertical-stepper [linear] = true #stepper>
   <mat-step [completed] = session>
-      <ng-template matStepLabel>Connect to datasource</ng-template>
+    <ng-template matStepLabel>Connect to datasource</ng-template>
     <ncats-frontend-library-connection-form (connection)="setConnection($event)"></ncats-frontend-library-connection-form>
-      <div>
-        <button mat-raised-button matStepperNext>Next</button>
-      </div>
+    <div>
+      <button mat-raised-button matStepperNext>Next</button>
+    </div>
   </mat-step>
   <mat-step [completed] = objectFields>
     <ng-template matStepLabel>Select object field to map</ng-template>
     <ncats-frontend-library-object-tree
-    (fieldSelectChange) = "setObjectFields($event)"
+      (fieldSelectChange) = "setObjectFields($event)"
     ></ncats-frontend-library-object-tree>
     <div>
       <button mat-raised-button [color] = "'warn'" matStepperPrevious>Back</button>
@@ -53,25 +50,25 @@
       <div fxFlex = "75">
         You are mapping:<br>
         <div fxLayout="row">
-        <div fxFlex = 20>
-          <div *ngFor = "let entry of selectedFields">
-          <div *ngFor = "let field of entry.fields">
-            {{entry.source}}: {{field}}
+          <div fxFlex = 20>
+            <div *ngFor = "let entry of selectedFields">
+              <div *ngFor = "let field of entry.fields">
+                {{entry.source}}: {{field}}
+              </div>
+            </div>
           </div>
-          </div>
-        </div>
           <div fxFlex="5" fxFlexAlign="center">
             To
           </div>
           <div fxFlex = 20>
             <div *ngFor = "let entry of objectFields">
-             Disease: {{entry.field}}
+              Disease: {{entry.field}}
             </div>
           </div>
         </div>
-        </div>
       </div>
-        <div fxLayout = "row" fxLayoutAlign="space-around center">
+    </div>
+    <div fxLayout = "row" fxLayoutAlign="space-around center">
       <div fxFlex = "75">
         <ncats-frontend-library-search-bar
           (inputChangeEvent)="typeahead($event)"
@@ -82,9 +79,9 @@
     </div>
     <div fxLayout = "row" fxLayoutAlign="space-around center" *ngIf = diseaseResult>
       <div fxFlex = "75">
-      <div *ngFor = "let field of diseaseResult | keyvalue">
-      {{field.key}}: {{field.value}}
-      </div> <br>
+        <div *ngFor = "let field of diseaseResult | keyvalue">
+          {{field.key}}: {{field.value}}
+        </div> <br>
       </div>
     </div>
     <div>
@@ -97,9 +94,9 @@
     <button mat-raised-button (click)="runQuery()">Fetch data</button>
     <div fxLayout = "row wrap" fxLayoutAlign="space-around center" *ngIf = diseaseResults.length >
       <div fxFlex = "95" *ngFor = "let diseaseResult of diseaseResults">
-      <div *ngFor = "let field of diseaseResult | keyvalue">
-      {{field.key}}: {{field.value}} <br>
-      </div>
+        <div *ngFor = "let field of diseaseResult | keyvalue">
+          {{field.key}}: {{field.value}} <br>
+        </div>
         <br>
       </div>
     </div>
@@ -119,6 +116,3 @@
     </div>
   </mat-step>
 </mat-vertical-stepper>
-</div>
-
-

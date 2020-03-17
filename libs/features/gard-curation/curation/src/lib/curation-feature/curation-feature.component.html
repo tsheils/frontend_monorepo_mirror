@@ -1,0 +1,59 @@
+<div fxLayout = "row" fxLayoutAlign="space-around center">
+  <div fxFlex = "75">
+    <mat-card>
+    <ncats-frontend-library-connection-form (connection)="setConnection($event)"></ncats-frontend-library-connection-form>
+    </mat-card>
+  </div>
+</div>
+    <div fxLayout = "row" fxLayoutAlign="space-around center">
+  <div fxFlex = "75">
+    <mat-card *ngIf="session">
+      <div fxLayout = "row" fxLayoutAlign="space-around center">
+        <div fxFlex = "95">
+      <ncats-frontend-library-search-bar
+      (inputChangeEvent)="typeahead($event)"
+      (query) = "search($event)"
+      [placeholderStr]="'Fetch by disease'"
+    ></ncats-frontend-library-search-bar>
+  </div>
+      </div>
+    </mat-card>
+    <mat-card *ngIf="searching || dataLoaded">
+<div fxLayout = "row" fxLayoutAlign="space-around center">
+  <div fxFlex = "95" >
+    <mat-progress-bar [mode]="'indeterminate'" *ngIf="searching && !dataLoaded"></mat-progress-bar>
+    <mat-card *ngIf = "editing !== 'inheritance'">
+     <div *ngFor="let value of disease.inheritance">
+      {{value.value}}
+      <span *ngIf="value.references">
+      &nbsp;
+    <span *ngFor="let ref of value.references">
+      <sup><a href="">{{ref}}</a></sup>
+            &nbsp;
+    </span>
+    </span>
+     </div>
+    </mat-card>
+    <ncats-frontend-library-curation-matrix
+  [field] = "'inheritance'"
+  [data] = disease.inheritance
+  [currentObject] = newTestData
+  (curatedObjectChange)="setCuratedObject($event, 'inheritance')"
+  *ngIf="dataLoaded && editing === 'inheritance'">
+</ncats-frontend-library-curation-matrix>
+</div>
+</div>
+      <div fxLayout = "row" fxLayoutAlign="end end" *ngIf="dataLoaded" >
+        <div fxFlex = "15">
+      <div *ngIf = "editing !== 'inheritance'">
+  <button mat-stroked-button [color]="'primary'" (click) = "editing = 'inheritance'">Edit</button>
+</div>
+<div *ngIf = "editing === 'inheritance'">
+  <button mat-stroked-button [color]="'warn'" (click) = "editing = null">Cancel</button>
+  <button mat-stroked-button [color]="'primary'" (click) = "setObject('inheritance')">Save</button>
+</div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>

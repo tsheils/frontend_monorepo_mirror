@@ -6,6 +6,7 @@ import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-mat
 import {SharedUiNcatsFormModule} from "@ncats-frontend-library/shared/ui/ncats-form";
 import {CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA} from "@angular/core";
 import {CommonModule} from "@angular/common";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('ConnectionFormComponent', () => {
   let component: ConnectionFormComponent;
@@ -15,6 +16,7 @@ describe('ConnectionFormComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         CommonModule,
+        BrowserAnimationsModule,
         CustomMaterialModule,
         FormsModule,
         ReactiveFormsModule,
