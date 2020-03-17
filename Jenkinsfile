@@ -10,7 +10,7 @@ pipeline {
     }
     triggers {
         pollSCM('H/5 * * * *')
-    }  
+    }
   environment {
         PROJECT_NAME = "gard-frontend"
         DOCKER_REPO_NAME = "registry.ncats.nih.gov:5000/gard-frontend"
@@ -52,15 +52,15 @@ pipeline {
                             sh 'git config --global url."git@github.com:".insteadOf "https://github.com/"'
                             sh 'npm i'
                             sh 'npm install -g @angular/cli'
-                            sh 'NODE_OPTIONS=--max_old_space_size=4096 ng build mapper --prod'
-                            sh 'chmod 644 ./dist/apps/mapper/*'
-            
+                            sh 'NODE_OPTIONS=--max_old_space_size=4096 ng build gard-data-hub --prod'
+                            sh 'chmod 644 ./dist/apps/gard-data-hub/*'
+
 
                             script {
                                 docker.withRegistry("https://registry.ncats.nih.gov:5000", "564b9230-c7e3-482d-b004-8e79e5e9720a") {
                                     def image = docker.build(
                                         "${env.IMAGE_NAME}:${env.BUILD_VERSION}",
-                                        "--no-cache --build-arg SOURCE_FOLDER=./dist/apps/mapper ."
+                                        "--no-cache --build-arg SOURCE_FOLDER=./dist/apps/gard-data-hub ."
                                     )
                                     // Push the image to the registry
                                     image.push("${env.BUILD_VERSION}")
@@ -79,7 +79,7 @@ pipeline {
                 cleanWs()
                 checkout scm
                 configFileProvider([
-                    configFile(fileId: 'gard-dev-docker-compose', targetLocation: 'docker-compose.yml')     
+                    configFile(fileId: 'gard-dev-docker-compose', targetLocation: 'docker-compose.yml')
                 ]) {
                    script {
                         def docker = new org.labshare.Docker()
