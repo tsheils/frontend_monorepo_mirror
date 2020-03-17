@@ -11,17 +11,7 @@
     "nx.json": "*"
   },
   "projects": {
-    "ncats-frontend-demo-e2e": {
-      "tags": [],
-      "implicitDependencies": ["ncats-frontend-demo"]
-    },
-    "ncats-frontend-demo": {
-      "tags": []
-    },
     "ncats-firebase-auth-module": {
-      "tags": []
-    },
-    "idg-tdl-indicator": {
       "tags": []
     },
     "gard-curation-e2e": {
@@ -86,13 +76,6 @@
     "ui-gard-gard-footer": {
       "tags": []
     },
-    "mapper": {
-      "tags": []
-    },
-    "mapper-e2e": {
-      "tags": [],
-      "implicitDependencies": ["mapper"]
-    },
     "shared-ui-mapper-ui": {
       "tags": []
     },
@@ -100,6 +83,22 @@
       "tags": []
     },
     "shared-ui-header-template": {
+      "tags": []
+    },
+    "gard-data-hub": {
+      "tags": []
+    },
+    "gard-data-hub-e2e": {
+      "tags": [],
+      "implicitDependencies": ["gard-data-hub"]
+    },
+    "features-gard-curation-mapper": {
+      "tags": []
+    },
+    "features-gard-curation-curation": {
+      "tags": []
+    },
+    "features-gard-curation-dashboard": {
       "tags": []
     }
   }

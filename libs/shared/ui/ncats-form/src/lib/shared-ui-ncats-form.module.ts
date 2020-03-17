@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ReactiveFormsModule} from "@angular/forms";
 import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
 import {NcatsFileComponent} from "./question-templates/ncats-file/ncats-file.component";
@@ -16,7 +15,6 @@ import {NcatsFormComponent} from "./ncats-form.component";
 @NgModule({
   imports: [
     CommonModule,
-    BrowserAnimationsModule,
     ReactiveFormsModule,
     CustomMaterialModule
   ],

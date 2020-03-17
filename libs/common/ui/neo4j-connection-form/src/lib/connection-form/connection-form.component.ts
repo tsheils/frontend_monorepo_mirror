@@ -16,8 +16,9 @@ export class ConnectionFormComponent implements OnInit {
     new TextboxQuestion({
       key: 'url',
       label: 'Database Url',
-      value: 'bolt://gard-dev-neo4j.ncats.nih.gov:7687/',
+      // value: 'bolt://gard-dev-neo4j.ncats.nih.gov:7687/',
       // value: 'bolt://ifxdev3.ncats.nih.gov:9005/',
+       value: 'bolt://disease.ncats.io:80/',
       required: true
     }),
     new TextboxQuestion({
@@ -61,6 +62,7 @@ export class ConnectionFormComponent implements OnInit {
   }
 
   connect(): void {
+    console.log("connect");
     const formVals = this.form.value;
     this.neo4jConnectService.connect(formVals).subscribe(res => {
       this.connected = res;

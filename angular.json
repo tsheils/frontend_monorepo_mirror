@@ -1,135 +1,6 @@
 {
   "version": 1,
   "projects": {
-    "ncats-frontend-demo": {
-      "projectType": "application",
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        },
-        "@schematics/angular:component": {
-          "styleext": "scss"
-        }
-      },
-      "root": "apps/ncats-frontend-demo",
-      "sourceRoot": "apps/ncats-frontend-demo/src",
-      "prefix": "ncats-frontend-library",
-      "architect": {
-        "build": {
-          "builder": "ngx-library-assets:browser",
-          "options": {
-            "outputPath": "dist/apps/ncats-frontend-demo",
-            "index": "apps/ncats-frontend-demo/src/index.html",
-            "main": "apps/ncats-frontend-demo/src/main.ts",
-            "polyfills": "apps/ncats-frontend-demo/src/polyfills.ts",
-            "tsConfig": "apps/ncats-frontend-demo/tsconfig.app.json",
-            "aot": false,
-            "assets": [
-              "apps/ncats-frontend-demo/src/favicon.ico",
-              "apps/ncats-frontend-demo/src/assets"
-            ],
-            "styles": ["apps/ncats-frontend-demo/src/styles.scss"],
-            "scripts": []
-          },
-          "configurations": {
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "apps/ncats-frontend-demo/src/environments/environment.ts",
-                  "with": "apps/ncats-frontend-demo/src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "builder": "ngx-library-assets:dev-server",
-          "options": {
-            "browserTarget": "ncats-frontend-demo:build"
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "ncats-frontend-demo:build:production"
-            }
-          }
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "ncats-frontend-demo:build"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/ncats-frontend-demo/tsconfig.app.json",
-              "apps/ncats-frontend-demo/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!apps/ncats-frontend-demo/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/ncats-frontend-demo/jest.config.js",
-            "tsConfig": "apps/ncats-frontend-demo/tsconfig.spec.json",
-            "setupFile": "apps/ncats-frontend-demo/src/test-setup.ts"
-          }
-        }
-      }
-    },
-    "ncats-frontend-demo-e2e": {
-      "root": "apps/ncats-frontend-demo-e2e",
-      "sourceRoot": "apps/ncats-frontend-demo-e2e/src",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@nrwl/cypress:cypress",
-          "options": {
-            "cypressConfig": "apps/ncats-frontend-demo-e2e/cypress.json",
-            "tsConfig": "apps/ncats-frontend-demo-e2e/tsconfig.e2e.json",
-            "devServerTarget": "ncats-frontend-demo:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "ncats-frontend-demo:serve:production"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["apps/ncats-frontend-demo-e2e/tsconfig.e2e.json"],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/ncats-frontend-demo-e2e/**"
-            ]
-          }
-        }
-      }
-    },
     "ncats-firebase-auth-module": {
       "projectType": "library",
       "root": "libs/ncats-firebase-auth-module",
@@ -155,37 +26,6 @@
             "jestConfig": "libs/ncats-firebase-auth-module/jest.config.js",
             "tsConfig": "libs/ncats-firebase-auth-module/tsconfig.spec.json",
             "setupFile": "libs/ncats-firebase-auth-module/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "styleext": "scss"
-        }
-      }
-    },
-    "idg-tdl-indicator": {
-      "projectType": "library",
-      "root": "libs/idg-tdl-indicator",
-      "sourceRoot": "libs/idg-tdl-indicator/src",
-      "prefix": "ncats-frontend-library",
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/idg-tdl-indicator/tsconfig.lib.json",
-              "libs/idg-tdl-indicator/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/idg-tdl-indicator/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/idg-tdl-indicator/jest.config.js",
-            "tsConfig": "libs/idg-tdl-indicator/tsconfig.spec.json",
-            "setupFile": "libs/idg-tdl-indicator/src/test-setup.ts"
           }
         }
       },
@@ -968,128 +808,6 @@
         }
       }
     },
-    "mapper": {
-      "projectType": "application",
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
-      },
-      "root": "apps/mapper",
-      "sourceRoot": "apps/mapper/src",
-      "prefix": "ncats-frontend-library",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "outputPath": "dist/apps/mapper",
-            "index": "apps/mapper/src/index.html",
-            "main": "apps/mapper/src/main.ts",
-            "polyfills": "apps/mapper/src/polyfills.ts",
-            "tsConfig": "apps/mapper/tsconfig.app.json",
-            "aot": true,
-            "assets": ["apps/mapper/src/favicon.ico", "apps/mapper/src/assets"],
-            "scripts": [],
-            "stylePreprocessorOptions": {
-              "includePaths": ["libs/styles/src/styles/"]
-            },
-            "styles": ["apps/mapper/src/styles.scss"]
-          },
-          "configurations": {
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "apps/mapper/src/environments/environment.ts",
-                  "with": "apps/mapper/src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "mapper:build"
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "mapper:build:production"
-            }
-          }
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "mapper:build"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/mapper/tsconfig.app.json",
-              "apps/mapper/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!apps/mapper/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/mapper/jest.config.js",
-            "tsConfig": "apps/mapper/tsconfig.spec.json",
-            "setupFile": "apps/mapper/src/test-setup.ts"
-          }
-        }
-      }
-    },
-    "mapper-e2e": {
-      "root": "apps/mapper-e2e",
-      "sourceRoot": "apps/mapper-e2e/src",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@nrwl/cypress:cypress",
-          "options": {
-            "cypressConfig": "apps/mapper-e2e/cypress.json",
-            "tsConfig": "apps/mapper-e2e/tsconfig.e2e.json",
-            "devServerTarget": "mapper:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "mapper:serve:production"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["apps/mapper-e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**", "!apps/mapper-e2e/**"]
-          }
-        }
-      }
-    },
     "shared-ui-mapper-ui": {
       "projectType": "library",
       "root": "libs/shared/ui/mapper-ui",
@@ -1188,6 +906,233 @@
           "styleext": "scss"
         }
       }
+    },
+    "gard-data-hub": {
+      "projectType": "application",
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/gard-data-hub",
+      "sourceRoot": "apps/gard-data-hub/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/gard-data-hub",
+            "index": "apps/gard-data-hub/src/index.html",
+            "main": "apps/gard-data-hub/src/main.ts",
+            "polyfills": "apps/gard-data-hub/src/polyfills.ts",
+            "tsConfig": "apps/gard-data-hub/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "apps/gard-data-hub/src/favicon.ico",
+              "apps/gard-data-hub/src/assets"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": ["libs/styles/src/styles/"]
+            },
+            "styles": ["apps/gard-data-hub/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/gard-data-hub/src/environments/environment.ts",
+                  "with": "apps/gard-data-hub/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "gard-data-hub:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "gard-data-hub:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "gard-data-hub:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/gard-data-hub/tsconfig.app.json",
+              "apps/gard-data-hub/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/gard-data-hub/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/gard-data-hub/jest.config.js",
+            "tsConfig": "apps/gard-data-hub/tsconfig.spec.json",
+            "setupFile": "apps/gard-data-hub/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "gard-data-hub-e2e": {
+      "root": "apps/gard-data-hub-e2e",
+      "sourceRoot": "apps/gard-data-hub-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/gard-data-hub-e2e/cypress.json",
+            "tsConfig": "apps/gard-data-hub-e2e/tsconfig.e2e.json",
+            "devServerTarget": "gard-data-hub:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "gard-data-hub:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["apps/gard-data-hub-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/gard-data-hub-e2e/**"]
+          }
+        }
+      }
+    },
+    "features-gard-curation-mapper": {
+      "projectType": "library",
+      "root": "libs/features/gard-curation/mapper",
+      "sourceRoot": "libs/features/gard-curation/mapper/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/features/gard-curation/mapper/tsconfig.lib.json",
+              "libs/features/gard-curation/mapper/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/features/gard-curation/mapper/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/features/gard-curation/mapper/jest.config.js",
+            "tsConfig": "libs/features/gard-curation/mapper/tsconfig.spec.json",
+            "setupFile": "libs/features/gard-curation/mapper/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "features-gard-curation-curation": {
+      "projectType": "library",
+      "root": "libs/features/gard-curation/curation",
+      "sourceRoot": "libs/features/gard-curation/curation/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/features/gard-curation/curation/tsconfig.lib.json",
+              "libs/features/gard-curation/curation/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/features/gard-curation/curation/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/features/gard-curation/curation/jest.config.js",
+            "tsConfig": "libs/features/gard-curation/curation/tsconfig.spec.json",
+            "setupFile": "libs/features/gard-curation/curation/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "features-gard-curation-dashboard": {
+      "projectType": "library",
+      "root": "libs/features/gard-curation/dashboard",
+      "sourceRoot": "libs/features/gard-curation/dashboard/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/features/gard-curation/dashboard/tsconfig.lib.json",
+              "libs/features/gard-curation/dashboard/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/features/gard-curation/dashboard/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/features/gard-curation/dashboard/jest.config.js",
+            "tsConfig": "libs/features/gard-curation/dashboard/tsconfig.spec.json",
+            "setupFile": "libs/features/gard-curation/dashboard/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
     }
   },
   "cli": {
@@ -1202,5 +1147,5 @@
       "unitTestRunner": "jest"
     }
   },
-  "defaultProject": "ncats-frontend-demo"
+  "defaultProject": "gard-data-hub"
 }
