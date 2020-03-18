@@ -3,6 +3,7 @@ import RxSession from "neo4j-driver/types/session-rx";
 import {Neo4jConnectService} from "@ncats-frontend-library/common/data-access/neo4j-connector";
 import {from, of} from "rxjs";
 import {concatAll, map, mergeMap} from "rxjs/operators";
+import {Disease, DiseaseSerializer} from "../../../../../../../models/gard/disease";
 
 @Component({
   selector: 'ncats-frontend-library-curation-feature',
@@ -10,11 +11,9 @@ import {concatAll, map, mergeMap} from "rxjs/operators";
   styleUrls: ['./curation-feature.component.scss']
 })
 export class CurationFeatureComponent implements OnInit {
-
-  disease = {
-    name: '',
-    inheritance: []
-  };
+  disease: Disease;
+  displayDisease: Disease;
+  diseaseObj: any[] = [];
   session: RxSession;
   curatedObject = {
     name: '',
@@ -22,10 +21,10 @@ export class CurationFeatureComponent implements OnInit {
   };
 
   searching = false;
-  newTestData: any;
   editing:string  = '';
   calls: any[] = [];
   dataLoaded = false;
+  serializer: DiseaseSerializer = new DiseaseSerializer();
 
   constructor(
     private changeRef: ChangeDetectorRef
@@ -46,7 +45,9 @@ export class CurationFeatureComponent implements OnInit {
 
   search(event: any) {
     this.searching = true;
-    this.disease.name = event;
+    this.dataLoaded = false;
+    this.disease = null;
+    this.diseaseObj = [];
     this.calls.push(`match (n:S_OMIM)-[:R_rel{name:'has_inheritance_type'}]-(m:S_OMIM)-[:N_Name|:I_CODE]-(:S_HP)-[]-(z:DATA) WHERE n._N_Name CONTAINS '${event.toUpperCase()}' match (n)-[]-(x:DATA), (m)-[]-(y:DATA) with DISTINCT {disease: x.label, inheritance: [{value: y.label, references:['OMIM']}, {value: z.label, references: ['OMIM', 'HPO']}]} as ret RETURN ret`);
 this.calls.push(`match (n:S_ORDO_ORPHANET{_N_Name: '${event.toUpperCase()}'})-[:R_subClassOf{property:'http://www.orpha.net/ORDO/Orphanet_C016'}]-(i)-[]-(h:S_HP)-[]-(d:DATA) with DISTINCT {disease: n._N_Name, inheritance: [{value:  i._N_Name, references:['ORPHANET']}, {value: d.label, references: ['ORPHANET', 'HPO']}]} as ret RETURN ret`);
     from(this.calls.map(call => {
@@ -58,7 +59,7 @@ this.calls.push(`match (n:S_ORDO_ORPHANET{_N_Name: '${event.toUpperCase()}'})-[:
             .pipe(
               mergeMap<any, any>(response => {
                 if(response._fields[0].disease === event.toUpperCase()) {
-                  this.disease.inheritance.push(...response._fields[0].inheritance);
+                  this.diseaseObj.push(...response._fields[0].inheritance);
                 }
                 return of(response);
               }));
@@ -69,7 +70,7 @@ this.calls.push(`match (n:S_ORDO_ORPHANET{_N_Name: '${event.toUpperCase()}'})-[:
         complete: () => {
           const inheritanceValuesArr = [];
           const dataMap: Map<string, string[]> = new Map<string, string[]>();
-          this.disease.inheritance.forEach(inheritance =>  {
+          this.diseaseObj.forEach(inheritance =>  {
              if (dataMap.has(inheritance.value)) {
                let arr: string[] = dataMap.get(inheritance.value);
                arr.push(...inheritance.references);
@@ -82,7 +83,8 @@ this.calls.push(`match (n:S_ORDO_ORPHANET{_N_Name: '${event.toUpperCase()}'})-[:
           Array.from(dataMap.entries()).forEach(entry => {
             inheritanceValuesArr.push({value: entry[0], references: entry[1]})
           });
-          this.disease.inheritance = inheritanceValuesArr;
+          this.disease = this.serializer.fromJson({name: event, inheritance: inheritanceValuesArr});
+          this.displayDisease = this.serializer.fromJson(this.disease);
           this.dataLoaded = true;
           this.searching = false;
           this.editing = 'inheritance';
@@ -100,8 +102,12 @@ this.calls.push(`match (n:S_ORDO_ORPHANET{_N_Name: '${event.toUpperCase()}'})-[:
   }
 
   setObject(field: string): void {
-   // this.disease[field] = this.curatedObject[field];
-    this.newTestData = this.curatedObject[field];
+    this.displayDisease[field] = this.curatedObject[field];
     this.editing = null;
+  }
+
+  disconnect() {
+    this.session.close();
+    this.session = null;
   }
 }

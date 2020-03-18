@@ -31,6 +31,7 @@ export class NcatsFormComponent implements OnInit {
     this.createForm().subscribe(res => {
       if (res) {
         this.form = res;
+        console.log(this);
         this.formReturner.emit(res);
         this.form.valueChanges.subscribe(val => {
           this.formReturner.emit(this.form);
@@ -67,6 +68,7 @@ export class NcatsFormComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log("submit");
     this.payLoad = JSON.stringify(this.form.value);
   }
 }

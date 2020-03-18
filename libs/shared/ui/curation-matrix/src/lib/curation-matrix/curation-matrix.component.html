@@ -38,14 +38,14 @@
           </ng-template>
         </td>
       </ng-container>
-
       <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayColumns;"></tr>
     </table>
   </div>
 </div>
-
-<h4>{{field}}: </h4> <h5>drag to reorder</h5>
+<div *ngIf="selectedValues.length">
+  <br>
+  <br>
 <div class="draggable-list"
      cdkDropList
      (cdkDropListDropped)="drop($event)">
@@ -59,6 +59,10 @@
     </span>
     </span>
   </mat-card>
+  <h5 *ngIf="selectedValues.length > 1">drag to reorder</h5>
+</div>
 </div>
 
+<!--
 {{field}}: {{selectedValues | json}}
+-->
