@@ -3,12 +3,15 @@ import { CommonModule } from '@angular/common';
 import { ConnectionFormComponent } from './connection-form/connection-form.component';
 import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
 import {SharedUiNcatsFormModule} from "@ncats-frontend-library/shared/ui/ncats-form";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   imports: [
     CommonModule,
     CustomMaterialModule,
     SharedUiNcatsFormModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   declarations: [ConnectionFormComponent],
   exports: [

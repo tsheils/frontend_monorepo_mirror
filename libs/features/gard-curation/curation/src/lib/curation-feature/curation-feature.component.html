@@ -1,13 +1,21 @@
-<div fxLayout = "row" fxLayoutAlign="space-around center">
+<div fxLayout = "row" fxLayoutAlign="space-around center" *ngIf = !session>
   <div fxFlex = "75">
     <mat-card>
     <ncats-frontend-library-connection-form (connection)="setConnection($event)"></ncats-frontend-library-connection-form>
     </mat-card>
   </div>
 </div>
-    <div fxLayout = "row" fxLayoutAlign="space-around center">
+    <div fxLayout = "row" fxLayoutAlign="space-around center" *ngIf="session">
   <div fxFlex = "75">
-    <mat-card *ngIf="session">
+    <h1>{{disease?.name}}</h1>
+  </div>
+      <div fxFlex="15" fxLayoutAlign="end">
+        Connected
+        <button mat-flat-button [color]="'primary'" (click)="disconnect()">Disconnect</button>
+      </div>
+    </div>
+    <div fxLayout = "row" fxLayoutAlign="space-around center" *ngIf="session">
+  <div fxFlex = "75">
       <div fxLayout = "row" fxLayoutAlign="space-around center">
         <div fxFlex = "95">
       <ncats-frontend-library-search-bar
@@ -15,15 +23,15 @@
       (query) = "search($event)"
       [placeholderStr]="'Fetch by disease'"
     ></ncats-frontend-library-search-bar>
-  </div>
+          <mat-progress-bar [mode]="'indeterminate'" *ngIf="searching && !dataLoaded"></mat-progress-bar>
+        </div>
       </div>
-    </mat-card>
-    <mat-card *ngIf="searching || dataLoaded">
+    <mat-card *ngIf="disease || dataLoaded">
+      <mat-card-header><h3>Inheritance</h3></mat-card-header>
 <div fxLayout = "row" fxLayoutAlign="space-around center">
   <div fxFlex = "95" >
-    <mat-progress-bar [mode]="'indeterminate'" *ngIf="searching && !dataLoaded"></mat-progress-bar>
-    <mat-card *ngIf = "editing !== 'inheritance'">
-     <div *ngFor="let value of disease.inheritance">
+    <mat-card *ngIf = "disease && editing !== 'inheritance'">
+     <div *ngFor="let value of displayDisease?.inheritance">
       {{value.value}}
       <span *ngIf="value.references">
       &nbsp;
@@ -36,22 +44,22 @@
     </mat-card>
     <ncats-frontend-library-curation-matrix
   [field] = "'inheritance'"
-  [data] = disease.inheritance
-  [currentObject] = newTestData
+  [data] = disease?.inheritance
+  [currentObject] = displayDisease?.inheritance
   (curatedObjectChange)="setCuratedObject($event, 'inheritance')"
   *ngIf="dataLoaded && editing === 'inheritance'">
 </ncats-frontend-library-curation-matrix>
 </div>
 </div>
-      <div fxLayout = "row" fxLayoutAlign="end end" *ngIf="dataLoaded" >
+      <div fxLayout = "row" fxLayoutAlign="end center" *ngIf="dataLoaded" class="action-buttons-row">
         <div fxFlex = "15">
-      <div *ngIf = "editing !== 'inheritance'">
+          <div *ngIf = "editing !== 'inheritance'" fxLayoutAlign="end center">
   <button mat-stroked-button [color]="'primary'" (click) = "editing = 'inheritance'">Edit</button>
 </div>
-<div *ngIf = "editing === 'inheritance'">
+<div  *ngIf = "editing === 'inheritance'" fxLayoutAlign="space-around center">
   <button mat-stroked-button [color]="'warn'" (click) = "editing = null">Cancel</button>
   <button mat-stroked-button [color]="'primary'" (click) = "setObject('inheritance')">Save</button>
-</div>
+        </div>
         </div>
       </div>
     </mat-card>

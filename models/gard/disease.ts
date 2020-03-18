@@ -79,6 +79,7 @@ export class Disease {
   synonyms: GardDataProperty[];
   hpo: GardDataProperty[];
   inheritance: GardDataProperty[];
+  //inheritance: GardDataProperty[];
   xrefs: GardDataProperty[];
   is_rare: boolean;
   uri: string;

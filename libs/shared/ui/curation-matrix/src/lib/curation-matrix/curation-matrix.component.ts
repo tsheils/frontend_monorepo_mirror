@@ -79,5 +79,15 @@ export class CurationMatrixComponent implements OnInit {
     this.curatedObjectChange.emit(this.selectedValues);
   }
 
+  ngOnChanges(change) {
+    if (change.data && this.data === null) {
+    this.dataSource.data = [];
+    } else if (change.data && this.data.length > 0) {
+     this.dataSource.data = this.data.sort((a,b) => {
+        return b.references.length - a.references.length;
+      });
+    }
+  }
+
 
 }
