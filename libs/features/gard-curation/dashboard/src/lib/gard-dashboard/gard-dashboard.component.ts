@@ -1,25 +1,29 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {Neo4jConnectService} from "@ncats-frontend-library/common/data-access/neo4j-connector";
 import RxSession from "neo4j-driver/types/session-rx";
 
 @Component({
-  selector: 'ncats-frontend-library-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  selector: 'ncats-frontend-library-gard-dashboard',
+  templateUrl: './gard-dashboard.component.html',
+  styleUrls: ['./gard-dashboard.component.scss']
 })
-export class AppComponent {
-  title = 'gard-data-hub';
+export class GardDashboardComponent implements OnInit {
   session: RxSession;
-  links: any[] = [];
 
   constructor (
     private connectionService: Neo4jConnectService
   ) {
     this.connectionService.session$.subscribe(res => {
       this.session = res;
-      this.links = [{link:'mapper'}, {link: 'curation', label: 'curation'}];
       console.log(this.session);
-      });
+    });
   }
 
+
+  ngOnInit(): void {
+  }
+
+  setConnection($event: Neo4jConnectService) {
+     // this.session = $event.session;
+  }
 }

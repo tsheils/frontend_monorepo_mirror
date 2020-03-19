@@ -1,0 +1,17 @@
+<div fxLayout="row" fxLayoutAlign="space-around center">
+  <div fxFlex="75">
+    <ncats-frontend-library-connection-form (connection)="setConnection($event)"></ncats-frontend-library-connection-form>
+  </div>
+</div>
+    <div fxLayout="row" fxLayoutAlign="space-around center" *ngIf="session">
+  <div fxFlex="75">
+    <div class="tile-grid">
+      <mat-card class="dashboard-tile">Public Data Browser</mat-card>
+      <mat-card class="dashboard-tile" [routerLink]="'/mapper'">Mapper</mat-card>
+      <mat-card class="dashboard-tile" [routerLink]="'/curation'">Curation</mat-card>
+      <mat-card class="dashboard-tile">Annotation</mat-card>
+      <mat-card class="dashboard-tile">Translation</mat-card>
+      <mat-card class="dashboard-tile">Database Stats</mat-card>
+    </div>
+  </div>
+</div>

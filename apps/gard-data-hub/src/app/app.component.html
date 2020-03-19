@@ -1,4 +1,12 @@
-<ncats-frontend-library-gard-header></ncats-frontend-library-gard-header>
+<ncats-frontend-library-header-template [links]="links">
+  <div class="title">
+    <h1 class="toolbar-dark" ><a href="/">GARD Mapper</a> </h1>
+  </div>
+  <div class="right-options">
+    <button mat-flat-button>Login</button>
+  </div>
+</ncats-frontend-library-header-template>
+
 <div class="main-content">
   <router-outlet></router-outlet>
 </div>

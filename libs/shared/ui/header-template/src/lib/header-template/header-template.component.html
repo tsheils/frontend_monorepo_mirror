@@ -8,7 +8,7 @@
 
 
 
-    <!--mobile sidenav menu-->
+    <!- mobile sidenav menu-->
 <!--    <mat-sidenav #mobilesidenav class="mobile-menu-panel"
                  [position]="'end'"
                  [disableClose]="false"
@@ -56,23 +56,24 @@
         <a mat-button routerLink="/{{link.link}}" [ngClass]="{active: isActive(link.link)}">{{link.label ? link.label : link.link}}</a>
       </div>
       <span class="fill-remaining-space"></span>
-     <!-- <pharos-search-component [fxHide.lt-md]="true" [placeholderStr]="'search'"
-                               *ngIf=searchBar></pharos-search-component>
-      <div *ngIf=profile class="profile-section" [matMenuTriggerFor]="profileMenu" fxHide.lt-md>
-        <img [src]=profile.profilePic class="profile-pic" *ngIf="profile?.profilePic">
-        <span class="user-name">{{profile.name}}</span>
-      </div>
-      <button mat-button class="menu-button" aria-label = "signin button" (click)="openSignInModal()" *ngIf="!profile" fxHide.lt-md>
-        Sign In
-      </button>
-      <mat-menu #profileMenu="matMenu">
-        <button mat-menu-item routerLink="/profile">
-          My Profile
-        </button>
-        <button mat-menu-item (click)="signOut()">
-          Sign Out
-        </button>
-      </mat-menu>-->
+      <ng-content select=".right-options"></ng-content>
+      <!-- <pharos-search-component [fxHide.lt-md]="true" [placeholderStr]="'search'"
+                                *ngIf=searchBar></pharos-search-component>
+       <div *ngIf=profile class="profile-section" [matMenuTriggerFor]="profileMenu" fxHide.lt-md>
+         <img [src]=profile.profilePic class="profile-pic" *ngIf="profile?.profilePic">
+         <span class="user-name">{{profile.name}}</span>
+       </div>
+       <button mat-button class="menu-button" aria-label = "signin button" (click)="openSignInModal()" *ngIf="!profile" fxHide.lt-md>
+         Sign In
+       </button>
+       <mat-menu #profileMenu="matMenu">
+         <button mat-menu-item routerLink="/profile">
+           My Profile
+         </button>
+         <button mat-menu-item (click)="signOut()">
+           Sign Out
+         </button>
+       </mat-menu>-->
       <!-- <button mat-icon-button class="share-button" [color]="'primary'" aria-label = "share link button" fxHide fxShow.lt-md>
          <mat-icon>share</mat-icon>
        </button>-->

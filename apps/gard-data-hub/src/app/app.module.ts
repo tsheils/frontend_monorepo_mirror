@@ -4,8 +4,15 @@ import { AppComponent } from './app.component';
 import {RouterModule, Routes} from '@angular/router';
 import {UiGardGardHeaderModule} from "@ncats-frontend-library/ui/gard/gard-header";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {SharedUiHeaderTemplateModule} from "@ncats-frontend-library/shared/ui/header-template";
+import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
 
 const ROUTES: Routes = [
+  {
+    path: '',
+    pathMatch: 'full',
+    loadChildren: () => import('@ncats-frontend-library/features/gard-curation/dashboard').then(m => m.FeaturesGardCurationDashboardModule)
+  },
   { path: 'index',
     redirectTo: '/',
     pathMatch: 'full'
@@ -29,7 +36,9 @@ const ROUTES: Routes = [
     BrowserModule,
     BrowserAnimationsModule,
     RouterModule.forRoot(ROUTES, {initialNavigation: 'enabled'}),
-    UiGardGardHeaderModule
+    UiGardGardHeaderModule,
+    SharedUiHeaderTemplateModule,
+    CustomMaterialModule
   ],
   providers: [],
   bootstrap: [AppComponent]
