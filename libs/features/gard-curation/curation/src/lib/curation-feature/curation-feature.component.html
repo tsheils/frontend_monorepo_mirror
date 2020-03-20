@@ -9,8 +9,8 @@
   <div fxFlex = "75">
     <h1>{{disease?.name}}</h1>
   </div>
-      <div fxFlex="15" fxLayoutAlign="end">
-        Connected
+      <div fxFlex="15" fxLayoutAlign="center end">
+        Connected &nbsp;&nbsp;&nbsp;
         <button mat-flat-button [color]="'primary'" (click)="disconnect()">Disconnect</button>
       </div>
     </div>
@@ -22,6 +22,7 @@
       (inputChangeEvent)="typeahead($event)"
       (query) = "search($event)"
       [placeholderStr]="'Fetch by disease'"
+      [filteredGroups]="typeaheadSource$"
     ></ncats-frontend-library-search-bar>
           <mat-progress-bar [mode]="'indeterminate'" *ngIf="searching && !dataLoaded"></mat-progress-bar>
         </div>

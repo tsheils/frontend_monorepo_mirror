@@ -1,14 +1,14 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {debounceTime, distinctUntilChanged, switchMap} from "rxjs/operators";
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
+import {debounceTime, distinctUntilChanged} from "rxjs/operators";
 import {FormControl} from "@angular/forms";
 import {Router} from "@angular/router";
-import {MatAutocompleteTrigger} from "@angular/material/autocomplete";
-import {Observable} from "rxjs";
+import {MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from "@angular/material/autocomplete";
 
 @Component({
   selector: 'ncats-frontend-library-search-bar',
   templateUrl: './search-bar.component.html',
-  styleUrls: ['./search-bar.component.scss']
+  styleUrls: ['./search-bar.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class SearchBarComponent implements OnInit {
   @ViewChild(MatAutocompleteTrigger, {static: true}) autocomplete: MatAutocompleteTrigger;
@@ -28,11 +28,11 @@ export class SearchBarComponent implements OnInit {
   /**
    * observable list of returned responses
    */
-  filteredGroups: Observable<any>;
+  @Input() filteredGroups: any;
 
 
 
-  @Output() query: EventEmitter<string> = new EventEmitter<string>();
+  @Output() query: EventEmitter<any> = new EventEmitter<any>();
   @Output() inputChangeEvent: EventEmitter<string> = new EventEmitter<string>();
 
 
@@ -77,15 +77,15 @@ export class SearchBarComponent implements OnInit {
   }
 
   /**
-   * emits query, optionally appending a wildcard character
+   * emits query
    * @returns void
    */
-  search(wildcard?: boolean): void {
+  search(event?: MatAutocompleteSelectedEvent): void {
     this.autocomplete.closePanel();
-    let query = this.typeaheadCtrl.value;
-    if (wildcard) {
-      query = `${query}.*`;
-    }
-  this.query.emit(query);
+  this.query.emit(this.typeaheadCtrl.value);
+  }
+
+  displayFn(option: any): string {
+    return option && option.key ? option.key : '';
   }
 }

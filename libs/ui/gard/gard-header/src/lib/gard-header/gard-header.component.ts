@@ -7,8 +7,8 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class GardHeaderComponent implements OnInit {
 
-  @Input() links: any[] =  [{link:'mapper'}, {link: 'curation', label: 'curation'}];
- // @Input() links: any[] =  [];
+  @Input() links: any[] =  [];
+ // @Input() links: any[ =  [];
 
   constructor() { }
 
