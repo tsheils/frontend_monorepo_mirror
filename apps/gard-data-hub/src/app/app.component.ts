@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {Neo4jConnectService} from "@ncats-frontend-library/common/data-access/neo4j-connector";
 import RxSession from "neo4j-driver/types/session-rx";
 
@@ -7,7 +7,7 @@ import RxSession from "neo4j-driver/types/session-rx";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy {
   title = 'gard-data-hub';
   session: RxSession;
   links: any[] = [];
@@ -20,6 +20,13 @@ export class AppComponent {
       this.links = [{link:'mapper'}, {link: 'curation', label: 'curation'}];
       console.log(this.session);
       });
+  }
+
+  ngOnDestroy() {
+    if(this.session) {
+      this.session.close();
+      this.connectionService.driver.close();
+    }
   }
 
 }

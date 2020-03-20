@@ -30,19 +30,22 @@ export class MapperFeatureComponent implements OnDestroy {
   ) {
     this.connectionService.session$.subscribe(res => {
       this.session = res;
-      console.log(this.session);
       this.fetchKeys();
     });
   }
 
-  getData(call: string) {
-    if(this.session) {
-      return this.session.readTransaction(txc => txc.run(call).records());
-    }
+
+  ngOnInit(): void {
   }
 
+  setConnection(connection: Neo4jConnectService) {
+    // this.session = connection.session;
+  }
 
-  setConnection(connection: Neo4jConnectService) {}
+  getData(call: string) {
+    const session = this.connectionService.driver.rxSession();
+    return session.readTransaction(txc => txc.run(call).records());
+  }
 
   fetchKeys() {
     this.allSourcesLoading = true;
@@ -126,6 +129,7 @@ export class MapperFeatureComponent implements OnDestroy {
   ngOnDestroy() {
     if(this.session) {
       this.session.close();
+    //  this.connectionService.driver.close();
     }
   }
 

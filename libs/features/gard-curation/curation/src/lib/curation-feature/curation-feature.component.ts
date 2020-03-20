@@ -35,7 +35,6 @@ export class CurationFeatureComponent implements OnInit {
 
   searching = false;
   editing: string = '';
-  calls: any[] = [];
   typeaheadFields: Observable<any> = new Observable<any>();
   dataLoaded = false;
   serializer: DiseaseSerializer = new DiseaseSerializer();
@@ -63,28 +62,49 @@ export class CurationFeatureComponent implements OnInit {
   }
 
   search(event: any) {
+    const calls = [];
     this.searching = true;
     this.dataLoaded = false;
     this.disease = null;
     this.diseaseObj = [];
-    let omim, orphanet: string;
+    let omims: any[] = [],
+      orphanets: any[] = [];
     if(event.codes) {
+      if (!Array.isArray(event.codes)) {
+        event.codes = [event.codes];
+      }
       console.log(event);
-      omim = event.codes.filter(code => code.includes('OMIM'))[0];
-      orphanet = event.codes.filter(code => code.includes('ORPHA'))[0];
-      console.log(omim);
-      console.log(orphanet);
+      omims = [...new Set(event.codes.filter(code => code.includes('OMIM')))];
+      orphanets = [...new Set(event.codes.filter(code => code.includes('ORPHANET')))];
+      console.log(omims);
+      console.log(orphanets);
     }
 
     //this.calls.push(`match (n:S_OMIM)-[:R_rel{name:'has_inheritance_type'}]-(m:S_OMIM)-[:N_Name|:I_CODE]-(:S_HP)-[]-(z:DATA) WHERE n._N_Name CONTAINS '${event.key.toUpperCase()}' match (n)-[]-(x:DATA), (m)-[]-(y:DATA) with DISTINCT {disease: x.label, inheritance: [{value: y.label, references:['OMIM']}, {value: z.label, references: ['OMIM', 'HPO']}]} as ret RETURN ret`);
     // this.calls.push(`match (n:S_ORDO_ORPHANET{_N_Name: '${event.key.toUpperCase()}'})-[:R_subClassOf{property:'http://www.orpha.net/ORDO/Orphanet_C016'}]-(i)-[]-(h:S_HP)-[]-(d:DATA) with DISTINCT {disease: n._N_Name, inheritance: [{value:  i._N_Name, references:['ORPHANET']}, {value: d.label, references: ['ORPHANET', 'HPO']}]} as ret RETURN ret`);
-    if(omim) {
-      this.calls.push(`match p=(d:DATA{gard_id: '${event.id}'})-[]-(:S_GARD)-[]-(n:S_OMIM)-[:R_rel{name:'has_inheritance_type'}]-(m:S_OMIM)-[:N_Name|:I_CODE]-(:S_HP)-[]-(z:DATA) where n._I_CODE CONTAINS '${omim}' match (n)-[]-(x:DATA), (m)-[]-(y:DATA) with DISTINCT {disease: n._N_Name, inheritance: [{value: y.label, references:['OMIM']}, {value: z.label, references: ['OMIM', 'HPO']}]} as ret RETURN ret;`);
+    //  this.calls.push(`match p=(d:DATA{gard_id: '${event.id}'})-[]-(:S_GARD)-[]-(n:S_OMIM)-[:R_rel{name:'has_inheritance_type'}]-(m:S_OMIM)-[:N_Name|:I_CODE]-(:S_HP)-[]-(z:DATA) where n._I_CODE CONTAINS '${omim}' match (n)-[]-(x:DATA), (m)-[]-(y:DATA) with DISTINCT {disease: n._N_Name, inheritance: [{value: y.label, references:['OMIM']}, {value: z.label, references: ['OMIM', 'HPO']}]} as ret RETURN ret;`);
+    if(omims && omims.length > 0) {
+      omims.forEach(omim => {
+      calls.push(`match (n:S_GARD)-[]-(d:DATA{gard_id: '${event.id}'}) with n 
+match p=(n)-[:I_CODE|:N_Name]-(o:S_OMIM)
+where o._I_CODE CONTAINS '${omim}' with n, o
+match p2 = (o)-[:R_rel{name:'has_inheritance_type'}]-(m:S_OMIM)-[:N_Name|:I_CODE]-(:S_HP)-[]-(z:DATA) 
+with DISTINCT {disease: n._N_Name, inheritance: [{value:  m._N_Name, references:['OMIM']}, {value: z.label, references: ['OMIM', 'HPO']}]} as ret RETURN ret;`
+      )
+    });
     }
-    if (orphanet) {
-      this.calls.push(`match p=(d:DATA{gard_id: '${event.id}'})-[]-(:S_GARD)-[]-(n:S_ORDO_ORPHANET)-[:R_subClassOf{property:'http://www.orpha.net/ORDO/Orphanet_C016'}]-(i)-[]-(h:S_HP)-[]-(z:DATA) where n._I_CODE CONTAINS '${orphanet}' with DISTINCT {disease: n._N_Name, inheritance: [{value:  i._N_Name, references:['ORPHANET']}, {value: z.label, references: ['ORPHANET', 'HPO']}]} as ret RETURN ret`);
+    if (orphanets && orphanets.length > 0) {
+      orphanets.forEach(orphanet => {
+      calls.push(`
+      match (n:S_GARD)-[]-(d:DATA{gard_id: '${event.id}'}) with n 
+match p=(n)-[:I_CODE|:N_Name]-(o:S_ORDO_ORPHANET)
+where n._I_CODE CONTAINS '${orphanet}'with n, o
+match p2= (o)-[:R_subClassOf{property:'http://www.orpha.net/ORDO/Orphanet_C016'}]-(i:S_ORDO_ORPHANET)-[]-(h:S_HP)-[]-(g:DATA)
+with DISTINCT {disease: n._N_Name, inheritance: [{value:  i._N_Name, references:['ORPHANET']}, {value: g.label, references: ['ORPHANET', 'HPO']}]} as ret RETURN ret
+`)
+    });
     }
-    from(this.calls.map(call => {
+    from(calls.map(call => {
       return this.getData(call);
     }))
       .pipe(
@@ -131,7 +151,10 @@ export class CurationFeatureComponent implements OnInit {
   typeahead(event: any) {
     const results = [];
     if(event) {
-      const call = `match p=(n:S_GARD)-[]-(d:DATA) where d.name =~ '(?i).*${event}.*' return d.name as key, d.gard_id as id, n.I_CODE as codes LIMIT 10`;
+      const call = `
+      match p=(n:S_GARD)-[]-(d:DATA) 
+      where d.name =~ '(?i).*${event}.*' 
+      return d.name as key, d.gard_id as id, n.I_CODE as codes LIMIT 10`;
       this.getData(call)
         .pipe(
           switchMap(res => {
@@ -142,7 +165,6 @@ export class CurationFeatureComponent implements OnInit {
         ).subscribe( {
         complete: () => {
           this._typeaheadSource.next([{name: 'GARD names', options: results}]);
-          this.session.close();
         }
       })
     }
