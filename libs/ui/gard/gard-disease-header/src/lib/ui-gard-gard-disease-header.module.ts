@@ -4,7 +4,11 @@ import { GardDiseaseHeaderComponent } from './gard-disease-header/gard-disease-h
 import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
 
 @NgModule({
-  imports: [CommonModule, CustomMaterialModule],
-  declarations: [GardDiseaseHeaderComponent]
+  imports: [
+    CommonModule,
+    CustomMaterialModule
+  ],
+  declarations: [GardDiseaseHeaderComponent],
+  exports: [GardDiseaseHeaderComponent]
 })
 export class UiGardGardDiseaseHeaderModule {}

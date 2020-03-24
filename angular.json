@@ -1133,6 +1133,37 @@
           "styleext": "scss"
         }
       }
+    },
+    "ui-gard-search-bar": {
+      "projectType": "library",
+      "root": "libs/ui/gard/search-bar",
+      "sourceRoot": "libs/ui/gard/search-bar/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ui/gard/search-bar/tsconfig.lib.json",
+              "libs/ui/gard/search-bar/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/ui/gard/search-bar/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ui/gard/search-bar/jest.config.js",
+            "tsConfig": "libs/ui/gard/search-bar/tsconfig.spec.json",
+            "setupFile": "libs/ui/gard/search-bar/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
     }
   },
   "cli": {
