@@ -38,10 +38,6 @@ export class MapperFeatureComponent implements OnDestroy {
   ngOnInit(): void {
   }
 
-  setConnection(connection: Neo4jConnectService) {
-    // this.session = connection.session;
-  }
-
   getData(call: string) {
     const session = this.connectionService.driver.rxSession();
     return session.readTransaction(txc => txc.run(call).records());
@@ -127,10 +123,7 @@ export class MapperFeatureComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
-    if(this.session) {
-      this.session.close();
-    //  this.connectionService.driver.close();
-    }
+
   }
 
 }

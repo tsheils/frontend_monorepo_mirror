@@ -10,7 +10,7 @@ import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-mat
 const ROUTES: Routes = [
   {
     path: '',
-    component: CurationFeatureComponent,
+    component: CurationFeatureComponent
   }
 ];
 

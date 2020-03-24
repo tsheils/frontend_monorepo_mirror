@@ -6,6 +6,7 @@ import {UiGardGardHeaderModule} from "@ncats-frontend-library/ui/gard/gard-heade
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {SharedUiHeaderTemplateModule} from "@ncats-frontend-library/shared/ui/header-template";
 import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
+import {SessionGuard} from "./session.guard";
 
 const ROUTES: Routes = [
   {
@@ -20,10 +21,13 @@ const ROUTES: Routes = [
   {
     path: 'mapper',
     pathMatch: 'full',
+    canActivate: [SessionGuard],
     loadChildren: () => import('@ncats-frontend-library/features/gard-curation/mapper').then(m => m.FeaturesGardCurationMapperModule)
   }, {
     path: 'curation',
     pathMatch: 'full',
+    canActivate: [SessionGuard],
+    data: { path: 'curation' },
     loadChildren: () => import('@ncats-frontend-library/features/gard-curation/curation').then(m => m.FeaturesGardCurationCurationModule)
   }
   ];

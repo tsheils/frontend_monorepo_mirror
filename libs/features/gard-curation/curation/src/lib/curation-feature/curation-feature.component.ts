@@ -52,10 +52,6 @@ export class CurationFeatureComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  setConnection(connection: Neo4jConnectService) {
-    // this.session = connection.session;
-  }
-
   getData(call: string) {
     const session = this.connectionService.driver.rxSession();
     return session.readTransaction(txc => txc.run(call).records());
@@ -181,10 +177,5 @@ with DISTINCT {disease: n._N_Name, inheritance: [{value:  i._N_Name, references:
   setObject(field: string): void {
     this.displayDisease[field] = this.curatedObject[field];
     this.editing = null;
-  }
-
-  disconnect() {
-    this.session.close();
-    this.session = null;
   }
 }

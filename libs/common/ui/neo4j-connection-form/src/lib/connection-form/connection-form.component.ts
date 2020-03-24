@@ -1,7 +1,8 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {TextboxQuestion} from "@ncats-frontend-library/shared/ui/ncats-form";
+import {Component, EventEmitter, Inject, Input, OnInit, Optional, Output} from '@angular/core';
+import {QuestionBase} from "@ncats-frontend-library/shared/ui/ncats-form";
 import {FormGroup} from "@angular/forms";
 import {Neo4jConnectService} from "@ncats-frontend-library/common/data-access/neo4j-connector";
+import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 
 @Component({
   selector: 'ncats-frontend-library-connection-form',
@@ -10,40 +11,20 @@ import {Neo4jConnectService} from "@ncats-frontend-library/common/data-access/ne
 })
 export class ConnectionFormComponent implements OnInit {
   form: FormGroup;
-  @Output() connection: EventEmitter<Neo4jConnectService> = new EventEmitter<Neo4jConnectService>();
 
-  @Input() questions = [
-    new TextboxQuestion({
-      key: 'url',
-      label: 'Database Url',
-      // value: 'bolt://gard-dev-neo4j.ncats.nih.gov:7687/',
-      // value: 'bolt://ifxdev3.ncats.nih.gov:9005/',
-       value: 'bolt://disease.ncats.io:80/',
-      required: true
-    }),
-    new TextboxQuestion({
-      key: 'user',
-      label: 'User',
-      required: true,
-      value: 'neo4j'
-    }),
-    new TextboxQuestion({
-      key: 'password',
-      label: 'Password',
-      type: 'password'
-    })
-  ];
+  @Output() formValues: EventEmitter<any> = new EventEmitter<any>();
 
-  connected = false;
-
+  @Input() questions: QuestionBase<any>[] = [];
 
   constructor(
-    private neo4jConnectService: Neo4jConnectService
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
+    if(this.data && this.data.questions) {
+      this.questions = this.data.questions;
+    }
   }
 
   ngOnInit(): void {
-    console.log(this);
   }
 
 
@@ -65,15 +46,6 @@ export class ConnectionFormComponent implements OnInit {
   connect(): void {
     console.log("connect");
     const formVals = this.form.value;
-    this.neo4jConnectService.connect(formVals).subscribe(res => {
-      this.connected = res;
-      this.connection.emit(this.neo4jConnectService)
-    });
-  }
-
-  disconnect():void {
-    console.log('disconnect');
-    this.neo4jConnectService.close();
-    this.connected = false;
+    this.formValues.emit(formVals);
   }
 }

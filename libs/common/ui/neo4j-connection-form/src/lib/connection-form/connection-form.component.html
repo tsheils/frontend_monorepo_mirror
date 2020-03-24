@@ -7,8 +7,10 @@
       ></ncats-fel-form>
     </div>
     <br>
-    <button mat-raised-button (click)="connect()" [disabled]="!form || !form.valid">Connect</button>&nbsp;
-    <button mat-raised-button (click)="clearForm()" [color]="'warn'">Clear</button>
+    <button mat-raised-button [color]="'primary'" (click)="connect()" [disabled]="!form || !form.valid">Connect</button>&nbsp;
+<!--
+    <button mat-raised-button (click)="clearForm()" [color]="'warn'">Cancel</button>
+-->
     <br>
     <br>
   </div>

@@ -15,7 +15,6 @@ export class GardDashboardComponent implements OnInit {
   ) {
     this.connectionService.session$.subscribe(res => {
       this.session = res;
-      console.log(this.session);
     });
   }
 

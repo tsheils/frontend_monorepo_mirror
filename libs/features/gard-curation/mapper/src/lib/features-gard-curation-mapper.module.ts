@@ -12,6 +12,7 @@ const ROUTES: Routes = [
   {
     path: '',
     component: MapperFeatureComponent,
+    data: { path: 'mapper' }
   }
 ];
 

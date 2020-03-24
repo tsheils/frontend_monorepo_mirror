@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {slideInOutAnimation} from "./header-animations";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 export class LinkTemplateProperty {
   link: string;
@@ -23,28 +23,25 @@ export class HeaderTemplateComponent implements OnInit {
    */
   @Input() animationState = 'in';
 
-  @Input() title: string = 'GARD Mapper';
+  @Input() title: string;
 
   @Input() links: LinkTemplateProperty[] = [];
   constructor(
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
+    console.log(this);
   }
 
   /**
    * sets active section in nav
+   * todo: this probably won't work in longer url paths
    * @param path
    */
   isActive(path: string): boolean {
-    if (this.route.snapshot.data && this.route.snapshot.data.path) {
-      return path === this.route.snapshot.data.path;
-    } else if (this.route.snapshot.url && this.route.snapshot.url.length > 0 ) {
-      return path === this.route.snapshot.url[0].path;
-    } else {
-      return false;
-    }
+    return this.router.url === `/${path}`;
   }
 
 }
