@@ -1,0 +1,7 @@
+<ncats-frontend-library-search-bar
+  (inputChangeEvent)="typeahead($event)"
+  (query)="search($event)"
+  [placeholderStr]="'Fetch by disease'"
+  [filteredGroups]="typeaheadSource$"
+></ncats-frontend-library-search-bar>
+<mat-progress-bar [mode]="'indeterminate'" *ngIf="searching && !dataLoaded"></mat-progress-bar>
