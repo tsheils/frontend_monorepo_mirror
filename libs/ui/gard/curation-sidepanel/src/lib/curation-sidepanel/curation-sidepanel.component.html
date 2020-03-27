@@ -5,7 +5,7 @@
     </button>
   </div>
   <div class="mat-title">Jump to section:</div><br>
-  <div class="toc-wrapper" *ngIf="data">
+  <div class="toc-wrapper" *ngIf="data && data.length > 0">
     <div class="toc">
       <mat-nav-list >
         <a *ngFor="let section of data"

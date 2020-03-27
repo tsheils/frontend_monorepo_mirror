@@ -98,6 +98,9 @@
       ],
       "@ncats-frontend-library/features/gard-curation/dashboard": [
         "libs/features/gard-curation/dashboard/src/index.ts"
+      ],
+      "@ncats-frontend-library/ui/gard/search-bar": [
+        "libs/ui/gard/search-bar/src/index.ts"
       ]
     }
   },

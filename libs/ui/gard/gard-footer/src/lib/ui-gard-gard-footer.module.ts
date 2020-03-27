@@ -4,6 +4,7 @@ import { GardFooterComponent } from './gard-footer/gard-footer.component';
 
 @NgModule({
   imports: [CommonModule],
-  declarations: [GardFooterComponent]
+  declarations: [GardFooterComponent],
+  exports: [GardFooterComponent]
 })
 export class UiGardGardFooterModule {}

@@ -16,7 +16,8 @@ import { DisableControlDirective } from './disable-control.directive';
   declarations: [
     SearchBarComponent,
     HighlightPipe,
-    DisableControlDirective],
+    DisableControlDirective
+  ],
   exports: [
     SearchBarComponent,
     HighlightPipe
