@@ -4,6 +4,9 @@ import {Neo4jConnectService} from "@ncats-frontend-library/common/data-access/ne
 import {BehaviorSubject, from, Observable, of} from "rxjs";
 import {concatAll, map, mergeMap, switchMap} from "rxjs/operators";
 import {Disease, DiseaseSerializer} from "../../../../../../../models/gard/disease";
+import * as neo4j from "neo4j-driver";
+import {fromPromise} from "rxjs/internal-compatibility";
+import Driver from "neo4j-driver";
 
 @Component({
   selector: 'ncats-frontend-library-curation-feature',
@@ -38,6 +41,8 @@ export class CurationFeatureComponent implements OnInit {
   typeaheadFields: Observable<any> = new Observable<any>();
   dataLoaded = false;
   serializer: DiseaseSerializer = new DiseaseSerializer();
+  gardDriver: any;
+  gardSession: RxSession;
 
   constructor(
     private changeRef: ChangeDetectorRef,
@@ -46,6 +51,17 @@ export class CurationFeatureComponent implements OnInit {
     this.connectionService.session$.subscribe(res => {
       this.session = res;
     });
+
+    this.gardDriver = neo4j.driver(
+      'bolt://localhost:7687',
+      neo4j.auth.basic('neo4j', 'tim')
+    );
+    fromPromise(this.gardDriver.verifyConnectivity()
+      .then((res) => {
+        if (res) {
+             this.gardSession = this.gardDriver.rxSession();
+        }
+      }));
   }
 
 
@@ -53,11 +69,11 @@ export class CurationFeatureComponent implements OnInit {
   }
 
   getData(call: string) {
-    const session = this.connectionService.driver.rxSession();
-    return session.readTransaction(txc => txc.run(call).records());
+    return this.gardSession.readTransaction(txc => txc.run(call).records());
   }
 
   search(event: any) {
+    console.log(event);
     const calls = [];
     this.searching = true;
     this.dataLoaded = false;
@@ -148,12 +164,13 @@ with DISTINCT {disease: n._N_Name, inheritance: [{value:  i._N_Name, references:
     const results = [];
     if(event) {
       const call = `
-      match p=(n:S_GARD)-[]-(d:DATA) 
-      where d.name =~ '(?i).*${event}.*' 
-      return d.name as key, d.gard_id as id, n.I_CODE as codes LIMIT 10`;
+      CALL db.index.fulltext.queryNodes("namesAndSynonyms", "${event}") YIELD node
+      RETURN node.name AS key, node.gard_id AS id, node.codes AS codes LIMIT 10;
+      `;
       this.getData(call)
         .pipe(
           switchMap(res => {
+            console.log(res);
               results.push(res.toObject());
               return res;
             }

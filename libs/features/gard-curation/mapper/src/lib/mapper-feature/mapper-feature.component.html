@@ -6,7 +6,7 @@
       <button mat-raised-button matStepperNext>Next</button>
     </div>
   </mat-step>-->
-  <mat-step [completed] = "session && objectFields">
+ <!-- <mat-step [completed] = "session && objectFields">
     <ng-template matStepLabel>Select object field to map</ng-template>
     <ncats-frontend-library-object-tree
       (fieldSelectChange) = "setObjectFields($event)"
@@ -104,12 +104,18 @@
       <button mat-raised-button [color] = "'warn'" matStepperPrevious>Back</button>
       <button mat-raised-button matStepperNext>Next</button>
     </div>
-  </mat-step>
-  <mat-step [completed] = "selectedFields.length > 0">
+  </mat-step>-->
+  <mat-step >
     <ng-template matStepLabel>Build</ng-template>
     This may take a while.
+<!--
     <input matInput type ="email" placeholder="Enter your email for updates"/>
+-->
     <button mat-raised-button (click)="runQuery()">Build</button>
+
+    <button mat-raised-button (click)="buildInheritance()">Build Inheritance</button>
+
+    <button mat-raised-button (click)="initialBuild()">Initial Build</button>
     <div>
       <button mat-button matStepperPrevious>Back</button>
       <button mat-button matStepperNext>Next</button>
