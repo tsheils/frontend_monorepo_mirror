@@ -69,7 +69,7 @@ pipeline {
                                     "--no-cache --build-arg SOURCE_FOLDER=./dist/apps/gard-data-hub ."
                                 )
                                 docker.withRegistry("https://registry-1.docker.io/v2/","f16c74f9-0a60-4882-b6fd-bec3b0136b84") {
-                                    docker.push("${BUILD_VERSION}")
+                                    image.push("${env.BUILD_VERSION}")
                                 }
                             }
                         }
