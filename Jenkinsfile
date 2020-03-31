@@ -88,5 +88,22 @@ pipeline {
                 }
             }
         }
+        stage('Deploy docker - AWS') {
+            agent {
+                node { label 'gard-dev.ifx.aws'}
+            }
+            steps {
+                cleanWs()
+                checkout scm
+                configFileProvider([
+                    configFile(fileId: 'gard-dev-aws-docker-compose', targetLocation: 'docker-compose.yml')
+                ]) {
+                   script {
+                        def docker = new org.labshare.Docker()
+                        docker.deployDockerUI()
+                    }
+                }
+            }
+        }
     }
 }
