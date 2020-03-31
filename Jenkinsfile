@@ -106,7 +106,7 @@ pipeline {
                 ]) {
                     withEnv([
                         "DOCKER_REPO_NAME=ncats/gard-frontend",
-                        "BUILD_VERSION=" + (params.BUILD_VERSION ?: env.VERSION)
+                        "BUILD_VERSION=" + (params.BUILD_VERSION ?: env.BUILD_VERSION)
                     ]) {
                         script {
                             def docker = new org.labshare.Docker()
