@@ -65,7 +65,7 @@ pipeline {
                                     image.push("${env.BUILD_VERSION}")
                                 }
                                 docker.withRegistry("https://registry-1.docker.io/v2/","f16c74f9-0a60-4882-b6fd-bec3b0136b84") {
-                                    docker.image("ncats/gard-frontend").push("${BUILD_VERSION}")
+                                    docker.push("ncats/gard-frontend:${BUILD_VERSION}")
                                 }
                             }
                         }
