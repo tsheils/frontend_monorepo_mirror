@@ -1,0 +1,17 @@
+<div fxLayout="row" fxLayoutAlign="space-around center">
+  <div fxFlex="50">
+    <div>
+      <ncats-fel-form
+        [questions]="questions"
+        (formReturner)="setForm($event)"
+      ></ncats-fel-form>
+    </div>
+    <br>
+    <button mat-raised-button [color]="'primary'" (click)="connect()" [disabled]="!form || !form.valid">Connect</button>&nbsp;
+    <!--
+        <button mat-raised-button (click)="clearForm()" [color]="'warn'">Cancel</button>
+    -->
+    <br>
+    <br>
+  </div>
+</div>
