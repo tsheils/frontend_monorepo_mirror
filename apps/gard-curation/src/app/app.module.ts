@@ -19,13 +19,10 @@ import {
 } from "@ncats-frontend-library/ui/gard/curation-sidepanel";
 import {SharedUiDynamicAppLayoutModule} from "@ncats-frontend-library/shared/ui/dynamic-app-layout";
 import {DataPanelComponent, UiGardGardDataViewerModule} from "@ncats-frontend-library/ui/gard/gard-data-viewer";
-import {GardHeaderComponent} from "../../../../libs/ui/gard/gard-header/src/lib/gard-header/gard-header.component";
 import {GardDiseaseHeaderComponent} from "../../../../libs/ui/gard/gard-disease-header/src/lib/gard-disease-header/gard-disease-header.component";
-import {GardFooterComponent} from "../../../../libs/ui/gard/gard-footer/src/lib/gard-footer/gard-footer.component";
-import {UiGardGardHeaderModule} from "@ncats-frontend-library/ui/gard/gard-header";
+import {GardHeaderComponent, UiGardGardHeaderModule} from "@ncats-frontend-library/ui/gard/gard-header";
 import {UiGardGardDiseaseHeaderModule} from "@ncats-frontend-library/ui/gard/gard-disease-header";
-import {UiGardGardFooterModule} from "@ncats-frontend-library/ui/gard/gard-footer";
-import {CommonUiNeo4jConnectionFormModule} from "@ncats-frontend-library/common/ui/neo4j-connection-form";
+import {GardFooterComponent, UiGardGardFooterModule} from "@ncats-frontend-library/ui/gard/gard-footer";
 
 const routes: Routes = [/*
  {
@@ -51,7 +48,6 @@ const routes: Routes = [/*
     UiGardGardHeaderModule,
     UiGardGardDiseaseHeaderModule,
     UiGardGardFooterModule,
-    CommonUiNeo4jConnectionFormModule
   ],
   bootstrap: [AppComponent],
   providers: [

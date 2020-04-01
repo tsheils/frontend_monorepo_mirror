@@ -3,8 +3,10 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTre
 import {Observable} from 'rxjs';
 import {map, take} from 'rxjs/internal/operators';
 import {MatDialog} from '@angular/material/dialog';
-import {Neo4jConnectService} from "@ncats-frontend-library/common/data-access/neo4j-connector";
-import {ConnectionFormComponent} from "@ncats-frontend-library/common/ui/neo4j-connection-form";
+import {
+  Neo4jConnectionFormComponent,
+  Neo4jConnectService
+} from "@ncats-frontend-library/common/data-access/neo4j-connector";
 import {QUESTIONS} from "./app.component";
 
 @Injectable({
@@ -34,7 +36,7 @@ export class SessionGuard implements CanActivate {
           if (res) {
             return true;
           } else {
-            const dialogRef = this.dialog.open(ConnectionFormComponent, {
+            const dialogRef = this.dialog.open(Neo4jConnectionFormComponent, {
                 height: '75vh',
                 width: '66vw',
                 data: {

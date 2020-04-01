@@ -7,6 +7,7 @@ import * as neo4j from "neo4j-driver";
 import {fromPromise} from "rxjs/internal-compatibility";
 import {FormControl} from "@angular/forms";
 import {MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from "@angular/material/autocomplete";
+import {DiseasesFacade, loadDiseases, searchDiseases} from "@ncats-frontend-library/stores/diseases";
 
 @Component({
   selector: 'ncats-frontend-library-gard-search',
@@ -66,6 +67,7 @@ export class GardSearchComponent implements OnInit {
   private driver;
 
   constructor(
+    private diseasesFacade: DiseasesFacade,
     private connectionService: Neo4jConnectService
   ) {
     this.driver = neo4j.driver(
@@ -110,8 +112,10 @@ export class GardSearchComponent implements OnInit {
   }
 
   typeahead(event: any) {
+    this.autocomplete.openPanel();
     this.options = [];
     if(event.length > 0) {
+      this.diseasesFacade.dispatch(searchDiseases({query: event}));
       const call = `
       CALL db.index.fulltext.queryNodes("namesAndSynonyms", "name:${event} OR ${event}") YIELD node
       RETURN node LIMIT 10;
@@ -119,9 +123,6 @@ export class GardSearchComponent implements OnInit {
       this.getData(call)
         .pipe(
           switchMap(res => {
-            this.autocomplete.openPanel();
-            console.log(event);
-              console.log(res);
               this.options.push(res.toObject().node.properties);
               return res;
             }

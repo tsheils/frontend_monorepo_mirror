@@ -1,10 +1,14 @@
-import {Component, OnDestroy} from '@angular/core';
-import {Neo4jConnectService} from "@ncats-frontend-library/common/data-access/neo4j-connector";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {
+  Neo4jConnectionFormComponent,
+  Neo4jConnectService
+} from "@ncats-frontend-library/common/data-access/neo4j-connector";
 import RxSession from "neo4j-driver/types/session-rx";
 import {MatDialog} from "@angular/material/dialog";
-import {ConnectionFormComponent} from "@ncats-frontend-library/common/ui/neo4j-connection-form";
 import {QuestionBase, TextboxQuestion} from "@ncats-frontend-library/shared/ui/ncats-form";
 import {Router} from "@angular/router";
+import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
+import {map} from "rxjs/operators";
 
  export const QUESTIONS: QuestionBase<any>[] = [
   new TextboxQuestion({
@@ -33,14 +37,19 @@ import {Router} from "@angular/router";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnDestroy {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'gard-data-hub';
   session: RxSession;
   links: any[] = [];
+  diseases: any;
+  diseases2: any;
+  diseases3: any;
+  diseases4: any;
 
   constructor (
     public dialog: MatDialog,
     private router: Router,
+    private diseasesFacade: DiseasesFacade,
     private connectionService: Neo4jConnectService
   ) {
     this.connectionService.session$.subscribe(res => {
@@ -49,8 +58,31 @@ export class AppComponent implements OnDestroy {
       });
   }
 
+  ngOnInit() {
+    this.diseases2 = this.diseasesFacade.loaded$;
+    this.diseases3 = this.diseasesFacade.allDiseases$;
+    this.diseases4 = this.diseasesFacade.searchDiseases$;
+    this.diseases = this.diseasesFacade.selectedDiseases$;
+    this.diseases2.pipe(
+      map(res => {console.log(res)})
+    ).subscribe();
+    this.diseases3.pipe(
+      map(res => {console.log(res)})
+    ).subscribe();
+   this.diseases3.pipe(
+      map(res => {console.log(res)})
+    ).subscribe();
+
+   this.diseases4.pipe(
+      map(res => {console.log(res)})
+    ).subscribe();
+    console.log(this.diseases3);
+    console.log(this.diseases);
+    console.log(this)
+  }
+
   connect(): void {
-      const dialogRef = this.dialog.open(ConnectionFormComponent, {
+      const dialogRef = this.dialog.open(Neo4jConnectionFormComponent, {
           height: '75vh',
           width: '66vw',
           data: {

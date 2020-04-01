@@ -101,6 +101,9 @@
       ],
       "@ncats-frontend-library/ui/gard/search-bar": [
         "libs/ui/gard/search-bar/src/index.ts"
+      ],
+      "@ncats-frontend-library/stores/diseases": [
+        "libs/stores/diseases/src/index.ts"
       ]
     }
   },

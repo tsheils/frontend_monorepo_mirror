@@ -12,6 +12,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
+import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
 
 const ROUTES: Routes = [
   {
@@ -67,7 +68,15 @@ const ROUTES: Routes = [
     !environment.production ? StoreDevtoolsModule.instrument() : [],
     StoreRouterConnectingModule.forRoot()
   ],
-  providers: [],
+  providers: [
+    DiseasesFacade
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+  constructor() {
+    console.log("app module");
+    console.log(AppModule);
+  }
+
+}

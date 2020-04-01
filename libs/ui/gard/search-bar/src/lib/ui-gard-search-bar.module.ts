@@ -9,7 +9,9 @@ import {HighlightPipe} from "./gard-search/highlight.pipe";
 @NgModule({
   imports: [CommonModule,
     SharedUiSearchBarModule,
-    CustomMaterialModule, ReactiveFormsModule],
+    CustomMaterialModule,
+    ReactiveFormsModule
+  ],
   declarations: [
     HighlightPipe,
     GardSearchComponent
