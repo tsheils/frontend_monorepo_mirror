@@ -11,17 +11,12 @@ export class DiseasesFacade {
   loaded$ = this.store.pipe(select(DiseasesSelectors.getDiseasesLoaded));
 
   allDiseases$ = this.store.pipe(select(DiseasesSelectors.getAllDiseases));
-  selectedDiseases$ = this.store.pipe(select(DiseasesSelectors.getSelected));
+  selectedDisease$ = this.store.pipe(select(DiseasesSelectors.getSelected));
   searchDiseases$ = this.store.pipe(select(DiseasesSelectors.searchDiseasesEntities));
-/*
-  searchDiseases$ = this.store.pipe(select(DiseasesSelectors.search));
-*/
 
   constructor(private store: Store<fromDiseases.DiseasesPartialState>) {
-    console.log("create diseases facade");
   }
   dispatch(action: Action) {
-    console.log(action);
     this.store.dispatch(action);
   }
 }

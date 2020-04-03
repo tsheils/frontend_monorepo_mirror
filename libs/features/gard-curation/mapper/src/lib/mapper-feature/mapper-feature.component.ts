@@ -35,21 +35,6 @@ export class MapperFeatureComponent implements OnDestroy {
     private changeRef: ChangeDetectorRef,
     private connectionService: Neo4jConnectService
   ) {
-    this.connectionService.session$.subscribe(res => {
-      this.session = res;
-    //  this.fetchKeys();
-    });
-    this.driver = this.connectionService.driver;
-     this.writedriver = neo4j.driver(
-      'bolt://localhost:7687',
-      neo4j.auth.basic('neo4j', 'tim')
-    );
-    fromPromise(this.writedriver.verifyConnectivity()
-      .then((res) => {
-        if (res) {
-       //   this.writesession = this.writedriver.rxSession();
-        }
-      }));
   }
 
 
@@ -57,8 +42,8 @@ export class MapperFeatureComponent implements OnDestroy {
   }
 
   getRawData(call: string) {
-    const session = this.connectionService.driver.rxSession();
-      return session.readTransaction(txc => txc.run(call).records());
+   // const session = this.connectionService.driver.rxSession();
+  //    return session.readTransaction(txc => txc.run(call).records());
   }
 
   getWriteData(call: string, data?: any) {
@@ -100,7 +85,6 @@ export class MapperFeatureComponent implements OnDestroy {
         }
       });
   }
-
   setObjectFields(event: any) {
     this.objectFields = event;
   }
@@ -112,9 +96,8 @@ export class MapperFeatureComponent implements OnDestroy {
 
   search(event: any) {
     console.log(event);
-   /* this.getData(`match p=(n:S_ORDO_ORPHANET{_N_Name: '${event.toUpperCase()}'})-[:R_subClassOf{property:'http://www.orpha.net/ORDO/Orphanet_C016'}]-(i)-[]-(h:S_HP)-[]-(d:DATA) return n._N_Name as disease, i._N_Name as ORPHANET_inheritance,  d.label as HPO_inheritance`)
+    this.getData(`match p=(n:S_ORDO_ORPHANET{_N_Name: '${event.toUpperCase()}'})-[:R_subClassOf{property:'http://www.orpha.net/ORDO/Orphanet_C016'}]-(i)-[]-(h:S_HP)-[]-(d:DATA) return n._N_Name as disease, i._N_Name as ORPHANET_inheritance,  d.label as HPO_inheritance`)
       .subscribe(res=> this.diseaseResult = res.toObject());
-*/
   }
 
   typeahead(event: any) {
@@ -152,23 +135,29 @@ export class MapperFeatureComponent implements OnDestroy {
 
   initialBuild() {
     const diseases: any[] = [];
-    const writedriver = neo4j.driver(
+/*    const writedriver = neo4j.driver(
       'bolt://localhost:7687',
       neo4j.auth.basic('neo4j', 'tim')
+    ); */
+      const writedriver = neo4j.driver(
+      ' bolt://gard-dev.ncats.io:7687',
+      neo4j.auth.basic('neo4j', 'vei1jeiceiK3Ohyaelai')
     );
      fromPromise(writedriver.verifyConnectivity()
       .then(() => {
-        const session = this.connectionService.driver.rxSession();
+     //   const session = this.connectionService.driver.rxSession();
         const call = `
         match (n:S_GARD)-[]-(d:DATA) 
         return d.name as name, d.gard_id as gard_id, n.N_Name as synonyms, n._N_Name as synonymsString, n.I_CODE as codes;
         `;
-      this.getRawData(call).subscribe({
+        this.connectionService.read('raw-data', call)
+          .subscribe({
            next: (res) => {
+          //   console.log(res);
             const writesession = writedriver.rxSession();
             const writecall = `CREATE (n:Disease $data)`;
-            //  writesession.writeTransaction(txc => txc.run(writecall, {data: res.toObject()}).records()).subscribe(res => console.log(res));
-            //  writesession.close();
+           //   writesession.writeTransaction(txc => txc.run(writecall, {data: res.toObject()}).records()).subscribe(res => console.log(res));
+           //   writesession.close();
             const resObject: any = res.toObject();
               if (!Array.isArray(resObject.synonyms)) {
                 resObject.synonyms = [resObject.synonyms];
@@ -190,7 +179,6 @@ export class MapperFeatureComponent implements OnDestroy {
               .subscribe({
                 complete: () => {
                   console.log("done");
-
                 }
               });
           }
@@ -198,6 +186,7 @@ export class MapperFeatureComponent implements OnDestroy {
       }));
   }
 
+/*
   buildInheritance() {
     const diseases: any[] = [];
         console.log("loggied in");
@@ -236,6 +225,7 @@ export class MapperFeatureComponent implements OnDestroy {
           );
         });
   }
+*/
 
   addRelationshipToNode(startNode, endNode, relationshipType) {
     const nodeId = startNode.properties.gard_id;
@@ -254,6 +244,7 @@ export class MapperFeatureComponent implements OnDestroy {
         });
   }
 
+/*
   fetchInheritanceData(node): Observable<any> {
     const calls = [];
     const retArr = [];
@@ -261,10 +252,10 @@ export class MapperFeatureComponent implements OnDestroy {
     const orphanets: any [] = [...new Set(node.properties.codes.filter(code => code.includes('ORPHANET')))];
     if(omims && omims.length > 0) {
       omims.forEach(omim => {
-        calls.push(`match (n:S_GARD)-[]-(d:DATA{gard_id: '${node.properties.gard_id}'}) with n 
+        calls.push(`match (n:S_GARD)-[]-(d:DATA{gard_id: '${node.properties.gard_id}'}) with n
 match p=(n)-[:I_CODE|:N_Name]-(o:S_OMIM)
 where o._I_CODE CONTAINS '${omim}' with o
-match p2 = (o)-[:R_rel{name:'has_inheritance_type'}]-(m:S_OMIM)-[:N_Name|:I_CODE]-(:S_HP)-[]-(z:DATA) 
+match p2 = (o)-[:R_rel{name:'has_inheritance_type'}]-(m:S_OMIM)-[:N_Name|:I_CODE]-(:S_HP)-[]-(z:DATA)
 with DISTINCT [{value:  m._N_Name, references:['OMIM']}, {value: z.label, references: ['OMIM', 'HPO']}] as data RETURN data;`
         )
       });
@@ -272,7 +263,7 @@ with DISTINCT [{value:  m._N_Name, references:['OMIM']}, {value: z.label, refere
     if (orphanets && orphanets.length > 0) {
       orphanets.forEach(orphanet => {
         calls.push(`
-      match (n:S_GARD)-[]-(d:DATA{gard_id: '${node.properties.gard_id}'}) with n 
+      match (n:S_GARD)-[]-(d:DATA{gard_id: '${node.properties.gard_id}'}) with n
 match p=(n)-[:I_CODE|:N_Name]-(o:S_ORDO_ORPHANET)
 where n._I_CODE CONTAINS '${orphanet}'with o
 match p2= (o)-[:R_subClassOf{property:'http://www.orpha.net/ORDO/Orphanet_C016'}]-(i:S_ORDO_ORPHANET)-[]-(h:S_HP)-[]-(g:DATA)
@@ -292,6 +283,7 @@ with DISTINCT [{value:  i._N_Name, references:['ORPHANET']}, {value: g.label, re
       return of(null);
     }
   }
+*/
 
   ngOnDestroy() {
 

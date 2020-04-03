@@ -15,9 +15,11 @@
            class ="'input-field'">
     <mat-label class="search-label">Fetch by disease</mat-label>
     <mat-autocomplete #auto="matAutocomplete" (optionSelected) = "search($event)" [displayWith]="displayFn">
-        <mat-option *ngFor="let option of options" [value]="option">
+      <mat-optgroup *ngFor="let group of filteredGroups " [label]="group.name">
+        <mat-option *ngFor="let option of group?.options" [value]="option">
           <div [innerHTML]= "option.name  | highlight : typeaheadCtrl.value.name ? typeaheadCtrl.value.name : typeaheadCtrl.value "></div>
         </mat-option>
+      </mat-optgroup>
     </mat-autocomplete>
     <button mat-button mat-icon-button matSuffix aria-label="search"(click)="search()"><mat-icon>search</mat-icon></button>
   </mat-form-field>

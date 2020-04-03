@@ -1,58 +1,42 @@
-import { Injectable } from '@angular/core';
-import {BehaviorSubject, Observable, of} from "rxjs";
+import {Injectable} from '@angular/core';
+import {Observable, of} from "rxjs";
 import * as neo4j from "neo4j-driver";
 import RxSession from "neo4j-driver/types/session-rx";
 import {fromPromise} from "rxjs/internal/observable/fromPromise";
+import {Neo4jInstanceConfig} from "@ncats-frontend-library/common/data-access/neo4j-connector";
 
 @Injectable({
-    providedIn: 'root'
-  })
+  providedIn: 'root'
+})
 export class Neo4jConnectService {
-driver: neo4j.Driver;
-session: RxSession;
+  instances: Map<string | number, neo4j.Driver> = new Map<string | number, neo4j.Driver>();
 
-  /**
-   * subject to track neo4j session
-   */
-  private _sessionSource = new BehaviorSubject<RxSession>(null);
+  constructor() {
+  }
 
-
-  /**
-   * Observable stream of session changes
-   * @type {Observable<RxSession>}
-   */
-  session$: Observable<RxSession> = this._sessionSource.asObservable();
-
-
-  constructor() { }
-
-  connect(params: any):Observable<boolean> {
-    this.driver = neo4j.driver(
-      params.url,
+  createDriver(params: Neo4jInstanceConfig): void {
+    const driver = neo4j.driver(
+      params.url ? params.url : params.bolt,
       neo4j.auth.basic(params.user, params.password ? params.password : '')
     );
-    return fromPromise(this.driver.verifyConnectivity()
-      .then(() => {
-      this.session = this.driver.rxSession();
-      this._sessionSource.next(this.session);
-      return true;
+    fromPromise(driver.verifyConnectivity()).subscribe(res => {
+      if (res) {
+        this.instances.set(params.name, driver);
+      }
     })
-      .catch(res => {
-        console.error(res);
-      return false;
-    }));
-
   }
 
-  fetch(query: string, params?: any): Observable<any> {
-    if(this.session) {
-      return this.session.run(query, params).records();
+  // todo: close session
+  read(instance: string, call: string, params?: any): Observable<any> {
+    const data = [];
+    if (this.instances.has(instance)) {
+      const session: RxSession = this.instances.get(instance).rxSession();
+      return session
+        .readTransaction(txc => txc.run(call, params ? params : null)
+          .records())
+    } else {
+      console.error("Error - no instances set");
+      return of([]);
     }
-  }
-
-  close():void {
-    this.session.close();
-    this.driver.close();
-    this._sessionSource.next(null);
   }
 }

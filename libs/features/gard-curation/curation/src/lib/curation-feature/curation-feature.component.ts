@@ -1,10 +1,10 @@
-import {ChangeDetectorRef, Component, InjectionToken, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, InjectionToken, OnInit} from '@angular/core';
 import RxSession from "neo4j-driver/types/session-rx";
-import {Neo4jConnectService} from "@ncats-frontend-library/common/data-access/neo4j-connector";
 import {BehaviorSubject, from, Observable, of} from "rxjs";
 import {concatAll, map, mergeMap, switchMap} from "rxjs/operators";
 import {Disease, DiseaseSerializer} from "../../../../../../../models/gard/disease";
 import {PanelConfig, Position} from "@ncats-frontend-library/shared/ui/dynamic-app-layout";
+import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
 
 
 export const GARD_HEADER_COMPONENT = new InjectionToken<string>('GardHeaderComponent');
@@ -12,14 +12,12 @@ export const CURATION_SIDEPANEL_COMPONENT = new InjectionToken<string>('SideNavC
 export const GARD_DISEASE_SEARCH_COMPONENT = new InjectionToken<string>('GardDiseaseSearchComponent');
 export const CURATION_MAIN_COMPONENT = new InjectionToken<string>('MainComponent');
 export const GARD_FOOTER_COMPONENT = new InjectionToken<string>('GardFooter');
-import * as neo4j from "neo4j-driver";
-import {fromPromise} from "rxjs/internal-compatibility";
-import Driver from "neo4j-driver";
 
 @Component({
   selector: 'ncats-frontend-library-curation-feature',
   templateUrl: './curation-feature.component.html',
-  styleUrls: ['./curation-feature.component.scss']
+  styleUrls: ['./curation-feature.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CurationFeatureComponent implements OnInit {
   fields: string[];
@@ -105,9 +103,10 @@ export class CurationFeatureComponent implements OnInit {
 
   constructor(
     private changeRef: ChangeDetectorRef,
-    private connectionService: Neo4jConnectService
+   private diseasesFacade: DiseasesFacade
+   // private connectionService: Neo4jConnectService
   ) {
-    this.connectionService.session$.subscribe(res => {
+   /* this.connectionService.session$.subscribe(res => {
       this.session = res;
     });
 
@@ -120,11 +119,18 @@ export class CurationFeatureComponent implements OnInit {
         if (res) {
              this.gardSession = this.gardDriver.rxSession();
         }
-      }));
+      }));*/
   }
 
 
   ngOnInit(): void {
+    this.diseasesFacade.selectedDisease$.subscribe(res=> {
+      if(res) {
+        this.disease = res;
+        this._diseaseObservableSource.next(this.disease);
+        this.changeRef.markForCheck();
+      }
+    });
   }
 
   getData(call: string) {

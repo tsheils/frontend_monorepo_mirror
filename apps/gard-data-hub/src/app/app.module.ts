@@ -12,7 +12,12 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
-import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
+import {DiseasesFacade, StoresDiseasesModule} from "@ncats-frontend-library/stores/diseases";
+import {
+  CommonDataAccessNeo4jConnectorModule,
+  Neo4jdbsFacade
+} from "@ncats-frontend-library/common/data-access/neo4j-connector";
+import {DiseasesEffects} from "../../../../libs/stores/diseases/src/lib/+state/diseases/diseases.effects";
 
 const ROUTES: Routes = [
   {
@@ -54,6 +59,8 @@ const ROUTES: Routes = [
     UiGardGardHeaderModule,
     SharedUiHeaderTemplateModule,
     CustomMaterialModule,
+    CommonDataAccessNeo4jConnectorModule,
+    StoresDiseasesModule,
     StoreModule.forRoot(
       {},
       {
@@ -69,14 +76,9 @@ const ROUTES: Routes = [
     StoreRouterConnectingModule.forRoot()
   ],
   providers: [
-    DiseasesFacade
+    DiseasesFacade,
+    Neo4jdbsFacade
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-  constructor() {
-    console.log("app module");
-    console.log(AppModule);
-  }
-
-}
+export class AppModule {}

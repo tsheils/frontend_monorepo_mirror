@@ -25,8 +25,7 @@ export const getDiseasesError = createSelector(
 );
 
 // get everything
-export const getAllDiseases = createSelector(getDiseasesState, (state: State) =>
-  selectAll(state)
+export const getAllDiseases = createSelector(getDiseasesState, (state: State) => selectAll(state)
 );
 // get some diseases
 export const getDiseasesEntities = createSelector(
@@ -45,14 +44,15 @@ export const getSelectedId = createSelector(
   (state: State) => state.selectedId
 );
 
+// returns selected disease
+export const getSelectedDisease = createSelector(
+  getDiseasesState,
+  (state: State) =>  selectEntities(state)
+);
+
 // returns diseases and selected id to be filtered
 export const getSelected = createSelector(
   getDiseasesEntities,
   getSelectedId,
-  (entities, selectedId) => {
-      console.log("inside selector state");
-      console.log(entities);
-      console.log(selectedId);
-    return selectedId && entities[selectedId]
-  }
+  (entities, selectedId) => selectedId && entities[selectedId].disease
 );

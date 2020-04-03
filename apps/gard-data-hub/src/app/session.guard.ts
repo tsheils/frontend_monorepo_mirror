@@ -17,20 +17,20 @@ export class SessionGuard implements CanActivate {
   constructor(
     private dialog: MatDialog,
     private router: Router,
-    public connectionService: Neo4jConnectService
+   // public connectionService: Neo4jConnectService
   ) {
-    console.log("new auth guard");
   }
 
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     const url: string = state.url;
-    return this.checkLogin(url);
+    //return this.checkLogin(url);
+    return true;
   }
 
-  checkLogin(url: string): Observable<boolean> {
-    return this.connectionService.session$
+//  checkLogin(url: string): Observable<boolean> {
+  /*  return this.connectionService.session$
       .pipe(
         map( res => {
           if (res) {
@@ -65,5 +65,5 @@ export class SessionGuard implements CanActivate {
         })
       )
       ;
-  }
+  }*/
 }

@@ -1,18 +1,26 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
-import {debounceTime, distinctUntilChanged, switchMap} from "rxjs/operators";
+import {
+  ChangeDetectionStrategy, ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
+import {debounceTime, distinctUntilChanged, switchMap, zipAll} from "rxjs/operators";
 import {BehaviorSubject, Observable} from "rxjs";
 import {Neo4jConnectService} from "@ncats-frontend-library/common/data-access/neo4j-connector";
 import {DiseaseSerializer} from "../../../../../../../models/gard/disease";
-import * as neo4j from "neo4j-driver";
-import {fromPromise} from "rxjs/internal-compatibility";
 import {FormControl} from "@angular/forms";
 import {MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from "@angular/material/autocomplete";
-import {DiseasesFacade, loadDiseases, searchDiseases} from "@ncats-frontend-library/stores/diseases";
+import {DiseasesFacade, setDisease} from "@ncats-frontend-library/stores/diseases";
 
 @Component({
   selector: 'ncats-frontend-library-gard-search',
   templateUrl: './gard-search.component.html',
   styleUrls: ['./gard-search.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
 export class GardSearchComponent implements OnInit {
@@ -67,10 +75,11 @@ export class GardSearchComponent implements OnInit {
   private driver;
 
   constructor(
+    private changeRef: ChangeDetectorRef,
     private diseasesFacade: DiseasesFacade,
     private connectionService: Neo4jConnectService
   ) {
-    this.driver = neo4j.driver(
+   /* this.driver = neo4j.driver(
       'bolt://localhost:7687',
       neo4j.auth.basic('neo4j', 'tim')
     );
@@ -79,7 +88,7 @@ export class GardSearchComponent implements OnInit {
         if (res) {
           //   this.writesession = this.writedriver.rxSession();
         }
-      }));
+      }));*/
   }
 
   ngOnInit(): void {
@@ -90,6 +99,16 @@ export class GardSearchComponent implements OnInit {
         distinctUntilChanged()
       )
       .subscribe(term => this.typeahead(term));
+
+    /*this.diseasesFacade.searchDiseases$.subscribe( {
+      next: (res) => {
+        console.log(res);
+        this.options.push(res);
+      },
+      complete: () => {
+      this.filteredGroups = [{name: 'GARD names', options: this.options}];
+    }
+    })*/
   }
 
   /**
@@ -97,9 +116,16 @@ export class GardSearchComponent implements OnInit {
    * @returns void
    */
   search(event?: MatAutocompleteSelectedEvent): void {
-    this.autocomplete.closePanel();
-
+    console.log(this.typeaheadCtrl.value);
+    const diseaseObj = this.typeaheadCtrl.value;
+  this.diseasesFacade.dispatch(setDisease({disease: {
+    id: diseaseObj.gard_id,
+      name: diseaseObj.name,
+      disease: diseaseObj
+    }
+  }));
     this.query.emit(this.typeaheadCtrl.value);
+    this.autocomplete.closePanel();
   }
 
   displayFn(option: any): string {
@@ -113,10 +139,36 @@ export class GardSearchComponent implements OnInit {
 
   typeahead(event: any) {
     this.autocomplete.openPanel();
-    this.options = [];
     if(event.length > 0) {
-      this.diseasesFacade.dispatch(searchDiseases({query: event}));
+      this.options = [];
+ /*     const call = `
+      CALL db.index.fulltext.queryNodes("namesAndSynonyms", "name:${event} OR ${event}") YIELD node
+      RETURN node LIMIT 10;
+      `;*/
       const call = `
+      CALL db.index.fulltext.queryNodes("namesAndSynonyms", "name:${event}* OR ${event}") YIELD node 
+      with collect(properties(node)) AS arr 
+      with arr[0..10] AS data
+      RETURN data
+      `;
+      this.connectionService.read('gard-data', call)
+        .pipe(
+          switchMap(res => {
+            this.filteredGroups = [{name: 'GARD names', options: res.toObject().data}];
+            this.changeRef.markForCheck();
+              return res;
+            }
+          ),
+        ).subscribe( )
+          //{
+       /* next: (res => {console.log(res)}),
+        complete: () => {
+          this.filteredGroups = [{name: 'GARD names', options: this.options}];
+          this.changeRef.markForCheck();
+        }*/
+     // })
+     // this.diseasesFacade.dispatch(searchDiseases({query: event}));
+/*      const call = `
       CALL db.index.fulltext.queryNodes("namesAndSynonyms", "name:${event} OR ${event}") YIELD node
       RETURN node LIMIT 10;
       `;
@@ -132,7 +184,7 @@ export class GardSearchComponent implements OnInit {
           this.filteredGroups = [{name: 'GARD names', options: this.options}];
           console.log(this.filteredGroups);
         }
-      })
+      })*/
     }
   }
 }

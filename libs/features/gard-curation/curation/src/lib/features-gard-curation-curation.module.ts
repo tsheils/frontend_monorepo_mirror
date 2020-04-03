@@ -15,12 +15,13 @@ import {GardHeaderComponent} from "@ncats-frontend-library/ui/gard/gard-header";
 import {CurationSidepanelComponent} from "@ncats-frontend-library/ui/gard/curation-sidepanel";
 import {DataPanelComponent} from "@ncats-frontend-library/ui/gard/gard-data-viewer";
 import {GardFooterComponent} from "@ncats-frontend-library/ui/gard/gard-footer";
-import {GardSearchComponent} from "@ncats-frontend-library/ui/gard/search-bar";
+import {GardSearchComponent, UiGardSearchBarModule} from "@ncats-frontend-library/ui/gard/search-bar";
 import {diseaseInitialState, DiseasesFacade, reducer} from "@ncats-frontend-library/stores/diseases";
 import {StoreDevtoolsModule} from "@ngrx/store-devtools";
 import {EffectsModule} from "@ngrx/effects";
 import {StoreModule} from "@ngrx/store";
 import {DiseasesEffects} from "../../../../../stores/diseases/src/lib/+state/diseases/diseases.effects";
+import {Neo4jdbsEffects} from "../../../../../common/data-access/neo4j-connector/src/lib/+state/neo4jdbs.effects";
 
 const ROUTES: Routes = [
   {
@@ -38,10 +39,7 @@ const ROUTES: Routes = [
     SharedUiSearchBarModule,
     CustomMaterialModule,
     SharedUiDynamicAppLayoutModule,
-    StoreModule.forFeature('diseases', reducer, {
-      initialState: diseaseInitialState,
-    }),
-    EffectsModule.forFeature([DiseasesEffects]),
+    UiGardSearchBarModule,
   ],
   declarations: [CurationFeatureComponent],
   providers: [

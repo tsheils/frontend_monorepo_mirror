@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { DiseasesEntity } from './diseases.models';
+import {Disease} from "../../../../../../../models/gard/disease";
 
 export enum DiseasesActionsTypes {
   loadDiseases = '[Diseases] Load Diseases',
@@ -8,6 +9,9 @@ export enum DiseasesActionsTypes {
   searchDiseases = '[Diseases] Search Diseases',
   searchDiseasesSuccess = '[Diseases] Search Diseases Success',
   searchDiseasesFailure = '[Diseases] Search Diseases Failure',
+  setDisease = '[Diseases] Set Disease',
+  setDiseaseSuccess = '[Diseases] Set Disease Success',
+  setDiseaseFailure = '[Diseases] Set Disease Failure',
 }
 
 export const loadDiseases = createAction(DiseasesActionsTypes.loadDiseases);
@@ -34,5 +38,21 @@ export const searchDiseasesSuccess = createAction(
 //errors
 export const searchDiseasesFailure = createAction(
   DiseasesActionsTypes.searchDiseasesFailure,
+  props<{ error: any }>()
+);
+
+//input
+export const setDisease = createAction(
+  DiseasesActionsTypes.setDisease,
+  props<{ disease: DiseasesEntity }>()
+);
+//output
+export const setDiseaseSuccess = createAction(
+  DiseasesActionsTypes.setDiseaseSuccess,
+  props<{ selectedDisease: DiseasesEntity }>()
+);
+//errors
+export const setDiseaseFailure = createAction(
+  DiseasesActionsTypes.setDiseaseFailure,
   props<{ error: any }>()
 );

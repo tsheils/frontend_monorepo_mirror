@@ -1,23 +1,25 @@
 
-<ncats-frontend-library-dynamic-app-content [components]="components"></ncats-frontend-library-dynamic-app-content>
-
 <!--
-<div fxLayout="row" fxLayoutAlign="space-around center" *ngIf="session">
+<ncats-frontend-library-dynamic-app-content [components]="components" [data]="disease"></ncats-frontend-library-dynamic-app-content>
+-->
+
+<div fxLayout="row" fxLayoutAlign="space-around center">
   <div fxFlex="75">
     <div fxLayout="row" fxLayoutAlign="space-around center">
       <div fxFlex="95">
-        <ncats-frontend-library-search-bar
+        <ncats-frontend-library-gard-search (query)="search($event)"></ncats-frontend-library-gard-search>
+       <!-- <ncats-frontend-library-search-bar
           (inputChangeEvent)="typeahead($event)"
           (query)="search($event)"
           [placeholderStr]="'Fetch by disease'"
           [filteredGroups]="typeaheadSource$"
-        ></ncats-frontend-library-search-bar>
+        ></ncats-frontend-library-search-bar>-->
         <mat-progress-bar [mode]="'indeterminate'" *ngIf="searching && !dataLoaded"></mat-progress-bar>
       </div>
     </div>
   </div>
 </div>
-    <div fxLayout="row" fxLayoutAlign="space-around center" *ngIf="session">
+    <div fxLayout="row" fxLayoutAlign="space-around center">
       <div fxFlex="75">
         <h1>{{disease?.name}}</h1>
       </div>
@@ -68,4 +70,3 @@
       </div>
     </mat-card>
 
--->

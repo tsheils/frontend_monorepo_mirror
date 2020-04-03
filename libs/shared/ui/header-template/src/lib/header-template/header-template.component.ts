@@ -32,7 +32,6 @@ export class HeaderTemplateComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this);
   }
 
   /**
