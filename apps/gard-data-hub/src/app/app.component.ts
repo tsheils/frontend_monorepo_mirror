@@ -6,7 +6,6 @@ import {QuestionBase, TextboxQuestion} from "@ncats-frontend-library/shared/ui/n
 import {Router} from "@angular/router";
 import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
 import {map} from "rxjs/operators";
-import {environment} from "../environments/environment";
 import {
   loadNeo4jdbs,
   Neo4jConnectionFormComponent,
@@ -17,8 +16,6 @@ import {
 import {Store} from "@ngrx/store";
 import {Disease} from "../../../../models/gard/disease";
 import {ConfigService} from "./config.service";
-
-const ENVIRONMENT = environment;
 
  export const QUESTIONS: QuestionBase<any>[] = [
   new TextboxQuestion({
