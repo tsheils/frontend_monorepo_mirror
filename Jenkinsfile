@@ -57,12 +57,18 @@ pipeline {
 
 
                             script {
+                                def image = docker.build(
+                                    "${env.IMAGE_NAME}:${env.BUILD_VERSION}",
+                                    "--no-cache --build-arg SOURCE_FOLDER=./dist/apps/gard-data-hub ."
+                                )
                                 docker.withRegistry("https://registry.ncats.nih.gov:5000", "564b9230-c7e3-482d-b004-8e79e5e9720a") {
-                                    def image = docker.build(
-                                        "${env.IMAGE_NAME}:${env.BUILD_VERSION}",
-                                        "--no-cache --build-arg SOURCE_FOLDER=./dist/apps/gard-data-hub ."
-                                    )
-                                    // Push the image to the registry
+                                    image.push("${env.BUILD_VERSION}")
+                                }
+                                image = docker.build(
+                                    "ncats/gard-frontend:${env.BUILD_VERSION}",
+                                    "--no-cache --build-arg SOURCE_FOLDER=./dist/apps/gard-data-hub ."
+                                )
+                                docker.withRegistry("https://registry-1.docker.io/v2/","f16c74f9-0a60-4882-b6fd-bec3b0136b84") {
                                     image.push("${env.BUILD_VERSION}")
                                 }
                             }
@@ -84,6 +90,28 @@ pipeline {
                    script {
                         def docker = new org.labshare.Docker()
                         docker.deployDockerUI()
+                    }
+                }
+            }
+        }
+        stage('Deploy docker - AWS') {
+            agent {
+                node { label 'gard-dev.ifx.aws'}
+            }
+            steps {
+                cleanWs()
+                checkout scm
+                configFileProvider([
+                    configFile(fileId: 'gard-dev-aws-docker-compose', targetLocation: 'docker-compose.yml')
+                ]) {
+                    withEnv([
+                        "DOCKER_REPO_NAME=ncats/gard-frontend",
+                        "BUILD_VERSION=" + (params.BUILD_VERSION ?: env.BUILD_VERSION)
+                    ]) {
+                        script {
+                            def docker = new org.labshare.Docker()
+                            docker.deployDockerUI()
+                        }
                     }
                 }
             }
