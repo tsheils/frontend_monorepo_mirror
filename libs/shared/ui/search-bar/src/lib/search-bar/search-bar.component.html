@@ -6,7 +6,7 @@
            [matAutocomplete]="auto"
            [formControl]="typeaheadCtrl"
            [ncatsFrontendLibraryDisableControl] = disabled
-           class ="input-field">
+           class ="'input-field'">
     <mat-label class="search-label">{{placeholderStr}}</mat-label>
     <mat-autocomplete #auto="matAutocomplete" (optionSelected) = "search($event)" [displayWith]="displayFn">
       <mat-optgroup *ngFor="let group of filteredGroups | async" [label]="group.name">

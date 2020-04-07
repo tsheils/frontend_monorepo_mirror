@@ -61,7 +61,7 @@ export class SearchBarComponent implements OnInit {
 
     this.typeaheadCtrl.valueChanges
       .pipe(
-        debounceTime(400),
+        debounceTime(200),
         distinctUntilChanged()
         )
       .subscribe(term => this.inputChangeEvent.emit(term));

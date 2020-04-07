@@ -1,0 +1,28 @@
+<!--<ncats-frontend-library-search-bar
+  (inputChangeEvent)="typeahead($event)"
+  (query)="search($event)"
+  [placeholderStr]="'Fetch by disease'"
+  [filteredGroups]="typeaheadSource$"
+></ncats-frontend-library-search-bar>-->
+
+<div class ="search-row">
+  <mat-form-field class = "typeahead-field search" [floatLabel] = "'never'">
+    <input matInput
+           (keyup.enter)="search()"
+           aria-label="Search"
+           [matAutocomplete]="auto"
+           [formControl]="typeaheadCtrl"
+           class ="'input-field'">
+    <mat-label class="search-label">Fetch by disease</mat-label>
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected) = "search($event)" [displayWith]="displayFn">
+      <mat-optgroup *ngFor="let group of filteredGroups " [label]="group.name">
+        <mat-option *ngFor="let option of group?.options" [value]="option">
+          <div [innerHTML]= "option.name  | highlight : typeaheadCtrl.value.name ? typeaheadCtrl.value.name : typeaheadCtrl.value "></div>
+        </mat-option>
+      </mat-optgroup>
+    </mat-autocomplete>
+    <button mat-button mat-icon-button matSuffix aria-label="search"(click)="search()"><mat-icon>search</mat-icon></button>
+  </mat-form-field>
+</div>
+
+<mat-progress-bar [mode]="'indeterminate'" *ngIf="searching && !dataLoaded"></mat-progress-bar>

@@ -5,7 +5,6 @@ import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-mat
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {SharedUiMapperUiModule} from "@ncats-frontend-library/shared/ui/mapper-ui";
 import {SharedUiSearchBarModule} from "@ncats-frontend-library/shared/ui/search-bar";
-import {CommonUiNeo4jConnectionFormModule} from "@ncats-frontend-library/common/ui/neo4j-connection-form";
 import {SharedUiObjectTreeModule} from "@ncats-frontend-library/shared/ui/object-tree";
 import {RouterTestingModule} from "@angular/router/testing";
 
@@ -19,7 +18,6 @@ describe('MapperFeatureComponent', () => {
         CustomMaterialModule,
         BrowserAnimationsModule,
         RouterTestingModule,
-        CommonUiNeo4jConnectionFormModule,
         SharedUiObjectTreeModule,
         SharedUiMapperUiModule,
         SharedUiSearchBarModule

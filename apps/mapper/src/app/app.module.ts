@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
-import {CommonUiNeo4jConnectionFormModule} from "@ncats-frontend-library/common/ui/neo4j-connection-form";
 import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
 import {SharedUiNcatsFormModule} from "@ncats-frontend-library/shared/ui/ncats-form";
 import {SharedUiMapperUiModule} from "@ncats-frontend-library/shared/ui/mapper-ui";
@@ -18,7 +17,6 @@ import {UiGardGardHeaderModule} from "@ncats-frontend-library/ui/gard/gard-heade
     RouterModule.forRoot([], {initialNavigation: 'enabled'}),
     CustomMaterialModule,
     SharedUiNcatsFormModule,
-    CommonUiNeo4jConnectionFormModule,
     SharedUiMapperUiModule,
     SharedUiObjectTreeModule,
     SharedUiSearchBarModule,

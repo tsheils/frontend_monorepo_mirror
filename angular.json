@@ -446,40 +446,6 @@
         }
       }
     },
-    "common-ui-neo4j-connection-form": {
-      "projectType": "library",
-      "root": "libs/common/ui/neo4j-connection-form",
-      "sourceRoot": "libs/common/ui/neo4j-connection-form/src",
-      "prefix": "ncats-frontend-library",
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/common/ui/neo4j-connection-form/tsconfig.lib.json",
-              "libs/common/ui/neo4j-connection-form/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/common/ui/neo4j-connection-form/**"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/common/ui/neo4j-connection-form/jest.config.js",
-            "tsConfig": "libs/common/ui/neo4j-connection-form/tsconfig.spec.json",
-            "setupFile": "libs/common/ui/neo4j-connection-form/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "styleext": "scss"
-        }
-      }
-    },
     "shared-ui-ncats-form": {
       "projectType": "library",
       "root": "libs/shared/ui/ncats-form",
@@ -1131,6 +1097,69 @@
       "schematics": {
         "@nrwl/angular:component": {
           "styleext": "scss"
+        }
+      }
+    },
+    "ui-gard-search-bar": {
+      "projectType": "library",
+      "root": "libs/ui/gard/search-bar",
+      "sourceRoot": "libs/ui/gard/search-bar/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ui/gard/search-bar/tsconfig.lib.json",
+              "libs/ui/gard/search-bar/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/ui/gard/search-bar/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ui/gard/search-bar/jest.config.js",
+            "tsConfig": "libs/ui/gard/search-bar/tsconfig.spec.json",
+            "setupFile": "libs/ui/gard/search-bar/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "stores-diseases": {
+      "projectType": "library",
+      "root": "libs/stores/diseases",
+      "sourceRoot": "libs/stores/diseases/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/stores/diseases/tsconfig.lib.json",
+              "libs/stores/diseases/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/stores/diseases/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/stores/diseases/jest.config.js",
+            "tsConfig": "libs/stores/diseases/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/stores/diseases/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
         }
       }
     }

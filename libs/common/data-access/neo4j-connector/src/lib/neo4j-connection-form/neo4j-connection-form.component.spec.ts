@@ -1,16 +1,16 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ConnectionFormComponent } from './connection-form.component';
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
-import {SharedUiNcatsFormModule} from "@ncats-frontend-library/shared/ui/ncats-form";
-import {CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA} from "@angular/core";
+import { Neo4jConnectionFormComponent } from './neo4j-connection-form.component';
 import {CommonModule} from "@angular/common";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {SharedUiNcatsFormModule} from "@ncats-frontend-library/shared/ui/ncats-form";
+import {CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA} from "@angular/core";
 
-describe('ConnectionFormComponent', () => {
-  let component: ConnectionFormComponent;
-  let fixture: ComponentFixture<ConnectionFormComponent>;
+describe('Neo4jConnectionFormComponent', () => {
+  let component: Neo4jConnectionFormComponent;
+  let fixture: ComponentFixture<Neo4jConnectionFormComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -23,7 +23,7 @@ describe('ConnectionFormComponent', () => {
         SharedUiNcatsFormModule
       ],
       declarations: [
-        ConnectionFormComponent
+        Neo4jConnectionFormComponent
       ],
       schemas: [
         CUSTOM_ELEMENTS_SCHEMA,
@@ -34,7 +34,7 @@ describe('ConnectionFormComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ConnectionFormComponent);
+    fixture = TestBed.createComponent(Neo4jConnectionFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

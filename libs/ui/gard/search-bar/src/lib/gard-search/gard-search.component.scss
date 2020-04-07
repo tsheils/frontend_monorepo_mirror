@@ -1,0 +1,12 @@
+// Import theming functions
+@import '~@angular/material/theming';
+
+.search {
+  width: 100%;
+}
+
+span.search-highlight {
+  font-weight: 500;
+  color: black;
+  text-decoration: underline;
+}

@@ -1,8 +1,11 @@
 <ncats-frontend-library-header-template [links]="links">
   <div class="title">
-    <h1 class="toolbar-dark" ><a href="/">GARD Mapper</a> </h1>
+    <h1 class="toolbar-dark" ><a routerLink="/">GARD Data Hub</a> </h1>
   </div>
-  <div class="right-options">
+  <div class="right-options" fxLayoutAlign="space-around center">
+    <button *ngIf="!session" mat-flat-button (click)="connect()">Connect</button>
+    <button *ngIf="session" mat-flat-button [color]="'primary'" (click)="disconnect()">Disconnect</button>
+    &nbsp;&nbsp;
     <button mat-flat-button>Login</button>
   </div>
 </ncats-frontend-library-header-template>

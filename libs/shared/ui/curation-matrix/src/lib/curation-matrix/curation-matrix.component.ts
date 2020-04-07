@@ -13,6 +13,7 @@ import {MatPaginator} from "@angular/material/paginator";
 export class CurationMatrixComponent implements OnInit {
 
   @Input() field: string;
+  @Input() editing = true;
   @Input() data: any[] = [];
   @Input() currentObject: any[] = [];
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
@@ -44,21 +45,31 @@ export class CurationMatrixComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dataSource.data = this.data.sort((a,b) => {
-      return b.references.length - a.references.length;
-    });
+    console.log(this);
+    if (this.data && this.field) {
+      this.dataSource.data = this.data[this.field].sort((a, b) => {
+        return b.references.length - a.references.length;
+      });
+      this.columns = [...new Set(this.columns.concat(...this.data[this.field].map(val => val.references)))].sort();
+     if (this.editing) {
+       this.displayColumns = ['display', 'value'].concat(this.columns);
+     } else {
+       this.displayColumns = ['value'].concat(this.columns);
+     }
+    }
     this.dataSource.paginator = this.paginator;
 
     if(this.sortingDataAccessor) {
       this.dataSource.sortingDataAccessor = this.sortingDataAccessor;
     }
     this.dataSource.sort = this.sort;
-    this.columns = [...new Set(this.columns.concat(...this.data.map(val => val.references)))].sort();
-    this.displayColumns = ['display', 'value'].concat(this.columns);
 
-    if(this.currentObject) {
-      this.filterSelection.select(...this.currentObject);
-    }
+   /* if(this.currentObject) {
+      this.filterSelection.select(...this.currentObject[this.field]);
+    }*/
+
+   this.filterSelection.select(...this.data[this.field].filter(row => row.preferred));
+
   //  this.selectedValues = this.currentObject;
     this.filterSelection.changed.subscribe(change => {
       this.selectedValues = this.filterSelection.selected;
@@ -80,12 +91,14 @@ export class CurationMatrixComponent implements OnInit {
   }
 
   ngOnChanges(change) {
+    console.log(change);
     if (change.data && this.data === null) {
     this.dataSource.data = [];
     } else if (change.data && this.data.length > 0) {
      this.dataSource.data = this.data.sort((a,b) => {
         return b.references.length - a.references.length;
       });
+      this.filterSelection.select(...this.data[this.field].filter(row => row.preferred));
     }
   }
 

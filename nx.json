@@ -43,9 +43,6 @@
     "ui-gard-data-display": {
       "tags": []
     },
-    "common-ui-neo4j-connection-form": {
-      "tags": []
-    },
     "shared-ui-ncats-form": {
       "tags": []
     },
@@ -99,6 +96,12 @@
       "tags": []
     },
     "features-gard-curation-dashboard": {
+      "tags": []
+    },
+    "ui-gard-search-bar": {
+      "tags": []
+    },
+    "stores-diseases": {
       "tags": []
     }
   }

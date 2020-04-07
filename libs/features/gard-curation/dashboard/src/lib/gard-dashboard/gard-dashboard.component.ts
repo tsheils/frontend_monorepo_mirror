@@ -11,12 +11,11 @@ export class GardDashboardComponent implements OnInit {
   session: RxSession;
 
   constructor (
-    private connectionService: Neo4jConnectService
+   // private connectionService: Neo4jConnectService
   ) {
-    this.connectionService.session$.subscribe(res => {
+  /*  this.connectionService.session$.subscribe(res => {
       this.session = res;
-      console.log(this.session);
-    });
+    });*/
   }
 
 

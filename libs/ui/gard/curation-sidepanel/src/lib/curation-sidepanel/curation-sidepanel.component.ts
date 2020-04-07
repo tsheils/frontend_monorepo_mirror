@@ -46,7 +46,7 @@ export class CurationSidepanelComponent implements OnInit, OnChanges {
     class: 'filters-panel',
     opened: true,
     fixedInViewport: true,
-    fixedTopGap: 120,
+    fixedTopGap: 60,
     role: 'directory'
   };
 
