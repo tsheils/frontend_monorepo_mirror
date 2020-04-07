@@ -33,14 +33,14 @@ const diseasesReducer = createReducer(
     DiseasesActions.loadDiseases, (state) => ({...state, loaded: false, error: null})
     ),
   on(
-    DiseasesActions.searchDiseasesSuccess,
-    DiseasesActions.loadDiseasesSuccess, (state, { diseases }) => {
-    return diseasesAdapter.addMany(diseases, { ...state, loaded: true })
+    DiseasesActions.setDisease, (state, {disease}) => {
+      return diseasesAdapter.addOne(disease, { ...state, selectedId: disease.id, loaded: true })
     }
   ),
   on(
-    DiseasesActions.setDisease, (state, {disease}) => {
-    return diseasesAdapter.addOne(disease, { ...state, selectedId: disease.id, loaded: true })
+    DiseasesActions.searchDiseasesSuccess,
+    DiseasesActions.loadDiseasesSuccess, (state, { diseases }) => {
+    return diseasesAdapter.addMany(diseases, { ...state, loaded: true })
     }
   ),
   on(
@@ -49,7 +49,14 @@ const diseasesReducer = createReducer(
     DiseasesActions.loadDiseasesFailure, (state, { error }) => ({
     ...state,
     error,
-  }))
+  })),
+  on(
+    DiseasesActions.setDiseaseSuccess, (state, {selectedDisease}) => {
+      console.log("success");
+      return diseasesAdapter.addOne(selectedDisease, { ...state, selectedId: selectedDisease.id, loaded: true })
+
+    }
+  )
 );
 
 export function reducer(state: State | undefined, action: Action) {

@@ -16,6 +16,7 @@ import {
 } from "@ncats-frontend-library/common/data-access/neo4j-connector";
 import {Store} from "@ngrx/store";
 import {Disease} from "../../../../models/gard/disease";
+import {ConfigService} from "./config.service";
 
 const ENVIRONMENT = environment;
 
@@ -23,9 +24,9 @@ const ENVIRONMENT = environment;
   new TextboxQuestion({
   key: 'url',
   label: 'Database Url',
-  // value: 'bolt://gard-dev-neo4j.ncats.nih.gov:7687/',
+   value: 'bolt://gard-dev-neo4j.ncats.nih.gov:7687/',
   // value: 'bolt://ifxdev3.ncats.nih.gov:9005/',
-  value: 'bolt://disease.ncats.io:80/',
+  //value: 'bolt://disease.ncats.io:80/',
   required: true
 }),
   new TextboxQuestion({
@@ -60,60 +61,22 @@ export class AppComponent implements OnInit, OnDestroy {
     private router: Router,
     private diseasesFacade: DiseasesFacade,
     private neo4jdbFacade: Neo4jdbsFacade,
+   private configService: ConfigService,
    private connectionService: Neo4jConnectService
   ) {
     this.links = [{link:'mapper'}, {link: 'curation', label: 'curation'}];
-
-/*    this.connectionService.session$.subscribe(res => {
-      this.session = res;
-      this.links = [{link:'mapper'}, {link: 'curation', label: 'curation'}];
-      });*/
   }
 
   ngOnInit() {
-    ENVIRONMENT.neo4j.forEach(db => {
-      this.connectionService.createDriver(db)/*.subscribe(res => {
-        console.log(res);
-        const neo4jdb: Neo4jdbsEntity = {id: db.name, driver: res};
-        this.neo4jdbFacade.dispatch(setNeo4jdbs({neo4jdb: neo4jdb}));
-      });*/
+    this.configService.config.neo4j.forEach(db => {
+      this.connectionService.createDriver(db);
     });
+
     this.diseasesFacade.selectedDisease$.subscribe(res=> {
-      console.log(res);
       if(res) {
         this.disease = res;
       }
     });
-  //  this.diseasesList = this.diseasesFacade.searchDiseases$;
-    /*this.diseases4.pipe(
-      map(res => {console.log(res)})
-    ).subscribe();*/
-
- /*  this.store.select('neo4jdbs').subscribe(res=> console.log(res));
-    //this.diseases3 = ;
-
-    this.neo4jdbFacade.allNeo4jdbs$.subscribe(
-     (res => {console.log(res)})
-    );*/
-
-   /*
-*/
-   /* this.diseases2 = this.diseasesFacade.loaded$;
-    this.diseases3 = this.diseasesFacade.allDiseases$;*/
-  /*
-    this.diseases = this.diseasesFacade.selectedDiseases$;
-
-
-   this.diseases3.pipe(
-      map(res => {console.log(res)})
-    ).subscribe();
-
-   this.diseases4.pipe(
-      map(res => {console.log(res)})
-    ).subscribe();
-    console.log(this.diseases3);
-    console.log(this.diseases);*/
-    console.log(this)
   }
 
   connect(): void {
@@ -145,6 +108,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.connectionService.destroy();
     if(this.session) {
       this.session.close();
    //   this.connectionService.driver.close();

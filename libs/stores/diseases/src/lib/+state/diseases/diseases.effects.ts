@@ -34,12 +34,23 @@ export class DiseasesEffects {
     )
   );
 
+/*
   setDisease$ = createEffect(() =>
       this.actions$.pipe(
         ofType(DiseasesActions.setDisease),
         fetch({
           run: (action) => {
-            return DiseasesActions.setDiseaseSuccess({selectedDisease: action.disease});
+            console.log(action);
+            const call = `
+            match p = (d:Disease {gard_id :${action.disease.disease.gard_id})-[]-(:DataRef) RETURN p;
+            `;
+            return this.neo4jConnectionService.read('gard-data', call).pipe(
+              map(response => {
+                console.log(response);
+                return DiseasesActions.setDiseaseSuccess({selectedDisease: response.toObject()});
+              }),
+              catchError(error => of(DiseasesActions.setDiseaseFailure(error))),
+            )
           },
           onError: (action, error) => {
             return DiseasesActions.setDiseaseFailure({error});
@@ -47,10 +58,34 @@ export class DiseasesEffects {
         })
       )
   );
+*/
 
 
 
 
+
+  setDisease$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(DiseasesActions.setDisease),
+      concatMap(action => {
+        console.log(action);
+        const call = `
+          match p = (d:Disease {gard_id:'${action.disease.disease.gard_id}'})-[]-(:DataRef) RETURN p;
+        `;
+        console.log(call);
+     return this.neo4jConnectionService.read('gard-data', call).pipe(
+          map(response => {
+            console.log(response);
+            return DiseasesActions.setDiseaseSuccess({selectedDisease: response.toObject()});
+          }),
+          catchError(error => {
+            console.log(error);
+            return of(DiseasesActions.setDiseaseFailure(error))
+          }),
+        )
+  }),
+    )
+  });
 
   searchDiseases$ = createEffect(() => {
     return this.actions$.pipe(

@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import RxSession from "neo4j-driver/types/session-rx";
 import {Neo4jConnectService} from "@ncats-frontend-library/common/data-access/neo4j-connector";
 import {from, Observable, of, zip} from "rxjs";
@@ -35,37 +35,32 @@ export class MapperFeatureComponent implements OnDestroy {
     private changeRef: ChangeDetectorRef,
     private connectionService: Neo4jConnectService
   ) {
-  }
-
-
-  ngOnInit(): void {
-  }
-
-  getRawData(call: string) {
-   // const session = this.connectionService.driver.rxSession();
-  //    return session.readTransaction(txc => txc.run(call).records());
-  }
-
-  getWriteData(call: string, data?: any) {
-    const session = this.writedriver.rxSession();
-    if (data) {
-      return session.writeTransaction(txc => txc.run(call, {data: data}).records());
-    } else {
-      return session.readTransaction(txc => txc.run(call).records());
-    }
+   // this.fetchKeys();
   }
 
   fetchKeys() {
     this.allSourcesLoading = true;
     const obs = [];
+    const call = `
+    UNWIND ["S_GARD", "S_GHR", "S_OMIM","S_ORDO_ORPHANET", "S_HP"] as row
+    MATCH (n:Entity)-[r]-(d:DATA) WHERE row IN labels(n)
+    WITH DISTINCT keys(d) AS keys UNWIND keys AS keyslisting WITH DISTINCT keyslisting AS allfields 
+    RETURN collect(allfields) as data;
+    `;
+    this.connectionService.read('raw-data', call, {payload: this.allSources}).subscribe(res => {
+      // console.log(res);
+      }
+    )
+/*
     this.allSources.forEach(source => {
       obs.push({source: source, call:`MATCH (n:${source})-[r]-(d:DATA) WITH DISTINCT keys(d) AS keys UNWIND keys AS keyslisting WITH DISTINCT keyslisting AS allfields RETURN collect(allfields)`});
     });
+*/
 
-    // `CALL db.labels() YIELD label WITH label WHERE label Starts WITH 'S_' RETURN collect(label) AS datasources`
+/*    // `CALL db.labels() YIELD label WITH label WHERE label Starts WITH 'S_' RETURN collect(label) AS datasources`
     // todo: this returns the fields one source at a time
     from(obs.map(call => {
-      return {source: call.source, call: this.getRawData(call.call)};
+      return {source: call.source, call: this.connectionService.read('raw-data', call.call)};
     }))
       .pipe(
         map(res => {
@@ -83,7 +78,7 @@ export class MapperFeatureComponent implements OnDestroy {
           this.allSourcesLoading = false;
           this.sources = this.filteredSources;
         }
-      });
+      });*/
   }
   setObjectFields(event: any) {
     this.objectFields = event;
@@ -96,7 +91,7 @@ export class MapperFeatureComponent implements OnDestroy {
 
   search(event: any) {
     console.log(event);
-    this.getData(`match p=(n:S_ORDO_ORPHANET{_N_Name: '${event.toUpperCase()}'})-[:R_subClassOf{property:'http://www.orpha.net/ORDO/Orphanet_C016'}]-(i)-[]-(h:S_HP)-[]-(d:DATA) return n._N_Name as disease, i._N_Name as ORPHANET_inheritance,  d.label as HPO_inheritance`)
+    this.connectionService.read('raw-data',`match p=(n:S_ORDO_ORPHANET{_N_Name: '${event.toUpperCase()}'})-[:R_subClassOf{property:'http://www.orpha.net/ORDO/Orphanet_C016'}]-(i)-[]-(h:S_HP)-[]-(d:DATA) return n._N_Name as disease, i._N_Name as ORPHANET_inheritance,  d.label as HPO_inheritance`)
       .subscribe(res=> this.diseaseResult = res.toObject());
   }
 
@@ -110,35 +105,10 @@ export class MapperFeatureComponent implements OnDestroy {
   }
 
   runQuery() {
-   /* this.getData(`match p=(n:S_ORDO_ORPHANET)-[:R_subClassOf{property:'http://www.orpha.net/ORDO/Orphanet_C016'}]-(i)-[]-(h:S_HP)-[]-(d:DATA) return n._N_Name as disease, i._N_Name as ORPHANET_inheritance,  d.label as HPO_inheritance limit 25`)
-      .subscribe(res=> {
-        console.log(res);
-        this.diseaseResults.push(res.toObject());
-      });*/
-
-    /*    match p = (n:S_GARD)-[r:R_rel]-(m:`S_HP`)-[]-(d:DATA)
-        where n._N_Name contains "CYSTIC FIBROSIS"
-        AND EXISTS(r.`HPO-ID`)
-        AND "inheritance_type_of" IN m.R_rel
-        RETURN p AS inheritance
-        UNION
-        match q = (n:S_ORDO_ORPHANET)-[r:R_rel]-(m:`S_HP`)-[]-(d:DATA)
-        where n._N_Name contains "CYSTIC FIBROSIS"
-        AND EXISTS(r.`HPO-ID`)
-        AND "inheritance_type_of" IN m.R_rel
-        return q AS inheritance*/
-
-
-
-
   }
 
   initialBuild() {
     const diseases: any[] = [];
-/*    const writedriver = neo4j.driver(
-      'bolt://localhost:7687',
-      neo4j.auth.basic('neo4j', 'tim')
-    ); */
       const writedriver = neo4j.driver(
       ' bolt://gard-dev.ncats.io:7687',
       neo4j.auth.basic('neo4j', 'vei1jeiceiK3Ohyaelai')
@@ -186,104 +156,75 @@ export class MapperFeatureComponent implements OnDestroy {
       }));
   }
 
-/*
   buildInheritance() {
-    const diseases: any[] = [];
-        console.log("loggied in");
-        const call = `
-        match (n:Disease)
-        return n as data LIMIT 100
-        `;
-        this.getWriteData(call).subscribe(res => {
-          console.log(res);
-          this.fetchInheritanceData(res.toObject()['data']).subscribe(response => {
-            if(response) {
-                        const inheritanceValuesArr = [];
-                        const dataMap: Map<string, string[]> = new Map<string, string[]>();
-                        response.forEach( source => {
-                          console.log(source);
-                        source.toObject()['data'].forEach(inheritance => {
-                            if (dataMap.has(inheritance.value)) {
-                              let arr: string[] = dataMap.get(inheritance.value).concat(inheritance.references);
-                              //  arr.push(...inheritance.references);
-                              arr = Array.from(new Set(arr));
-                              dataMap.set(inheritance.value, arr);
-                            } else {
-                              dataMap.set(inheritance.value, inheritance.references);
-                            }
-                        });
-                        Array.from(dataMap.entries()).forEach(entry => {
-                          inheritanceValuesArr.push({value: entry[0], references: entry[1]})
-                        });
-                        this.addRelationshipToNode(res.toObject()['data'], inheritanceValuesArr, 'Inheritance');
-
-                    })
-                } else {
-             // session.close();
-              }
-            }
-          );
-        });
-  }
-*/
-
-  addRelationshipToNode(startNode, endNode, relationshipType) {
-    const nodeId = startNode.properties.gard_id;
-    const create = `
-    match (a:Disease)
-    where a.gard_id = '${nodeId}' with a
-    CREATE (b:DataRef $data) with a, b
-    CREATE p=(a)-[r:${relationshipType} { dateCreated: ${Date.now()}}]->(b)
-    return p;
+    const call = `
+    MATCH (n:S_GARD)-[:PAYLOAD]-(d:DATA) WITH n, d.gard_id AS id
+MATCH (n:S_GARD)-[:I_CODE|:N_Name]-(o:S_OMIM)-[:R_rel{name:'has_inheritance_type'}]-(m:S_OMIM) WITH id, COLLECT(DISTINCT m._N_Name) AS omims, COLLECT(DISTINCT m) AS m, n
+UNWIND(m) AS mm
+OPTIONAL MATCH (mm:S_OMIM)-[:N_Name|:I_CODE]-(:S_HP)-[:PAYLOAD]-(z:DATA) WITH id, m, n, COLLECT(DISTINCT z.label) AS omimhpos, omims
+WITH DISTINCT {d: id, h: omimhpos, o: omims} AS omim, n
+MATCH (n:S_GARD)-[:I_CODE|:N_Name]-(o:S_ORDO_ORPHANET)-[:R_subClassOf{property:'http://www.orpha.net/ORDO/Orphanet_C016'}]-(i:S_ORDO_ORPHANET) WITH omim, COLLECT(DISTINCT i._N_Name) AS orphas, COLLECT(DISTINCT i) AS i
+UNWIND(i) AS ii
+OPTIONAL MATCH (ii:S_ORDO_ORPHANET)-[:I_CODE|:N_Name]-(h:S_HP)-[:PAYLOAD]-(g:DATA) WITH i, COLLECT(DISTINCT g.label) AS orphaHpos , omim, orphas
+WITH DISTINCT {disease: omim.d, omim:omim.o, omim_hpo: omim.h, orphanet: orphas, orphanet_hpo:orphaHpos} AS ret
+  RETURN ret;
     `;
+//    RETURN ret.disease AS disease, ret.omim AS omim, ret.omimhpo AS omimhpo, ret.orpha AS orphanet, ret.orphahpo AS orphahpo LIMIT 10
 
-        endNode.map(value => {
-          console.log(value);
-          this.getWriteData(create, {data: value}).subscribe(res=> {
+    const mainDataMap: Map<string, string[]> = new Map<string, string[]>();
+    this.connectionService.read('raw-data', call).subscribe({
+      next: (res) => {
+        const inheritanceValuesArr = [];
+        res.forEach(disease => {
+          console.log(disease);
+          let inheritanceValuesArr = [];
+          const dataMap: Map<string, string[]> = new Map<string, string[]>();
+          Object.keys(disease).forEach(key => {
+            if (key !== 'disease') {
+              disease[key].forEach(inheritance => {
+                if (dataMap.has(inheritance)) {
+                  let arr: string[] = dataMap.get(inheritance).concat(key.split('_'));
+                  //  arr.push(...inheritance.references);
+                  arr = Array.from(new Set(arr));
+                  dataMap.set(inheritance, arr);
+                } else {
+                  dataMap.set(inheritance, key.split('_'));
+                }
+              });
+            }
           });
+          Array.from(dataMap.entries()).forEach(entry => {
+            inheritanceValuesArr.push({value: entry[0], references: entry[1], preferred: entry[1].includes('hpo')})
+          });
+          mainDataMap.set(disease.disease, inheritanceValuesArr);
         });
+      },
+      complete: () => {
+        console.log(mainDataMap);
+        const retData: any[] = [];
+       [...mainDataMap.entries()].forEach(entry => {
+          retData.push({disease: entry[0], values: entry[1]});
+        });
+        this.writeData(retData, 'Inheritance');
+    }
+    });
   }
 
-/*
-  fetchInheritanceData(node): Observable<any> {
-    const calls = [];
-    const retArr = [];
-    const omims: any[] = [...new Set(node.properties.codes.filter(code => code.includes('OMIM')))];
-    const orphanets: any [] = [...new Set(node.properties.codes.filter(code => code.includes('ORPHANET')))];
-    if(omims && omims.length > 0) {
-      omims.forEach(omim => {
-        calls.push(`match (n:S_GARD)-[]-(d:DATA{gard_id: '${node.properties.gard_id}'}) with n
-match p=(n)-[:I_CODE|:N_Name]-(o:S_OMIM)
-where o._I_CODE CONTAINS '${omim}' with o
-match p2 = (o)-[:R_rel{name:'has_inheritance_type'}]-(m:S_OMIM)-[:N_Name|:I_CODE]-(:S_HP)-[]-(z:DATA)
-with DISTINCT [{value:  m._N_Name, references:['OMIM']}, {value: z.label, references: ['OMIM', 'HPO']}] as data RETURN data;`
-        )
-      });
-    }
-    if (orphanets && orphanets.length > 0) {
-      orphanets.forEach(orphanet => {
-        calls.push(`
-      match (n:S_GARD)-[]-(d:DATA{gard_id: '${node.properties.gard_id}'}) with n
-match p=(n)-[:I_CODE|:N_Name]-(o:S_ORDO_ORPHANET)
-where n._I_CODE CONTAINS '${orphanet}'with o
-match p2= (o)-[:R_subClassOf{property:'http://www.orpha.net/ORDO/Orphanet_C016'}]-(i:S_ORDO_ORPHANET)-[]-(h:S_HP)-[]-(g:DATA)
-with DISTINCT [{value:  i._N_Name, references:['ORPHANET']}, {value: g.label, references: ['ORPHANET', 'HPO']}] as data RETURN data;
-`)
-      });
-    }
-    if(calls.length > 0) {
-      return from(calls.map(call => {
-        console.log(call);
-       return this.getRawData(call);
-      }))
-        .pipe(
-          zipAll()
-        )
-    } else {
-      return of(null);
-    }
+
+  writeData(payload: any[], type: string) {
+    const create = `
+    UNWIND {payload} as row
+    match (a:Disease) where a.gard_id = row.disease with a, row
+    unwind row.values as value
+    CREATE (n:DataRef)
+    SET n += value
+    CREATE p=(a)-[r:${type} { dateCreated: ${Date.now()}}]->(n)
+    return count(p);
+    `;
+    this.connectionService.write('gard-data', create, {payload: payload}).subscribe(res=> {
+      console.log(res);
+    })
   }
-*/
 
   ngOnDestroy() {
 

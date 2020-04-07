@@ -45,6 +45,7 @@ export class CurationMatrixComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this);
     if (this.data && this.field) {
       this.dataSource.data = this.data[this.field].sort((a, b) => {
         return b.references.length - a.references.length;
@@ -63,9 +64,12 @@ export class CurationMatrixComponent implements OnInit {
     }
     this.dataSource.sort = this.sort;
 
-    if(this.currentObject) {
-      this.filterSelection.select(...this.currentObject);
-    }
+   /* if(this.currentObject) {
+      this.filterSelection.select(...this.currentObject[this.field]);
+    }*/
+
+   this.filterSelection.select(...this.data[this.field].filter(row => row.preferred));
+
   //  this.selectedValues = this.currentObject;
     this.filterSelection.changed.subscribe(change => {
       this.selectedValues = this.filterSelection.selected;
@@ -87,12 +91,14 @@ export class CurationMatrixComponent implements OnInit {
   }
 
   ngOnChanges(change) {
+    console.log(change);
     if (change.data && this.data === null) {
     this.dataSource.data = [];
     } else if (change.data && this.data.length > 0) {
      this.dataSource.data = this.data.sort((a,b) => {
         return b.references.length - a.references.length;
       });
+      this.filterSelection.select(...this.data[this.field].filter(row => row.preferred));
     }
   }
 

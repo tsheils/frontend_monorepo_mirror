@@ -78,18 +78,7 @@ export class GardSearchComponent implements OnInit {
     private changeRef: ChangeDetectorRef,
     private diseasesFacade: DiseasesFacade,
     private connectionService: Neo4jConnectService
-  ) {
-   /* this.driver = neo4j.driver(
-      'bolt://localhost:7687',
-      neo4j.auth.basic('neo4j', 'tim')
-    );
-    fromPromise(this.driver.verifyConnectivity()
-      .then((res) => {
-        if (res) {
-          //   this.writesession = this.writedriver.rxSession();
-        }
-      }));*/
-  }
+  ) {}
 
   ngOnInit(): void {
     this.typeaheadCtrl = new FormControl({value: '', disabled: false});

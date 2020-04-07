@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
 import { UiGardGardHeaderModule } from '@ncats-frontend-library/ui/gard/gard-header';
@@ -18,7 +18,12 @@ import {
   Neo4jdbsFacade
 } from "@ncats-frontend-library/common/data-access/neo4j-connector";
 import {DiseasesEffects} from "../../../../libs/stores/diseases/src/lib/+state/diseases/diseases.effects";
+import {ConfigService} from "./config.service";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
 
+export function configServiceFactory(startupService: ConfigService): Function {
+  return () => startupService.load();
+}
 const ROUTES: Routes = [
   {
     path: '',
@@ -54,6 +59,7 @@ const ROUTES: Routes = [
   declarations: [AppComponent],
   imports: [
     BrowserModule,
+    HttpClientModule,
     BrowserAnimationsModule,
     RouterModule.forRoot(ROUTES, { initialNavigation: 'enabled' }),
     UiGardGardHeaderModule,
@@ -77,7 +83,14 @@ const ROUTES: Routes = [
   ],
   providers: [
     DiseasesFacade,
-    Neo4jdbsFacade
+    Neo4jdbsFacade,
+    ConfigService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: configServiceFactory,
+      deps: [ConfigService],
+      multi: true
+    },
   ],
   bootstrap: [AppComponent]
 })

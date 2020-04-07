@@ -39,4 +39,22 @@ export class Neo4jConnectService {
       return of([]);
     }
   }
+
+  // todo: close session
+  write(instance: string, call: string, params?: any): Observable<any> {
+    const data = [];
+    if (this.instances.has(instance)) {
+      const session: RxSession = this.instances.get(instance).rxSession();
+      return session
+        .writeTransaction(txc => txc.run(call, params ? params : null)
+          .records())
+    } else {
+      console.error("Error - no instances set");
+      return of([]);
+    }
+  }
+
+  destroy() {
+    [...this.instances.values()].forEach(driver => driver.close());
+  }
 }

@@ -12,6 +12,7 @@
 *environments
 *environment.ts
 *environment.prod.ts
+*config.json
 
 # IDEs and editors
 /.idea
