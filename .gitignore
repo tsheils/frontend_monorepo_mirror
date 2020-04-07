@@ -9,9 +9,6 @@
 /node_modules
 
 #environments
-*environments
-*environment.ts
-*environment.prod.ts
 *config.json
 
 # IDEs and editors
