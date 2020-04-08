@@ -42,7 +42,7 @@
           </mat-card>
           <ncats-frontend-library-curation-matrix
             [field]="'inheritance'"
-            [data]=disease
+            [data] = disease
             [currentObject]=displayDisease
             (curatedObjectChange)="setCuratedObject($event, 'inheritance')"
             *ngIf="dataLoaded && editing === 'inheritance'">

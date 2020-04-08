@@ -17,7 +17,14 @@
     <mat-autocomplete #auto="matAutocomplete" (optionSelected) = "search($event)" [displayWith]="displayFn">
       <mat-optgroup *ngFor="let group of filteredGroups " [label]="group.name">
         <mat-option *ngFor="let option of group?.options" [value]="option">
-          <div [innerHTML]= "option.name  | highlight : typeaheadCtrl.value.name ? typeaheadCtrl.value.name : typeaheadCtrl.value "></div>
+          <ng-container [ngSwitch] = checkOrigin(option)>
+            <div *ngSwitchCase = "'name'">
+              <div [innerHTML]= "option.name  | highlight : typeaheadCtrl.value.name ? typeaheadCtrl.value.name : typeaheadCtrl.value "></div>
+            </div>
+            <div *ngSwitchCase = "'synonym'">
+              <div [innerHTML]= "option['synonymString']  | highlight : typeaheadCtrl.value.name ? typeaheadCtrl.value.name : typeaheadCtrl.value "></div>
+            </div>
+          </ng-container>
         </mat-option>
       </mat-optgroup>
     </mat-autocomplete>

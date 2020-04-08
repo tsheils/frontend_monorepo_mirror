@@ -32,7 +32,7 @@ export class GardSearchComponent implements OnInit {
   @Input() placeholderStr?: string;
 
   @Input() disabled = false;
-  options = [];
+  options: any[] = [];
 
   /**
    * form control for text input
@@ -124,6 +124,10 @@ export class GardSearchComponent implements OnInit {
   getData(call: string): Observable<any> {
     const session = this.driver.rxSession();
     return session.readTransaction(txc => txc.run(call).records());
+  }
+
+  checkOrigin(option: any): string {
+      return 'name';
   }
 
   typeahead(event: any) {
