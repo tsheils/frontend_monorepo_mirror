@@ -83,15 +83,8 @@ export class CurationFeatureComponent implements OnInit {
     }
   ];
 
-
-
-
   disease: Disease;
   displayDisease: Disease;
-
-  disease2: any = {};
-  displayDisease2: any = {};
-  diseaseObj: any[] = [];
   session: RxSession;
   curatedObject = {
     name: '',
@@ -147,29 +140,6 @@ export class CurationFeatureComponent implements OnInit {
   ).subscribe(res=> {
     console.log(res);
      })
-  }
-
-  typeahead(event: any) {
-    const results = [];
-    if(event) {
-      const call = `
-      CALL db.index.fulltext.queryNodes("namesAndSynonyms", "${event}") YIELD node
-      RETURN node.name AS key, node.gard_id AS id, node.codes AS codes LIMIT 10;
-      `;
-      this.getData(call)
-        .pipe(
-          switchMap(res => {
-            console.log(res);
-              results.push(res.toObject());
-              return res;
-            }
-          )
-        ).subscribe( {
-        complete: () => {
-          this._diseaseObservableSource.next([{name: 'GARD names', options: results}]);
-        }
-      })
-    }
   }
 
   /**

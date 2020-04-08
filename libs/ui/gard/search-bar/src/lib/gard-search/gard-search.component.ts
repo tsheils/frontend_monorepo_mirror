@@ -45,32 +45,11 @@ export class GardSearchComponent implements OnInit {
    */
   @Input() filteredGroups: any;
 
-
-
   @Output() query: EventEmitter<any> = new EventEmitter<any>();
   @Output() inputChangeEvent: EventEmitter<string> = new EventEmitter<string>();
 
-
-
-
-
-
-  /**
-   * subject to track neo4j session
-   */
-  private _typeaheadSource = new BehaviorSubject<any>(null);
-
-
-  /**
-   * Observable stream of session changes
-   * @type {Observable<RxSession>}
-   */
-  typeaheadSource$: Observable<any> = this._typeaheadSource.asObservable();
-
   searching = false;
   dataLoaded = false;
-  private diseaseObj: any[] = [];
-  private disease: any;
   serializer: DiseaseSerializer = new DiseaseSerializer();
   private driver;
 
@@ -105,16 +84,14 @@ export class GardSearchComponent implements OnInit {
    * @returns void
    */
   search(event?: MatAutocompleteSelectedEvent): void {
-    console.log(this.typeaheadCtrl.value);
     const diseaseObj = this.typeaheadCtrl.value;
-  this.diseasesFacade.dispatch(setDisease({disease: {
+    this.diseasesFacade.dispatch(setDisease({disease: {
     id: diseaseObj.gard_id,
       name: diseaseObj.name,
       disease: diseaseObj
     }
   }));
     this.query.emit(this.typeaheadCtrl.value);
-    this.autocomplete.closePanel();
   }
 
   displayFn(option: any): string {
@@ -127,23 +104,24 @@ export class GardSearchComponent implements OnInit {
   }
 
   checkOrigin(option: any): string {
+    const val = this.typeaheadCtrl.value.name ? this.typeaheadCtrl.value.name : this.typeaheadCtrl.value;
+    if(option.name.toLowerCase().includes(val.toLowerCase())) {
       return 'name';
+    } else {
+      return 'synonym';
+    }
   }
 
   typeahead(event: any) {
-    this.autocomplete.openPanel();
     if(event.length > 0) {
       this.options = [];
- /*     const call = `
-      CALL db.index.fulltext.queryNodes("namesAndSynonyms", "name:${event} OR ${event}") YIELD node
-      RETURN node LIMIT 10;
-      `;*/
       const call = `
-      CALL db.index.fulltext.queryNodes("namesAndSynonyms", "name:${event}* OR ${event}") YIELD node 
+      CALL db.index.fulltext.queryNodes("namesAndSynonyms", "name:${event}* OR ${event}*") YIELD node 
       with collect(properties(node)) AS arr 
       with arr[0..10] AS data
       RETURN data
       `;
+      console.log(call);
       this.connectionService.read('gard-data', call)
         .pipe(
           switchMap(res => {
@@ -153,31 +131,7 @@ export class GardSearchComponent implements OnInit {
             }
           ),
         ).subscribe( )
-          //{
-       /* next: (res => {console.log(res)}),
-        complete: () => {
-          this.filteredGroups = [{name: 'GARD names', options: this.options}];
-          this.changeRef.markForCheck();
-        }*/
-     // })
-     // this.diseasesFacade.dispatch(searchDiseases({query: event}));
-/*      const call = `
-      CALL db.index.fulltext.queryNodes("namesAndSynonyms", "name:${event} OR ${event}") YIELD node
-      RETURN node LIMIT 10;
-      `;
-      this.getData(call)
-        .pipe(
-          switchMap(res => {
-              this.options.push(res.toObject().node.properties);
-              return res;
-            }
-          )
-        ).subscribe( {
-        complete: () => {
-          this.filteredGroups = [{name: 'GARD names', options: this.options}];
-          console.log(this.filteredGroups);
-        }
-      })*/
+    } else {
     }
   }
 }
