@@ -86,7 +86,7 @@ pipeline {
                 checkout scm
                 configFileProvider([
                     configFile(fileId: 'gard-dev-docker-compose', targetLocation: 'docker-compose.yml'),
-                    configFile(fileId: 'on-prem-config.json', targetLocation: 'config.json')
+                    configFile(fileId: 'on-prem-config.json', targetLocation: 'app.conf')
                 ]) {
                    script {
                         def docker = new org.labshare.Docker()
@@ -104,7 +104,7 @@ pipeline {
                 checkout scm
                 configFileProvider([
                     configFile(fileId: 'gard-dev-aws-docker-compose', targetLocation: 'docker-compose.yml'),
-                    configFile(fileId: 'aws-config.json', targetLocation: 'config.json')
+                    configFile(fileId: 'aws-config.json', targetLocation: 'app.conf')
                 ]) {
                     withEnv([
                         "DOCKER_REPO_NAME=ncats/gard-frontend",
