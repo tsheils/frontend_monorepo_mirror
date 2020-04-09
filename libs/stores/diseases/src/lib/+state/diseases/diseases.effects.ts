@@ -68,15 +68,20 @@ export class DiseasesEffects {
     return this.actions$.pipe(
       ofType(DiseasesActions.setDisease),
       concatMap(action => {
-        console.log(action);
+//        match p = (d:Disease {gard_id:'${action.disease.disease.gard_id}'})-[]-(:DataRef) RETURN COLLECT(p) as disease;
         const call = `
-          match p = (d:Disease {gard_id:'${action.disease.disease.gard_id}'})-[]-(:DataRef) RETURN p;
+match p = (d:Disease {gard_id:'GARD:0006233'})-[r]-(n:DataRef) with d, r, n 
+with distinct properties(d) as disease, {field: r.type, values: collect(properties(n))} as changes
+return {disease: disease,  data: collect(changes)} as data;
         `;
-        console.log(call);
+      //  console.log(call);
      return this.neo4jConnectionService.read('gard-data', call).pipe(
           map(response => {
-            console.log(response);
-            return DiseasesActions.setDiseaseSuccess({selectedDisease: response.toObject()});
+            const resp = response.toObject().data;
+            const disease = resp.disease;
+            resp.data.forEach(data => disease[data.field] = data.values);
+            console.log(disease);
+            return DiseasesActions.setDiseaseSuccess({selectedDisease: disease});
           }),
           catchError(error => {
             console.log(error);

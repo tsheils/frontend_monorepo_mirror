@@ -52,6 +52,7 @@ const diseasesReducer = createReducer(
   })),
   on(
     DiseasesActions.setDiseaseSuccess, (state, {selectedDisease}) => {
+      console.log(selectedDisease);
       console.log("success");
       return diseasesAdapter.addOne(selectedDisease, { ...state, selectedId: selectedDisease.id, loaded: true })
 

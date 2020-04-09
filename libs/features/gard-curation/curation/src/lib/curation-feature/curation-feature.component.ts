@@ -54,7 +54,7 @@ export class CurationFeatureComponent implements OnInit {
     {
       token: CURATION_SIDEPANEL_COMPONENT,
       section: Position.Left,
-      dataObservable: this.fieldsObservable$
+   //   dataObservable: this.fieldsObservable$
     },
     /*{
       token: GARD_HEADER_COMPONENT,
@@ -69,7 +69,7 @@ export class CurationFeatureComponent implements OnInit {
    {
       token: GARD_DISEASE_SEARCH_COMPONENT,
       section: Position.Content,
-      dataObservable: this.diseaseObservable$
+    //  dataObservable: this.diseaseObservable$
     },
     {
       token: CURATION_MAIN_COMPONENT,
@@ -82,6 +82,11 @@ export class CurationFeatureComponent implements OnInit {
       // dataObservable: this.diseaseObservable$
     }
   ];
+
+  data: {
+    object: Disease,
+    fields: string[]
+  };
 
   disease: Disease;
   displayDisease: Disease;
@@ -112,35 +117,33 @@ export class CurationFeatureComponent implements OnInit {
       if(res) {
         console.log(res);
         this.disease = this.serializer.fromJson(res);
-        this._diseaseObservableSource.next(this.disease);
+        this._diseaseObservableSource.next({object: this.disease, fields: ['inheritance', 'synonyms']})
+        this.data = {object: this.disease, fields: ['inheritance', 'synonyms']};
         this.changeRef.markForCheck();
       }
     });
   }
 
+/*
   getData(call: string) {
     return this.gardSession.readTransaction(txc => txc.run(call).records());
   }
+*/
 
-  search(event: any) {
-    console.log(event);
-    console.log(this.disease);
+/*  search(event: any) {
     const call = `
           match p = (d:Disease {gard_id:'${this.disease.gard_id}'})-[]-(r:DataRef) RETURN collect(properties(r)) as data;
         `;
     console.log(call);
      this.connectionService.read('gard-data', call).pipe(
       map(response => {
-        console.log(response.toObject())
         this.disease.inheritance = response.toObject()['data'];
         this.displayDisease = this.disease;
         this.dataLoaded = true;
         this.editing = "inheritance";
       })
-  ).subscribe(res=> {
-    console.log(res);
-     })
-  }
+  ).subscribe()
+  }*/
 
   /**
    * @param object

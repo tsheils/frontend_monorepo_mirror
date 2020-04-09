@@ -121,7 +121,7 @@ export class GardSearchComponent implements OnInit {
       with arr[0..10] AS data
       RETURN data
       `;
-      console.log(call);
+     // console.log(call);
       this.connectionService.read('gard-data', call)
         .pipe(
           switchMap(res => {
