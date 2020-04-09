@@ -11,8 +11,8 @@ export interface Neo4jdbsEntity {
 
 export interface Neo4jInstanceConfig {
   name: string;
-  url?: string;
-  bolt: string;
+  url: string;
+ /* bolt: string;
   user: string;
-  password: string;
+  password: string;*/
 }

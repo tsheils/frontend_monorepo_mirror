@@ -74,7 +74,7 @@ export class AppComponent implements OnDestroy {
 
   search(event: any) {
     this.getData(`match p=(n:S_ORDO_ORPHANET{_N_Name: '${event.toUpperCase()}'})-[:R_subClassOf{property:'http://www.orpha.net/ORDO/Orphanet_C016'}]-(i)-[]-(h:S_HP)-[]-(d:DATA) return n._N_Name as disease, i._N_Name as ORPHANET_inheritance,  d.label as HPO_inheritance`)
-      .subscribe(res=> this.diseaseResult = res.toObject());
+      .subscribe(res=> this.diseaseResult = res);
   }
 
   typeahead(event: any) {
@@ -89,7 +89,7 @@ export class AppComponent implements OnDestroy {
   runQuery() {
     this.getData(`match p=(n:S_ORDO_ORPHANET)-[:R_subClassOf{property:'http://www.orpha.net/ORDO/Orphanet_C016'}]-(i)-[]-(h:S_HP)-[]-(d:DATA) return n._N_Name as disease, i._N_Name as ORPHANET_inheritance,  d.label as HPO_inheritance limit 25`)
       .subscribe(res=> {
-        this.diseaseResults.push(res.toObject());
+        this.diseaseResults.push(res);
       });
 
 /*    match p = (n:S_GARD)-[r:R_rel]-(m:`S_HP`)-[]-(d:DATA)

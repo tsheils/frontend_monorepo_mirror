@@ -45,14 +45,14 @@
           </ncats-frontend-library-curation-matrix>
         </div>
       </div>
-      <div fxLayout="row" fxLayoutAlign="space-around center" *ngIf="disease && disease.inheritance.length === 0">
+      <div fxLayout="row" fxLayoutAlign="space-around center" *ngIf="disease?.inheritance && disease?.inheritance.length === 0">
         <div fxFlex="95">
           <h3>No inheritance data found.</h3>
         </div>
       </div>
 
 
-      <div fxLayout="row" fxLayoutAlign="end center" *ngIf="disease && disease.inheritance.length > 0"
+      <div fxLayout="row" fxLayoutAlign="end center" *ngIf="disease?.inheritance && disease?.inheritance.length > 0"
            class="action-buttons-row">
         <div fxFlex="15">
           <div *ngIf="editing !== 'inheritance'" fxLayoutAlign="end center">

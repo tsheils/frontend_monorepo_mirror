@@ -131,8 +131,8 @@ export class CurationFeatureComponent implements OnInit {
     console.log(call);
      this.connectionService.read('gard-data', call).pipe(
       map(response => {
-        console.log(response.toObject())
-        this.disease.inheritance = response.toObject()['data'];
+        console.log(response)
+        this.disease.inheritance = response['data'];
         this.displayDisease = this.disease;
         this.dataLoaded = true;
         this.editing = "inheritance";

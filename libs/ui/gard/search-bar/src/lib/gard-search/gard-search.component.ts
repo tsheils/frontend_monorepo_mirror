@@ -125,7 +125,8 @@ export class GardSearchComponent implements OnInit {
       this.connectionService.read('gard-data', call)
         .pipe(
           switchMap(res => {
-            this.filteredGroups = [{name: 'GARD names', options: res.toObject().data}];
+            console.log(res);
+            this.filteredGroups = [{name: 'GARD names', options: res.data}];
             this.changeRef.markForCheck();
               return res;
             }
