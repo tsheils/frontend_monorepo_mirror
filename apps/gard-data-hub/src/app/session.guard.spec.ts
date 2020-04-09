@@ -2,7 +2,7 @@ import {TestBed} from '@angular/core/testing';
 
 import {SessionGuard} from './session.guard';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {AngularFireModule} from '@angular/fire';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {AngularFireAuth} from '@angular/fire/auth';
@@ -18,6 +18,7 @@ describe('SessionGuard', () => {
         RouterTestingModule,
       ],
       providers: [
+        MatDialog,
         {provide: MAT_DIALOG_DATA, useValue: {}},
         {provide: MatDialogRef, useValue: {}},
       ]

@@ -35,99 +35,6 @@
         }
       }
     },
-    "gard-curation": {
-      "projectType": "application",
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
-      },
-      "root": "apps/gard-curation",
-      "sourceRoot": "apps/gard-curation/src",
-      "prefix": "ncats-frontend-library",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "outputPath": "dist/apps/gard-curation",
-            "index": "apps/gard-curation/src/index.html",
-            "main": "apps/gard-curation/src/main.ts",
-            "polyfills": "apps/gard-curation/src/polyfills.ts",
-            "tsConfig": "apps/gard-curation/tsconfig.app.json",
-            "aot": true,
-            "assets": [
-              "apps/gard-curation/src/favicon.ico",
-              "apps/gard-curation/src/assets"
-            ],
-            "styles": ["apps/gard-curation/src/styles.scss"],
-            "scripts": []
-          },
-          "configurations": {
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "apps/gard-curation/src/environments/environment.ts",
-                  "with": "apps/gard-curation/src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "gard-curation:build"
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "gard-curation:build:production"
-            }
-          }
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "gard-curation:build"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/gard-curation/tsconfig.app.json",
-              "apps/gard-curation/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!apps/gard-curation/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/gard-curation/jest.config.js",
-            "tsConfig": "apps/gard-curation/tsconfig.spec.json",
-            "setupFile": "apps/gard-curation/src/test-setup.ts"
-          }
-        }
-      }
-    },
     "gard-data-hub": {
       "projectType": "application",
       "schematics": {
@@ -247,33 +154,6 @@
           "options": {
             "tsConfig": ["apps/gard-data-hub-e2e/tsconfig.e2e.json"],
             "exclude": ["**/node_modules/**", "!apps/gard-data-hub-e2e/**"]
-          }
-        }
-      }
-    },
-    "gard-curation-e2e": {
-      "root": "apps/gard-curation-e2e",
-      "sourceRoot": "apps/gard-curation-e2e/src",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@nrwl/cypress:cypress",
-          "options": {
-            "cypressConfig": "apps/gard-curation-e2e/cypress.json",
-            "tsConfig": "apps/gard-curation-e2e/tsconfig.e2e.json",
-            "devServerTarget": "gard-curation:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "gard-curation:serve:production"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["apps/gard-curation-e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**", "!apps/gard-curation-e2e/**"]
           }
         }
       }

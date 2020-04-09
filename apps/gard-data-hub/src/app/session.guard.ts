@@ -1,13 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 import {Observable} from 'rxjs';
-import {map, take} from 'rxjs/internal/operators';
 import {MatDialog} from '@angular/material/dialog';
-import {
-  Neo4jConnectionFormComponent,
-  Neo4jConnectService
-} from "@ncats-frontend-library/common/data-access/neo4j-connector";
-import {QUESTIONS} from "./app.component";
 
 @Injectable({
   providedIn: 'root'
