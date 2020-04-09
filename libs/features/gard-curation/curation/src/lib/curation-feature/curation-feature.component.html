@@ -1,6 +1,9 @@
 
 <!--
-<ncats-frontend-library-dynamic-app-content [components]="components" [data]="disease"></ncats-frontend-library-dynamic-app-content>
+<ncats-frontend-library-dynamic-app-content
+  [components]="components"
+  [data]="disease"
+></ncats-frontend-library-dynamic-app-content>
 -->
 
 <div fxLayout="row" fxLayoutAlign="space-around center">
@@ -8,12 +11,6 @@
     <div fxLayout="row" fxLayoutAlign="space-around center">
       <div fxFlex="95">
         <ncats-frontend-library-gard-search (query)="search($event)"></ncats-frontend-library-gard-search>
-       <!-- <ncats-frontend-library-search-bar
-          (inputChangeEvent)="typeahead($event)"
-          (query)="search($event)"
-          [placeholderStr]="'Fetch by disease'"
-          [filteredGroups]="typeaheadSource$"
-        ></ncats-frontend-library-search-bar>-->
         <mat-progress-bar [mode]="'indeterminate'" *ngIf="searching && !dataLoaded"></mat-progress-bar>
       </div>
     </div>
@@ -26,7 +23,7 @@
     </div>
     <mat-card *ngIf="dataLoaded">
       <mat-card-header><h3>Inheritance</h3></mat-card-header>
-      <div fxLayout="row" fxLayoutAlign="space-around center" *ngIf="disease && disease.inheritance.length > 0">
+      <div fxLayout="row" fxLayoutAlign="space-around center" *ngIf="disease?.inheritance && disease?.inheritance.length >0">
         <div fxFlex="95">
           <mat-card *ngIf="disease && editing !== 'inheritance'">
             <div *ngFor="let value of displayDisease?.inheritance">
@@ -42,21 +39,20 @@
           </mat-card>
           <ncats-frontend-library-curation-matrix
             [field]="'inheritance'"
-            [data]=disease
-            [currentObject]=displayDisease
+            [data] = disease
             (curatedObjectChange)="setCuratedObject($event, 'inheritance')"
             *ngIf="dataLoaded && editing === 'inheritance'">
           </ncats-frontend-library-curation-matrix>
         </div>
       </div>
-      <div fxLayout="row" fxLayoutAlign="space-around center" *ngIf="disease && disease.inheritance.length === 0">
+      <div fxLayout="row" fxLayoutAlign="space-around center" *ngIf="disease?.inheritance && disease?.inheritance.length === 0">
         <div fxFlex="95">
           <h3>No inheritance data found.</h3>
         </div>
       </div>
 
 
-      <div fxLayout="row" fxLayoutAlign="end center" *ngIf="disease && disease.inheritance.length > 0"
+      <div fxLayout="row" fxLayoutAlign="end center" *ngIf="disease?.inheritance && disease?.inheritance.length > 0"
            class="action-buttons-row">
         <div fxFlex="15">
           <div *ngIf="editing !== 'inheritance'" fxLayoutAlign="end center">

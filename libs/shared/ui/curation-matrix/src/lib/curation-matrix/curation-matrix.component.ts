@@ -15,7 +15,6 @@ export class CurationMatrixComponent implements OnInit {
   @Input() field: string;
   @Input() editing = true;
   @Input() data: any[] = [];
-  @Input() currentObject: any[] = [];
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
@@ -64,13 +63,9 @@ export class CurationMatrixComponent implements OnInit {
     }
     this.dataSource.sort = this.sort;
 
-   /* if(this.currentObject) {
-      this.filterSelection.select(...this.currentObject[this.field]);
-    }*/
 
    this.filterSelection.select(...this.data[this.field].filter(row => row.preferred));
 
-  //  this.selectedValues = this.currentObject;
     this.filterSelection.changed.subscribe(change => {
       this.selectedValues = this.filterSelection.selected;
       this.curatedObjectChange.emit(this.selectedValues);

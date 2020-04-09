@@ -8,16 +8,24 @@
 <div class ="search-row">
   <mat-form-field class = "typeahead-field search" [floatLabel] = "'never'">
     <input matInput
-           (keyup.enter)="search()"
+           (keydown.enter)="search($event)"
            aria-label="Search"
            [matAutocomplete]="auto"
            [formControl]="typeaheadCtrl"
            class ="'input-field'">
     <mat-label class="search-label">Fetch by disease</mat-label>
-    <mat-autocomplete #auto="matAutocomplete" (optionSelected) = "search($event)" [displayWith]="displayFn">
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected) = "search($event)" [displayWith]="displayFn" class="custom-autocomplete-panel">
       <mat-optgroup *ngFor="let group of filteredGroups " [label]="group.name">
-        <mat-option *ngFor="let option of group?.options" [value]="option">
-          <div [innerHTML]= "option.name  | highlight : typeaheadCtrl.value.name ? typeaheadCtrl.value.name : typeaheadCtrl.value "></div>
+        <mat-option *ngFor="let option of group?.options" [value]="option" class="dynamic-height" [ngClass]="checkOrigin(option)">
+          <ng-container [ngSwitch] = checkOrigin(option)>
+            <div *ngSwitchCase = "'name'" class="name-options-list">
+              <div [innerHTML]= "option.name  | highlight : typeaheadCtrl.value.name ? typeaheadCtrl.value.name : typeaheadCtrl.value "></div>
+            </div>
+            <div *ngSwitchCase = "'synonym'" class="synonyms-option-list">
+              <div>{{option.name}} Synonyms:</div>
+              <div class= "synonyms-list" [innerHTML]= "option['synonyms'].join(', ').toUpperCase() | titlecase | highlight : typeaheadCtrl.value.name ? typeaheadCtrl.value.name : typeaheadCtrl.value ">-</div>
+            </div>
+          </ng-container>
         </mat-option>
       </mat-optgroup>
     </mat-autocomplete>

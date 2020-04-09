@@ -1,5 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Disease} from "../../../../../../../models/gard/disease";
+import {Observable} from "rxjs";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'ncats-frontend-library-data-panel',
@@ -12,7 +14,10 @@ export class DataPanelComponent implements OnInit {
 
   @Input() object: Disease;
 
-  @Input() data: any;
+
+  @Input() data?: any;
+
+  @Input() dataObservable?: Observable<any>;
 
   editing: string;
 
@@ -22,6 +27,12 @@ export class DataPanelComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    this.dataObservable.pipe(
+      map(res => {
+        console.log(res);
+        this.data = res;
+      })
+    ).subscribe()
   }
 
   setCuratedObject(object, field): void {
