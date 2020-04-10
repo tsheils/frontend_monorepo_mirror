@@ -10,17 +10,13 @@ export class GardBase {
 }
 
 export class GardDataProperty {
-  public value: string;
-  propertyType: string = "string";
-  references: GardReference[];
+  value: string;
+  references: string[];
+  preferred: boolean;
 
   constructor (obj: any) {
     this.value = obj.value;
-    this.propertyType = obj.propertyType;
     this.references = obj.references ? obj.references : [];
-  }
-
-  static display() {
-    return this.prototype.value;
+    this.preferred = obj.preferred;
   }
 }

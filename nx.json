@@ -14,12 +14,12 @@
     "ncats-firebase-auth-module": {
       "tags": []
     },
-    "gard-curation-e2e": {
-      "tags": [],
-      "implicitDependencies": ["gard-curation"]
-    },
-    "gard-curation": {
+    "gard-data-hub": {
       "tags": []
+    },
+    "gard-data-hub-e2e": {
+      "tags": [],
+      "implicitDependencies": ["gard-data-hub"]
     },
     "gard-frontend-e2e": {
       "tags": [],
@@ -81,13 +81,6 @@
     },
     "shared-ui-header-template": {
       "tags": []
-    },
-    "gard-data-hub": {
-      "tags": []
-    },
-    "gard-data-hub-e2e": {
-      "tags": [],
-      "implicitDependencies": ["gard-data-hub"]
     },
     "features-gard-curation-mapper": {
       "tags": []

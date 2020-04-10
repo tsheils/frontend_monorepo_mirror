@@ -15,7 +15,6 @@ import {
 } from "@ncats-frontend-library/common/data-access/neo4j-connector";
 import {Store} from "@ngrx/store";
 import {Disease} from "../../../../models/gard/disease";
-import {WebsocketService} from "../../../../libs/common/data-access/neo4j-connector/src/lib/websocket.service";
 import {environment} from "../environments/environment";
 
  export const QUESTIONS: QuestionBase<any>[] = [
@@ -59,7 +58,6 @@ export class AppComponent implements OnInit, OnDestroy {
     private router: Router,
     private diseasesFacade: DiseasesFacade,
     private neo4jdbFacade: Neo4jdbsFacade,
-   private websocketService: WebsocketService,
    private connectionService: Neo4jConnectService
   ) {
     this.links = [{link:'mapper'}, {link: 'curation', label: 'curation'}];
@@ -70,11 +68,9 @@ export class AppComponent implements OnInit, OnDestroy {
       this.connectionService.createDriver(db);
     });
 
-   /* this.websocketService.subject.subscribe(res=> console.log(res));
-    this.websocketService.subject.next("SDFSFSFSFSD");
-*/
     this.diseasesFacade.selectedDisease$.subscribe(res=> {
       if(res) {
+        console.log(res);
         this.disease = res;
       }
     });

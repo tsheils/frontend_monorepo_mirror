@@ -85,22 +85,18 @@ export class GardSearchComponent implements OnInit {
    */
   search(event?: MatAutocompleteSelectedEvent): void {
     const diseaseObj = this.typeaheadCtrl.value;
+    console.log(diseaseObj);
     this.diseasesFacade.dispatch(setDisease({disease: {
-    id: diseaseObj.gard_id,
+      id: diseaseObj.gard_id,
       name: diseaseObj.name,
       disease: diseaseObj
     }
   }));
-    this.query.emit(this.typeaheadCtrl.value);
+   // this.query.emit(this.typeaheadCtrl.value);
   }
 
   displayFn(option: any): string {
     return option && option.name ? option.name : '';
-  }
-
-  getData(call: string): Observable<any> {
-    const session = this.driver.rxSession();
-    return session.readTransaction(txc => txc.run(call).records());
   }
 
   checkOrigin(option: any): string {
@@ -121,11 +117,11 @@ export class GardSearchComponent implements OnInit {
       with arr[0..10] AS data
       RETURN data
       `;
-      console.log(call);
+     // console.log(call);
       this.connectionService.read('gard-data', call)
         .pipe(
           switchMap(res => {
-            console.log(res);
+         //   console.log(res);
             this.filteredGroups = [{name: 'GARD names', options: res.data}];
             this.changeRef.markForCheck();
               return res;
