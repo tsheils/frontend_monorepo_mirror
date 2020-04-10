@@ -1,14 +1,26 @@
 
-<mat-card>
-  <mat-card-header>{{field | titlecase}}</mat-card-header>
+<mat-card *ngFor =" let field of fields" class = "object-fields-display">
+  <mat-card-header> <h3>{{field | titlecase}}</h3></mat-card-header>
   <mat-card-content>
-        <div *ngIf = "editing !== field">
+          <div *ngIf = "object[field] && editing !== field">
+            <div *ngFor="let value of object[field]">
+              {{value.value}}
+              <span *ngIf="value.references">
+      &nbsp;
+    <span *ngFor="let ref of value.references">
+      <sup><a href="">{{ref}}</a></sup>
+            &nbsp;
+    </span>
+    </span>
+            </div>
+          </div>
+<!--
           <gard-data-display [property] = object[field]></gard-data-display>
-        </div>
+-->
         <div *ngIf="editing === field">
           <ncats-frontend-library-curation-matrix
             [field] = "field"
-            [data] = data
+            [data] = object
             (curatedObjectChange)="setCuratedObject($event, field)">
           </ncats-frontend-library-curation-matrix>
         </div>

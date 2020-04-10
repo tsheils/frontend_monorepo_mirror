@@ -79,7 +79,6 @@ export class Disease {
   synonyms: GardDataProperty[];
   hpo: GardDataProperty[];
   inheritance: GardDataProperty[];
-  //inheritance: GardDataProperty[];
   xrefs: GardDataProperty[];
   is_rare: boolean;
   uri: string;
@@ -165,10 +164,9 @@ export class DiseaseSerializer implements Serializer {
       delete obj['Diagnosis'];
     }
 
-    if (json.Inheritance) {
-      obj.inheritance = [json.Inheritance].map(val => new GardDataProperty({value: val, propertyType: 'html'}));
-      delete obj['Inheritance'];
-
+    if (json.inheritance) {
+      obj.inheritance = json.inheritance.map(val => new GardDataProperty(val));
+    //  delete obj['Inheritance'];
     }
 
     if (json.Statistics) {

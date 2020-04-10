@@ -19,10 +19,7 @@ export class Neo4jConnectService {
         this.instances.set(params.name, webSocket(params.url) );
   }
 
-  // todo: close session
   read(instance: string, call: string, params?: any): Observable<any> {
-    console.log(instance)
-    console.log(call);
     const socket =  this.instances.get(instance);
     socket.next({txcType: 'read', call: call, params: params ? params : null});
      return socket;
@@ -38,10 +35,7 @@ export class Neo4jConnectService {
     }*/
   }
 
-  // todo: close session
   write(instance: string, call: string, params?: any): Observable<any> {
-    console.log(instance)
-    console.log(call);
     const socket =  this.instances.get(instance);
     socket.next({txcType: 'write', call: call, params: params ? params : null});
     return socket;

@@ -14,9 +14,13 @@ export class CurationMatrixComponent implements OnInit {
 
   @Input() field: string;
   @Input() editing = true;
-  @Input() data: any[] = [];
+  @Input() data: any;
+
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+
+  @ViewChild(MatSort, {static: false}) set content(sort: MatSort) {
+    this.dataSource.sort = sort;
+  }
 
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
 
@@ -33,6 +37,8 @@ export class CurationMatrixComponent implements OnInit {
   selectedValues: any[] = [];
 
   @Input() sortingDataAccessor(item, property) {
+    console.log(property);
+    console.log(item);
     if (!item.references.includes(property)) {
       return item;
     }
@@ -44,7 +50,6 @@ export class CurationMatrixComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this);
     if (this.data && this.field) {
       this.dataSource.data = this.data[this.field].sort((a, b) => {
         return b.references.length - a.references.length;
@@ -61,8 +66,6 @@ export class CurationMatrixComponent implements OnInit {
     if(this.sortingDataAccessor) {
       this.dataSource.sortingDataAccessor = this.sortingDataAccessor;
     }
-    this.dataSource.sort = this.sort;
-
 
    this.filterSelection.select(...this.data[this.field].filter(row => row.preferred));
 
@@ -86,14 +89,16 @@ export class CurationMatrixComponent implements OnInit {
   }
 
   ngOnChanges(change) {
-    console.log(change);
     if (change.data && this.data === null) {
     this.dataSource.data = [];
     } else if (change.data && this.data.length > 0) {
-     this.dataSource.data = this.data.sort((a,b) => {
+     this.dataSource.data = this.data[this.field].sort((a,b) => {
         return b.references.length - a.references.length;
       });
       this.filterSelection.select(...this.data[this.field].filter(row => row.preferred));
+      if(this.sortingDataAccessor) {
+        this.dataSource.sortingDataAccessor = this.sortingDataAccessor;
+      }
     }
   }
 

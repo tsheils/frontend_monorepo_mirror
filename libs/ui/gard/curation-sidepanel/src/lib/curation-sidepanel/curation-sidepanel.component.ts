@@ -8,6 +8,7 @@ import {
   OnInit,
   Output
 } from '@angular/core';
+import {BehaviorSubject} from "rxjs";
 
 @Component({
   selector: 'ncats-frontend-library-curation-sidepanel',
@@ -27,12 +28,34 @@ export class CurationSidepanelComponent implements OnInit, OnChanges {
   @Input() activeElement: string;
 
   activeFragment: string;
+
   /**
-   * list of all available sections
-   * @type {any[]}
-   * todo: should be PharosPanel
+   * initialize a private variable _data, it's a BehaviorSubject
+   * @type {BehaviorSubject<any>}
+   * @private
    */
-  @Input() data: any[];
+  protected _data = new BehaviorSubject<any>({});
+
+  /**
+   * pushes changed data to {BehaviorSubject}
+   * @param value
+   */
+  @Input()
+  set data(value: any) {
+    if (value.data) {
+      this._data.next(value.data);
+    } else {
+      this._data.next(value);
+    }
+  }
+
+  /**
+   * returns value of {BehaviorSubject}
+   * @returns {any}
+   */
+  get data() {
+    return this._data.getValue();
+  }
 
   /**
    * boolean to toggle mobile views and parameters
@@ -50,11 +73,18 @@ export class CurationSidepanelComponent implements OnInit, OnChanges {
     role: 'directory'
   };
 
+  open = true;
+
   constructor(
     private changeRef: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
+    this._data.subscribe()
+  }
+
+  setData() {
+  this.changeRef.detectChanges();
   }
 
   ngOnChanges(change) {
@@ -63,6 +93,7 @@ export class CurationSidepanelComponent implements OnInit, OnChanges {
    * close the filter panel
    */
   toggleMenu() {
+    this.open = !this.open;
     this.menuToggle.emit();
   }
 

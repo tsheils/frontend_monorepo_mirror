@@ -1,37 +1,77 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output
+} from '@angular/core';
 import {Disease} from "../../../../../../../models/gard/disease";
-import {Observable} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 import {map} from "rxjs/operators";
 
 @Component({
   selector: 'ncats-frontend-library-data-panel',
   templateUrl: './data-panel.component.html',
-  styleUrls: ['./data-panel.component.scss']
+  styleUrls: ['./data-panel.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DataPanelComponent implements OnInit {
 
-  @Input() field: string;
+  @Input() fields: string[];
 
   @Input() object: Disease;
 
+  /**
+   * initialize a private variable _data, it's a BehaviorSubject
+   * @type {BehaviorSubject<any>}
+   * @private
+   */
+  protected _data = new BehaviorSubject<any>({});
 
-  @Input() data?: any;
+  /**
+   * pushes changed data to {BehaviorSubject}
+   * @param value
+   */
+  @Input()
+  set data(value: any) {
+    if (value.data) {
+      this._data.next(value.data);
+    } else {
+      this._data.next(value);
+    }
+  }
 
-  @Input() dataObservable?: Observable<any>;
+  /**
+   * returns value of {BehaviorSubject}
+   * @returns {any}
+   */
+  get data() {
+    return this._data.getValue();
+  }
+
+
+ // @Input() dataObservable: Observable<any>;
 
   editing: string;
 
   returnObject: Disease;
 
-  @Output() objectSet: EventEmitter<any> = new EventEmitter<any>();
-  constructor() { }
+  @Output() dataChange: EventEmitter<any> = new EventEmitter<any>();
+  constructor(
+    private changeDetectorRef: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
-    this.dataObservable.pipe(
-      map(res => {
+    this._data.pipe(
+      map(res=> {
         console.log(res);
-        this.data = res;
-      })
+         Object.keys(res).forEach( key => this[key] = res[key]);
+        this.changeDetectorRef.markForCheck();
+        }
+
+      )
     ).subscribe()
   }
 
@@ -43,6 +83,6 @@ export class DataPanelComponent implements OnInit {
     this.object[field] = this.returnObject[field];
    // this.data = this.returnObject[field];
     this.editing = null;
-    this.objectSet.emit(this.returnObject[field]);
+    this.dataChange.emit(this.returnObject[field]);
   }
 }

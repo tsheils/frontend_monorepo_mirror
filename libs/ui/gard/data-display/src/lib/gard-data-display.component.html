@@ -4,18 +4,18 @@
 -->
 
 <ng-container [ngSwitch] = propertyType>
-  <div *ngSwitchCase = "'array'">
+  <!--<div *ngSwitchCase = "'array'">
     <ul *ngFor= 'let value of property'>
       <div [ngSwitch] = value.propertyType>
       <div *ngSwitchCase = "'html'">
         <li [innerHTML] = "value.value"></li>
       </div>
       <div *ngSwitchDefault>
-        <li>{{value.value}}</li>
+        <li>{{value.value | json}}</li>
       </div>
       </div>
     </ul>
-  </div>
+  </div>-->
   <div *ngSwitchCase = "'html'">
       <div [innerHTML] = "property.value ? property.value : property"></div>
   </div>
