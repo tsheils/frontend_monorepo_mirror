@@ -26,10 +26,11 @@ export class GardDataDisplayComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    if (Array.isArray(this.property)) {
+    console.log(this);
+    /*if (Array.isArray(this.property)) {
       this.propertyType =  'array';
     } else if (this.property && this.property.propertyType) {
       this.propertyType = this.property.propertyType;
-    }
+    }*/
   }
 }

@@ -161,10 +161,8 @@ export class DynamicAppContentComponent implements OnInit, OnDestroy {
             }
             if(component.dataObservable) {
               component.dataObservable.subscribe(data => {
-                console.log(component);
                 console.log(data);
-                componentInstance.instance.setData(data);
-                componentInstance.changeDetectorRef.detectChanges();
+                componentInstance.instance.data = data;
                 this.changeRef.markForCheck();
               });
             }

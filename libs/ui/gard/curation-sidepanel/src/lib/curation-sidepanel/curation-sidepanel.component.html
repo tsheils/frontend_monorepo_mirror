@@ -13,7 +13,7 @@
            class="list-button"
            (click)="scroll(section.section ? section.section : section )"
            [ngClass]="{'active': isActive(section.section ? section.section : section)}">
-          {{section.label? section.label : section}}
+          {{section.label ? section.label : section}}
         </a>
       </mat-nav-list>
     </div>

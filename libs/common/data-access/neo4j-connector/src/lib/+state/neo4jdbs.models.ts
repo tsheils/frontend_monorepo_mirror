@@ -6,13 +6,13 @@ import RxSession from "neo4j-driver/types/session-rx";
  */
 export interface Neo4jdbsEntity {
   id: string | number; // Primary ID
-  driver: neo4j.Driver;
+  driver?: neo4j.Driver;
 }
 
 export interface Neo4jInstanceConfig {
   name: string;
-  url?: string;
-  bolt: string;
+  url: string;
+ /* bolt: string;
   user: string;
-  password: string;
+  password: string;*/
 }

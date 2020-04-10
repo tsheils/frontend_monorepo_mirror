@@ -4,7 +4,6 @@ import {fetch} from '@nrwl/angular';
 
 import * as fromDiseases from './diseases.reducer';
 import * as DiseasesActions from './diseases.actions';
-import {Neo4jSessionService} from "../../../../../../common/data-access/neo4j-connector/src/lib/neo4j-session.service";
 import {catchError, concatMap, finalize, map, mergeMap, switchMap} from "rxjs/operators";
 import {Neo4jConnectService} from "@ncats-frontend-library/common/data-access/neo4j-connector";
 import {of} from "rxjs";
@@ -13,7 +12,6 @@ import {of} from "rxjs";
 export class DiseasesEffects {
   constructor(
     private neo4jConnectionService: Neo4jConnectService,
-    private neo4jService: Neo4jSessionService,
     private actions$: Actions) {
   }
 
@@ -77,14 +75,15 @@ return {disease: disease,  data: collect(changes)} as data;
       //  console.log(call);
      return this.neo4jConnectionService.read('gard-data', call).pipe(
           map(response => {
-            const resp = response.toObject().data;
+            const resp = response.data;
             const disease = resp.disease;
-            resp.data.forEach(data => disease[data.field] = data.values);
-            console.log(disease);
-            return DiseasesActions.setDiseaseSuccess({selectedDisease: disease});
+            if(resp.data && resp.data.length > 0) {
+              resp.data.forEach(data => disease[data.field] = data.values);
+            }
+            return DiseasesActions.setDiseaseSuccess({disease: {id: disease.gard_id, name: disease.name, disease:disease}});
           }),
           catchError(error => {
-            console.log(error);
+           // console.log(error);
             return of(DiseasesActions.setDiseaseFailure(error))
           }),
         )

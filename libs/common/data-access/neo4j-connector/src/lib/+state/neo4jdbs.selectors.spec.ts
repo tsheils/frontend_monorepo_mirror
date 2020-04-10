@@ -9,6 +9,7 @@ describe('Neo4jdbs Selectors', () => {
     ({
       id,
       name: name || `name-${id}`,
+      driver: null
     } as Neo4jdbsEntity);
 
   let state;

@@ -14,7 +14,11 @@
            [formControl]="typeaheadCtrl"
            class ="'input-field'">
     <mat-label class="search-label">Fetch by disease</mat-label>
-    <mat-autocomplete #auto="matAutocomplete" (optionSelected) = "search($event)" [displayWith]="displayFn" class="custom-autocomplete-panel">
+    <mat-autocomplete #auto="matAutocomplete"
+                      (optionSelected) = "search($event)"
+                      [displayWith]="displayFn"
+                      [autoActiveFirstOption]="true"
+                      class="custom-autocomplete-panel">
       <mat-optgroup *ngFor="let group of filteredGroups " [label]="group.name">
         <mat-option *ngFor="let option of group?.options" [value]="option" class="dynamic-height" [ngClass]="checkOrigin(option)">
           <ng-container [ngSwitch] = checkOrigin(option)>

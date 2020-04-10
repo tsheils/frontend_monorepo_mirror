@@ -18,12 +18,8 @@ import {
   Neo4jdbsFacade
 } from "@ncats-frontend-library/common/data-access/neo4j-connector";
 import {DiseasesEffects} from "../../../../libs/stores/diseases/src/lib/+state/diseases/diseases.effects";
-import {ConfigService} from "./config.service";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 
-export function configServiceFactory(startupService: ConfigService): Function {
-  return () => startupService.load();
-}
 const ROUTES: Routes = [
   {
     path: '',
@@ -83,14 +79,7 @@ const ROUTES: Routes = [
   ],
   providers: [
     DiseasesFacade,
-    Neo4jdbsFacade,
-    ConfigService,
-    {
-      provide: APP_INITIALIZER,
-      useFactory: configServiceFactory,
-      deps: [ConfigService],
-      multi: true
-    },
+    Neo4jdbsFacade
   ],
   bootstrap: [AppComponent]
 })

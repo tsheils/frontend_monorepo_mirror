@@ -49,7 +49,7 @@ export const setDisease = createAction(
 //output
 export const setDiseaseSuccess = createAction(
   DiseasesActionsTypes.setDiseaseSuccess,
-  props<{ selectedDisease: DiseasesEntity }>()
+  props<{ disease: DiseasesEntity }>()
 );
 //errors
 export const setDiseaseFailure = createAction(

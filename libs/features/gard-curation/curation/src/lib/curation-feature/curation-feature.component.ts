@@ -54,7 +54,7 @@ export class CurationFeatureComponent implements OnInit {
     {
       token: CURATION_SIDEPANEL_COMPONENT,
       section: Position.Left,
-   //   dataObservable: this.fieldsObservable$
+      dataObservable: this.fieldsObservable$
     },
     /*{
       token: GARD_HEADER_COMPONENT,
@@ -85,7 +85,7 @@ export class CurationFeatureComponent implements OnInit {
 
   data: {
     object: Disease,
-    fields: string[]
+    fields: any[]
   };
 
   disease: Disease;
@@ -115,10 +115,10 @@ export class CurationFeatureComponent implements OnInit {
   ngOnInit(): void {
     this.diseasesFacade.selectedDisease$.subscribe(res=> {
       if(res) {
-        console.log(res);
         this.disease = this.serializer.fromJson(res);
-        this._diseaseObservableSource.next({object: this.disease, fields: ['inheritance', 'synonyms']})
-        this.data = {object: this.disease, fields: ['inheritance', 'synonyms']};
+        this._diseaseObservableSource.next({object: this.disease, fields: ['inheritance', 'synonyms']});
+        this._fieldsObservableSource.next({data: ['inheritance', 'synonyms']});
+      //  this.data = {object: this.disease, fields: [{section: 'inheritance'},{section: 'synonyms'}]};
         this.changeRef.markForCheck();
       }
     });

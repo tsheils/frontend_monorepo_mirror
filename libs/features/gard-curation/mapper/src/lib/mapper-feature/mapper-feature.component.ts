@@ -92,7 +92,7 @@ export class MapperFeatureComponent implements OnDestroy {
   search(event: any) {
     console.log(event);
     this.connectionService.read('raw-data',`match p=(n:S_ORDO_ORPHANET{_N_Name: '${event.toUpperCase()}'})-[:R_subClassOf{property:'http://www.orpha.net/ORDO/Orphanet_C016'}]-(i)-[]-(h:S_HP)-[]-(d:DATA) return n._N_Name as disease, i._N_Name as ORPHANET_inheritance,  d.label as HPO_inheritance`)
-      .subscribe(res=> this.diseaseResult = res.toObject());
+      .subscribe(res=> this.diseaseResult = res);
   }
 
   typeahead(event: any) {
@@ -128,7 +128,7 @@ export class MapperFeatureComponent implements OnDestroy {
             const writecall = `CREATE (n:Disease $data)`;
            //   writesession.writeTransaction(txc => txc.run(writecall, {data: res.toObject()}).records()).subscribe(res => console.log(res));
            //   writesession.close();
-            const resObject: any = res.toObject();
+            const resObject: any = res;
               if (!Array.isArray(resObject.synonyms)) {
                 resObject.synonyms = [resObject.synonyms];
               }

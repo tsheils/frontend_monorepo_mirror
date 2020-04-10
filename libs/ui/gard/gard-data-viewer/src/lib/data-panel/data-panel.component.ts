@@ -8,13 +8,14 @@ import {
   Output
 } from '@angular/core';
 import {Disease} from "../../../../../../../models/gard/disease";
-import {Observable} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'ncats-frontend-library-data-panel',
   templateUrl: './data-panel.component.html',
   styleUrls: ['./data-panel.component.scss'],
- // changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DataPanelComponent implements OnInit {
 
@@ -22,8 +23,34 @@ export class DataPanelComponent implements OnInit {
 
   @Input() object: Disease;
 
+  /**
+   * initialize a private variable _data, it's a BehaviorSubject
+   * @type {BehaviorSubject<any>}
+   * @private
+   */
+  protected _data = new BehaviorSubject<any>({});
 
-  @Input() data?: any;
+  /**
+   * pushes changed data to {BehaviorSubject}
+   * @param value
+   */
+  @Input()
+  set data(value: any) {
+    if (value.data) {
+      this._data.next(value.data);
+    } else {
+      this._data.next(value);
+    }
+  }
+
+  /**
+   * returns value of {BehaviorSubject}
+   * @returns {any}
+   */
+  get data() {
+    return this._data.getValue();
+  }
+
 
  // @Input() dataObservable: Observable<any>;
 
@@ -36,36 +63,16 @@ export class DataPanelComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef
   ) { }
 
-  ngOnChanges(change) {
-    console.log(change);
-    if(change.data) {
-      console.log(this.data);
-      Object.entries(this.data).forEach((value, key) => this[key] = value);
-      this.changeDetectorRef.detectChanges();
-    }
-  }
-
   ngOnInit(): void {
-    console.log(this);
-    if(this.data) {
-      console.log(this.data);
-      Object.entries(this.data).forEach((value, key) => this[key] = value);
-      this.changeDetectorRef.detectChanges();
-    }
+    this._data.pipe(
+      map(res=> {
+        console.log(res);
+         Object.keys(res).forEach( key => this[key] = res[key]);
+        this.changeDetectorRef.markForCheck();
+        }
 
-    /* this.dataObservable.pipe(
-       map(res => {
-         console.log(res);
-         if(res) {
-           Object.keys(res).forEach(key => this[key] = res[key]);
-         }
-       })
-     ).subscribe()*/
-  }
-
-  setData(data: any) {
-    console.log(this.data);
-    Object.keys(data).forEach( key => this[key] = data[key]);
+      )
+    ).subscribe()
   }
 
   setCuratedObject(object, field): void {

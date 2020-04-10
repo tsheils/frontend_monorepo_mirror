@@ -6,6 +6,9 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {SharedUiNcatsFormModule} from "@ncats-frontend-library/shared/ui/ncats-form";
 import {CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA} from "@angular/core";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
+import {StoreModule} from "@ngrx/store";
+import {environment} from "../environments/environment";
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -18,13 +21,25 @@ describe('AppComponent', () => {
         RouterTestingModule,
         CustomMaterialModule,
         MatDialogModule,
-        SharedUiNcatsFormModule
+        SharedUiNcatsFormModule,
+        StoreModule.forRoot({},
+          {
+            metaReducers: !environment.production ? [] : [],
+            runtimeChecks: {
+              strictActionImmutability: true,
+              strictStateImmutability: true
+            }
+          })
       ],
       declarations: [AppComponent],
       schemas: [
         CUSTOM_ELEMENTS_SCHEMA,
         NO_ERRORS_SCHEMA
+      ],
+      providers: [
+        DiseasesFacade
       ]
+
     }).compileComponents();
   }));
 
