@@ -1,6 +1,6 @@
 import { DiseasesEntity } from './diseases.models';
 import * as DiseasesActions from './diseases.actions';
-import { State, initialState, reducer } from './diseases.reducer';
+import { State, diseaseInitialState, reducer } from './diseases.reducer';
 
 describe('Diseases Reducer', () => {
   const createDiseasesEntity = (id: string, name = '') =>
@@ -19,7 +19,7 @@ describe('Diseases Reducer', () => {
       ];
       const action = DiseasesActions.loadDiseasesSuccess({ diseases });
 
-      const result: State = reducer(initialState, action);
+      const result: State = reducer(diseaseInitialState, action);
 
       expect(result.loaded).toBe(true);
       expect(result.ids.length).toBe(2);
@@ -30,9 +30,9 @@ describe('Diseases Reducer', () => {
     it('should return the previous state', () => {
       const action = {} as any;
 
-      const result = reducer(initialState, action);
+      const result = reducer(diseaseInitialState, action);
 
-      expect(result).toBe(initialState);
+      expect(result).toBe(diseaseInitialState);
     });
   });
 });

@@ -9,6 +9,5 @@ import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-mat
     CustomMaterialModule
   ],
   declarations: [GardDiseaseHeaderComponent],
-  exports: [GardDiseaseHeaderComponent]
 })
 export class UiGardGardDiseaseHeaderModule {}

@@ -7,11 +7,8 @@ import {Router} from "@angular/router";
 import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
 import {map} from "rxjs/operators";
 import {
-  loadNeo4jdbs,
   Neo4jConnectionFormComponent,
-  Neo4jConnectService,
-  Neo4jdbsActionsTypes, Neo4jdbsEntity,
-  Neo4jdbsFacade, setNeo4jdbs
+  Neo4jConnectService
 } from "@ncats-frontend-library/common/data-access/neo4j-connector";
 import {Store} from "@ngrx/store";
 import {Disease} from "../../../../models/gard/disease";
@@ -49,15 +46,11 @@ export class AppComponent implements OnInit, OnDestroy {
   session: RxSession;
   links: any[] = [];
   disease: any;
-  diseasesList: any;
-  diseases3: any;
-  diseases4: any;
 
   constructor (
     public dialog: MatDialog,
     private router: Router,
     private diseasesFacade: DiseasesFacade,
-    private neo4jdbFacade: Neo4jdbsFacade,
    private connectionService: Neo4jConnectService
   ) {
     this.links = [{link:'mapper'}, {link: 'curation', label: 'curation'}];
@@ -68,12 +61,12 @@ export class AppComponent implements OnInit, OnDestroy {
       this.connectionService.createDriver(db);
     });
 
-    this.diseasesFacade.selectedDisease$.subscribe(res=> {
+   /* this.diseasesFacade.selectedDisease$.subscribe(res=> {
       if(res) {
         console.log(res);
-        this.disease = res;
+        this.disease = res.disease;
       }
-    });
+    });*/
   }
 
   connect(): void {

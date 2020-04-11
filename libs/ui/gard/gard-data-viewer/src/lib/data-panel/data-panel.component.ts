@@ -51,9 +51,6 @@ export class DataPanelComponent implements OnInit {
     return this._data.getValue();
   }
 
-
- // @Input() dataObservable: Observable<any>;
-
   editing: string;
 
   returnObject: Disease;
@@ -66,7 +63,6 @@ export class DataPanelComponent implements OnInit {
   ngOnInit(): void {
     this._data.pipe(
       map(res=> {
-        console.log(res);
          Object.keys(res).forEach( key => this[key] = res[key]);
         this.changeDetectorRef.markForCheck();
         }
@@ -81,7 +77,6 @@ export class DataPanelComponent implements OnInit {
 
   setObject(field: string): void {
     this.object[field] = this.returnObject[field];
-   // this.data = this.returnObject[field];
     this.editing = null;
     this.dataChange.emit(this.returnObject[field]);
   }

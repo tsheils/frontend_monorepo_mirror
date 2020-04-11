@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {BehaviorSubject} from "rxjs";
 import {Disease} from "../../../../../../../models/gard/disease";
 
 @Component({
@@ -7,12 +8,35 @@ import {Disease} from "../../../../../../../models/gard/disease";
   styleUrls: ['./gard-disease-header.component.scss']
 })
 export class GardDiseaseHeaderComponent implements OnInit {
+  /**
+   * initialize a private variable _data, it's a BehaviorSubject
+   * @type {BehaviorSubject<Disease>}
+   * @private
+   */
+  protected _data = new BehaviorSubject<Disease>(null);
 
-  @Input() data: Disease;
+  /**
+   * pushes changed data to {BehaviorSubject}
+   * @param value
+   */
+  @Input()
+  set data(value: Disease) {
+    this._data.next(value);
+  }
+
+  /**
+   * returns value of {BehaviorSubject}
+   * @returns {Disease}
+   */
+  get data() {
+    return this._data.getValue();
+  }
+
 
   constructor() { }
 
   ngOnInit(): void {
   }
+
 
 }

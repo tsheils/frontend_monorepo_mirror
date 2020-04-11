@@ -32,62 +32,38 @@ export class DiseasesEffects {
     )
   );
 
-/*
-  setDisease$ = createEffect(() =>
-      this.actions$.pipe(
-        ofType(DiseasesActions.setDisease),
-        fetch({
-          run: (action) => {
-            console.log(action);
-            const call = `
-            match p = (d:Disease {gard_id :${action.disease.disease.gard_id})-[]-(:DataRef) RETURN p;
-            `;
-            return this.neo4jConnectionService.read('gard-data', call).pipe(
-              map(response => {
-                console.log(response);
-                return DiseasesActions.setDiseaseSuccess({selectedDisease: response.toObject()});
-              }),
-              catchError(error => of(DiseasesActions.setDiseaseFailure(error))),
-            )
-          },
-          onError: (action, error) => {
-            return DiseasesActions.setDiseaseFailure({error});
-          },
-        })
-      )
-  );
-*/
-
-
-
-
-
   setDisease$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(DiseasesActions.setDisease),
       concatMap(action => {
 //        match p = (d:Disease {gard_id:'${action.disease.disease.gard_id}'})-[]-(:DataRef) RETURN COLLECT(p) as disease;
         const call = `
-match p = (d:Disease {gard_id:'GARD:0006233'})-[r]-(n:DataRef) with d, r, n 
+match p = (d:Disease {gard_id:'${action.disease.disease.gard_id}'})-[r]-(n:DataRef) with d, r, n 
 with distinct properties(d) as disease, {field: r.type, values: collect(properties(n))} as changes
 return {disease: disease,  data: collect(changes)} as data;
         `;
-      //  console.log(call);
-     return this.neo4jConnectionService.read('gard-data', call).pipe(
+        //  console.log(call);
+        return this.neo4jConnectionService.read('gard-data', call).pipe(
           map(response => {
             const resp = response.data;
             const disease = resp.disease;
-            if(resp.data && resp.data.length > 0) {
+            if (resp.data && resp.data.length > 0) {
               resp.data.forEach(data => disease[data.field] = data.values);
             }
-            return DiseasesActions.setDiseaseSuccess({disease: {id: disease.gard_id, name: disease.name, disease:disease}});
+            return DiseasesActions.setDiseaseSuccess({
+              disease: {
+                id: disease.gard_id,
+                name: disease.name,
+                disease: disease
+              }
+            });
           }),
           catchError(error => {
-           // console.log(error);
+            console.error(error);
             return of(DiseasesActions.setDiseaseFailure(error))
           }),
         )
-  }),
+      }),
     )
   });
 
@@ -99,48 +75,13 @@ return {disease: disease,  data: collect(changes)} as data;
             CALL db.index.fulltext.queryNodes("namesAndSynonyms", "name:${action.query} OR ${action.query}") YIELD node
             RETURN node LIMIT 10;
         `;
-     return this.neo4jConnectionService.read('gard-data', call).pipe(
+        return this.neo4jConnectionService.read('gard-data', call).pipe(
           map(response => {
-           return DiseasesActions.searchDiseasesSuccess({diseases: response})
+            return DiseasesActions.searchDiseasesSuccess({diseases: response})
           }),
           catchError(error => of(DiseasesActions.searchDiseasesFailure(error))),
         )
-  }),
+      }),
     )
   });
-
-  /*searchDiseases$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(DiseasesActions.searchDiseases),
-      fetch({
-        run: (action) => {
-          const results: any[] = [];
-          console.log(action);
-          const call = `
-            CALL db.index.fulltext.queryNodes("namesAndSynonyms", "name:${action.query} OR ${action.query}") YIELD node
-            RETURN node LIMIT 10;
-        `;
-          return this.neo4jConnectionService.read('gard-data', call)
-            .pipe(
-              switchMap(res => {
-                results.push(res.toObject());
-                  return res;
-                }
-              )
-            ).subscribe( {
-            complete: () => {
-              console.log("completing");
-              console.log(results);
-              return DiseasesActions.searchDiseasesSuccess({diseases: results})
-            }
-          })
-        },
-        onError: (action, error) => {
-          console.error('Error', error);
-          return DiseasesActions.loadDiseasesFailure({error});
-        },
-      })
-    )
-  })*/
 }
-

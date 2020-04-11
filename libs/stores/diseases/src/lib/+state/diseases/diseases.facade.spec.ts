@@ -1,24 +1,17 @@
-import { NgModule } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
-import { readFirst } from '@nrwl/angular/testing';
+import {NgModule} from '@angular/core';
+import {TestBed} from '@angular/core/testing';
+import {readFirst} from '@nrwl/angular/testing';
 
-import { EffectsModule } from '@ngrx/effects';
-import { StoreModule, Store } from '@ngrx/store';
+import {EffectsModule} from '@ngrx/effects';
+import {Store, StoreModule} from '@ngrx/store';
 
-import { NxModule } from '@nrwl/angular';
+import {NxModule} from '@nrwl/angular';
 
-import { DiseasesEntity } from './diseases.models';
-import { DiseasesEffects } from './diseases.effects';
-import { DiseasesFacade } from './diseases.facade';
-
-import * as DiseasesSelectors from './diseases.selectors';
+import {DiseasesEntity} from './diseases.models';
+import {DiseasesEffects} from './diseases.effects';
+import {DiseasesFacade} from './diseases.facade';
 import * as DiseasesActions from './diseases.actions';
-import {
-  DISEASES_FEATURE_KEY,
-  State,
-  initialState,
-  reducer,
-} from './diseases.reducer';
+import {DISEASES_FEATURE_KEY, reducer, State,} from './diseases.reducer';
 
 interface TestSchema {
   diseases: State;

@@ -1,14 +1,16 @@
 "use strict";
+import {Observable} from "rxjs";
+
 const neo4jUser= "";
 const neo4jPassword = "";
 const neo4j = require('neo4j-driver');
 const webSocketServer = require('websocket').server;
 const http = require('http');
-// const uri = "bolt://0.0.0.0:7687";
+ const uri = "bolt://0.0.0.0:7687";
 /**
  * this is the default uri for a neo4j instance running locally
  */
-const uri = "bolt://localhost:7687";
+//const uri = "bolt://localhost:7687";
 const driver = neo4j.driver(uri, neo4j.auth.basic(neo4jUser, neo4jPassword), {connectionPoolSize: 50});
 
 // Optional. You will see this name in eg. 'ps' or 'top' command
@@ -48,7 +50,7 @@ wsServer.on('request', function(request) {
   // accept connection - you should check 'request.origin' to make sure that
   // client is connecting from your website
   // (http://en.wikipedia.org/wiki/Same_origin_policy)
-  let connection = request.accept(null, request.origin);
+  const connection = request.accept(null, request.origin);
   console.log((new Date()) + ' Connection accepted.');
 
   // user sent some message
@@ -57,9 +59,9 @@ wsServer.on('request', function(request) {
    */
   connection.on('message', function(message) {
     const session = driver.rxSession();
-    let mes = JSON.parse(message.utf8Data);
+    const mes = JSON.parse(message.utf8Data);
     if (mes.txcType) {
-      let subscription;
+      let subscription: Observable<any>;
       switch (mes.txcType) {
         case 'write': {
           subscription = session.writeTransaction(txc => txc.run(mes.call, mes.params).records());
@@ -67,7 +69,7 @@ wsServer.on('request', function(request) {
         }
         case 'read':
         default: {
-         subscription = session.readTransaction(txc => txc.run(mes.call, mes.params).records());
+          subscription = session.readTransaction(txc => txc.run(mes.call, mes.params).records());
           break;
         }
       }
@@ -83,12 +85,12 @@ wsServer.on('request', function(request) {
         }
       });
     }
-  });
+  },
 
   // user disconnected
   connection.on('close', function(connection) {
-      console.log((new Date()) + " Peer "
-        + connection.remoteAddress + " disconnected.");
-  });
+    console.log((new Date()) + " Peer "
+      + connection.remoteAddress + " disconnected.");
+  }));
 
 });

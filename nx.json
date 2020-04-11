@@ -67,9 +67,6 @@
     "ui-gard-gard-header": {
       "tags": []
     },
-    "ui-gard-gard-disease-header": {
-      "tags": []
-    },
     "ui-gard-gard-footer": {
       "tags": []
     },
@@ -95,6 +92,12 @@
       "tags": []
     },
     "stores-diseases": {
+      "tags": []
+    },
+    "backend": {
+      "tags": []
+    },
+    "ui-gard-gard-disease-header": {
       "tags": []
     }
   }

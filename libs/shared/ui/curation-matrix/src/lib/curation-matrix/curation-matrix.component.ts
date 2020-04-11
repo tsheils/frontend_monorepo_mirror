@@ -37,8 +37,6 @@ export class CurationMatrixComponent implements OnInit {
   selectedValues: any[] = [];
 
   @Input() sortingDataAccessor(item, property) {
-    console.log(property);
-    console.log(item);
     if (!item.references.includes(property)) {
       return item;
     }

@@ -84,6 +84,7 @@
     "tslint": "~6.1.0",
     "typescript": "~3.8.3",
     "@ngrx/schematics": "9.0.0",
-    "@ngrx/store-devtools": "9.0.0"
+    "@ngrx/store-devtools": "9.0.0",
+    "@nrwl/node": "9.1.4"
   }
 }

@@ -123,11 +123,8 @@ export class MapperFeatureComponent implements OnDestroy {
         this.connectionService.read('raw-data', call)
           .subscribe({
            next: (res) => {
-          //   console.log(res);
             const writesession = writedriver.rxSession();
             const writecall = `CREATE (n:Disease $data)`;
-           //   writesession.writeTransaction(txc => txc.run(writecall, {data: res.toObject()}).records()).subscribe(res => console.log(res));
-           //   writesession.close();
             const resObject: any = res;
               if (!Array.isArray(resObject.synonyms)) {
                 resObject.synonyms = [resObject.synonyms];
@@ -148,7 +145,6 @@ export class MapperFeatureComponent implements OnDestroy {
               )
               .subscribe({
                 complete: () => {
-                  console.log("done");
                 }
               });
           }
@@ -176,7 +172,6 @@ WITH DISTINCT {disease: omim.d, omim:omim.o, omim_hpo: omim.h, orphanet: orphas,
       next: (res) => {
         const inheritanceValuesArr = [];
         res.forEach(disease => {
-          console.log(disease);
           let inheritanceValuesArr = [];
           const dataMap: Map<string, string[]> = new Map<string, string[]>();
           Object.keys(disease).forEach(key => {
@@ -200,7 +195,6 @@ WITH DISTINCT {disease: omim.d, omim:omim.o, omim_hpo: omim.h, orphanet: orphas,
         });
       },
       complete: () => {
-        console.log(mainDataMap);
         const retData: any[] = [];
        [...mainDataMap.entries()].forEach(entry => {
           retData.push({disease: entry[0], values: entry[1]});
@@ -222,7 +216,6 @@ WITH DISTINCT {disease: omim.d, omim:omim.o, omim_hpo: omim.h, orphanet: orphas,
     return count(p);
     `;
     this.connectionService.write('gard-data', create, {payload: payload}).subscribe(res=> {
-      console.log(res);
     })
   }
 

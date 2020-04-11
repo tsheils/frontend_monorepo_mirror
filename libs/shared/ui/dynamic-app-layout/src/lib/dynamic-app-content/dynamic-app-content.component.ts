@@ -139,7 +139,7 @@ export class DynamicAppContentComponent implements OnInit, OnDestroy {
    * for event emitting
    */
   makeComponents() {
-    if(this.components) {
+    if(this.components && this.components.length > 0) {
       this.components.forEach(component => {
         if (component) {
           let portalOutlet: CdkPortalOutlet;
@@ -161,7 +161,6 @@ export class DynamicAppContentComponent implements OnInit, OnDestroy {
             }
             if(component.dataObservable) {
               component.dataObservable.subscribe(data => {
-                console.log(data);
                 componentInstance.instance.data = data;
                 this.changeRef.markForCheck();
               });

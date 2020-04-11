@@ -4,6 +4,7 @@ import { CurationMatrixComponent } from './curation-matrix.component';
 import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {RouterTestingModule} from "@angular/router/testing";
+import {StoreModule} from "@ngrx/store";
 
 describe('CurationMatrixComponent', () => {
   let component: CurationMatrixComponent;
@@ -24,6 +25,8 @@ describe('CurationMatrixComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(CurationMatrixComponent);
     component = fixture.componentInstance;
+    component.data = {inheritance: []};
+    component.field = "inheritance";
     fixture.detectChanges();
   });
 

@@ -1,0 +1,116 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../dist/out-tsc",
+    "types": [
+      "node"
+    ],
+    "paths": {
+      "@ncats-frontend-library/firebase-auth": [
+        "libs/firebase-auth/src/index.ts"
+      ],
+      "@ncats-frontend-library/ncats-firebase-auth-module": [
+        "libs/ncats-firebase-auth-module/src/index.ts"
+      ],
+      "@ncats-frontend-library/idg-tdl-indicator": [
+        "libs/idg-tdl-indicator/src/index.ts"
+      ],
+      "@ncats-frontend-library/dynamic-app": [
+        "libs/dynamic-app/src/index.ts"
+      ],
+      "@ncats-frontend-library/ncats-form": [
+        "libs/ncats-form/src/index.ts"
+      ],
+      "@ncats-frontend-library/sidenavs/navigation-sidepanel": [
+        "libs/sidenavs/navigation-sidepanel/src/index.ts"
+      ],
+      "@ncats-frontend-library/sidenavs/curation-sidepanel": [
+        "libs/sidenavs/curation-sidepanel/src/index.ts"
+      ],
+      "@ncats-frontend-library/sidenavs/facet-sidepanel": [
+        "libs/sidenavs/facet-sidepanel/src/index.ts"
+      ],
+      "@ncats-frontend-library/common/ui/custom-material": [
+        "libs/common/ui/custom-material/src/index.ts"
+      ],
+      "@ncats-frontend-library/common/data-access/neo4j-connector": [
+        "libs/common/data-access/neo4j-connector/src/index.ts"
+      ],
+      "@ncats-frontend-library/ui/gard/data-display": [
+        "libs/ui/gard/data-display/src/index.ts"
+      ],
+      "@ncats-frontend-library/common/ui/neo4j-connection-form": [
+        "libs/common/ui/neo4j-connection-form/src/index.ts"
+      ],
+      "@ncats-frontend-library/shared/ui/ncats-form": [
+        "libs/shared/ui/ncats-form/src/index.ts"
+      ],
+      "@ncats-frontend-library/common/ui/full-page-search": [
+        "libs/common/ui/full-page-search/src/index.ts"
+      ],
+      "@ncats-frontend-library/shared/ui/search-bar": [
+        "libs/shared/ui/search-bar/src/index.ts"
+      ],
+      "@ncats-frontend-library/shared/ui/curation-matrix": [
+        "libs/shared/ui/curation-matrix/src/index.ts"
+      ],
+      "@ncats-frontend-library/ui/gard/curation-sidepanel": [
+        "libs/ui/gard/curation-sidepanel/src/index.ts"
+      ],
+      "@ncats-frontend-library/shared/ui/dynamic-app-layout": [
+        "libs/shared/ui/dynamic-app-layout/src/index.ts"
+      ],
+      "@ncats-frontend-library/ui/gard/gard-data-viewer": [
+        "libs/ui/gard/gard-data-viewer/src/index.ts"
+      ],
+      "@ncats-frontend-library/ui/gard/gard-header": [
+        "libs/ui/gard/gard-header/src/index.ts"
+      ],
+      "@ncats-frontend-library/ui/gard/gard-disease-header": [
+        "libs/ui/gard/gard-disease-header/src/index.ts"
+      ],
+      "@ncats-frontend-library/ui/gard/gard-footer": [
+        "libs/ui/gard/gard-footer/src/index.ts"
+      ],
+      "@ncats-frontend-library/shared/ui/mapper-ui": [
+        "libs/shared/ui/mapper-ui/src/index.ts"
+      ],
+      "@ncats-frontend-library/shared/ui/object-tree": [
+        "libs/shared/ui/object-tree/src/index.ts"
+      ],
+      "@ncats-frontend-library/shared/ui/header-template": [
+        "libs/shared/ui/header-template/src/index.ts"
+      ],
+      "@ncats-frontend-library/styles": [
+        "libs/styles/src/index.ts"
+      ],
+      "@ncats-frontend-library/curation": [
+        "libs/curation/src/index.ts"
+      ],
+      "@ncats-frontend-library/mapper": [
+        "libs/mapper/src/index.ts"
+      ],
+      "@ncats-frontend-library/features/gard-curation/mapper": [
+        "libs/features/gard-curation/mapper/src/index.ts"
+      ],
+      "@ncats-frontend-library/features/gard-curation/curation": [
+        "libs/features/gard-curation/curation/src/index.ts"
+      ],
+      "@ncats-frontend-library/features/gard-curation/dashboard": [
+        "libs/features/gard-curation/dashboard/src/index.ts"
+      ],
+      "@ncats-frontend-library/ui/gard/search-bar": [
+        "libs/ui/gard/search-bar/src/index.ts"
+      ],
+      "@ncats-frontend-library/stores/diseases": [
+        "libs/stores/diseases/src/index.ts"
+      ]
+    }
+  },
+  "exclude": [
+    "**/*.spec.ts"
+  ],
+  "include": [
+    "**/*.ts"
+  ]
+}

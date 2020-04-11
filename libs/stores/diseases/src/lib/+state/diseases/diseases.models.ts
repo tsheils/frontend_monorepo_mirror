@@ -8,5 +8,5 @@ import {Disease} from "../../../../../../../models/gard/disease";
 export interface DiseasesEntity {
   id: string | number; // Primary ID
   name: string;
-  disease: Disease;
+  disease?: Disease;
 }

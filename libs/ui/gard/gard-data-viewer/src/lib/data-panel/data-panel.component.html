@@ -5,7 +5,7 @@
           <div *ngIf = "object[field] && editing !== field">
             <div *ngFor="let value of object[field]">
               {{value.value}}
-              <span *ngIf="value.references">
+              <span *ngIf="value.references && value.references.length > 0">
       &nbsp;
     <span *ngFor="let ref of value.references">
       <sup><a href="">{{ref}}</a></sup>
@@ -14,6 +14,11 @@
     </span>
             </div>
           </div>
+    <div fxLayout="row" fxLayoutAlign="space-around center" *ngIf="!object[field] || object[field].length === 0">
+      <div fxFlex="95">
+        <h3>No inheritance data found.</h3>
+      </div>
+    </div>
 <!--
           <gard-data-display [property] = object[field]></gard-data-display>
 -->
@@ -24,7 +29,7 @@
             (curatedObjectChange)="setCuratedObject($event, field)">
           </ncats-frontend-library-curation-matrix>
         </div>
-    <mat-card-actions fxLayoutAlign="end center">
+    <mat-card-actions fxLayoutAlign="end center" *ngIf="object[field] && object[field].length > 0">
       <div *ngIf = "editing !== field">
         <button mat-stroked-button [color]="'primary'" (click) = "editing = field">Edit</button>
       </div>
