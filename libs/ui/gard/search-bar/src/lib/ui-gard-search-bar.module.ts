@@ -6,7 +6,6 @@ import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-mat
 import {ReactiveFormsModule} from "@angular/forms";
 import {HighlightPipe} from "./gard-search/highlight.pipe";
 import {DiseasesFacade, StoresDiseasesModule} from "@ncats-frontend-library/stores/diseases";
-import {DiseasesEffects} from "../../../../../stores/diseases/src/lib/+state/diseases/diseases.effects";
 
 @NgModule({
   imports: [CommonModule,
@@ -20,7 +19,6 @@ import {DiseasesEffects} from "../../../../../stores/diseases/src/lib/+state/dis
     GardSearchComponent
   ],
   providers: [
-    DiseasesEffects,
     DiseasesFacade
   ],
   exports: [

@@ -10,6 +10,7 @@ import {Neo4jConnectService} from "@ncats-frontend-library/common/data-access/ne
 
 
 export const GARD_HEADER_COMPONENT = new InjectionToken<string>('GardHeaderComponent');
+export const GARD_DISEASE_HEADER_COMPONENT = new InjectionToken<string>('GardDiseaseHeaderComponent');
 export const CURATION_SIDEPANEL_COMPONENT = new InjectionToken<string>('SideNavComponent');
 export const GARD_DISEASE_SEARCH_COMPONENT = new InjectionToken<string>('GardDiseaseSearchComponent');
 export const CURATION_MAIN_COMPONENT = new InjectionToken<string>('MainComponent');
@@ -61,7 +62,7 @@ export class CurationFeatureComponent implements OnInit {
       section: Position.Header,
       data: {title: this.title}
     },*/
-   /* {
+ /*   {
       token: GARD_DISEASE_HEADER_COMPONENT,
       section: Position.Header,
       dataObservable: this.diseaseObservable$
@@ -96,13 +97,7 @@ export class CurationFeatureComponent implements OnInit {
     inheritance: []
   };
 
-  searching = false;
-  editing: string = '';
-  typeaheadFields: Observable<any> = new Observable<any>();
-  dataLoaded = false;
   serializer: DiseaseSerializer = new DiseaseSerializer();
-  gardDriver: any;
-  gardSession: RxSession;
 
   constructor(
     private changeRef: ChangeDetectorRef,
@@ -114,8 +109,8 @@ export class CurationFeatureComponent implements OnInit {
 
   ngOnInit(): void {
     this.diseasesFacade.selectedDisease$.subscribe(res=> {
-      if(res) {
-        this.disease = this.serializer.fromJson(res);
+      if(res && res.disease) {
+        this.disease = this.serializer.fromJson(res.disease);
         this._diseaseObservableSource.next({object: this.disease, fields: ['inheritance', 'synonyms']});
         this._fieldsObservableSource.next({data: ['inheritance', 'synonyms']});
       //  this.data = {object: this.disease, fields: [{section: 'inheritance'},{section: 'synonyms'}]};
@@ -123,27 +118,6 @@ export class CurationFeatureComponent implements OnInit {
       }
     });
   }
-
-/*
-  getData(call: string) {
-    return this.gardSession.readTransaction(txc => txc.run(call).records());
-  }
-*/
-
-/*  search(event: any) {
-    const call = `
-          match p = (d:Disease {gard_id:'${this.disease.gard_id}'})-[]-(r:DataRef) RETURN collect(properties(r)) as data;
-        `;
-    console.log(call);
-     this.connectionService.read('gard-data', call).pipe(
-      map(response => {
-        this.disease.inheritance = response.toObject()['data'];
-        this.displayDisease = this.disease;
-        this.dataLoaded = true;
-        this.editing = "inheritance";
-      })
-  ).subscribe()
-  }*/
 
   /**
    * @param object
@@ -155,6 +129,6 @@ export class CurationFeatureComponent implements OnInit {
 
   setObject(field: string): void {
     this.displayDisease[field] = this.curatedObject[field];
-    this.editing = null;
+  //  this.editing = null;
   }
 }

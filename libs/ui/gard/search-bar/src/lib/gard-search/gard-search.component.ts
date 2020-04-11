@@ -8,8 +8,8 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import {debounceTime, distinctUntilChanged, switchMap, zipAll} from "rxjs/operators";
-import {BehaviorSubject, Observable} from "rxjs";
+import {debounceTime, distinctUntilChanged, finalize, switchMap, zipAll} from "rxjs/operators";
+import {BehaviorSubject, Observable, of} from "rxjs";
 import {Neo4jConnectService} from "@ncats-frontend-library/common/data-access/neo4j-connector";
 import {DiseaseSerializer} from "../../../../../../../models/gard/disease";
 import {FormControl} from "@angular/forms";
@@ -43,7 +43,7 @@ export class GardSearchComponent implements OnInit {
   /**
    * observable list of returned responses
    */
-  @Input() filteredGroups: any;
+  @Input() filteredGroups: [{name: string, options: any[]}];
 
   @Output() query: EventEmitter<any> = new EventEmitter<any>();
   @Output() inputChangeEvent: EventEmitter<string> = new EventEmitter<string>();
@@ -85,14 +85,12 @@ export class GardSearchComponent implements OnInit {
    */
   search(event?: MatAutocompleteSelectedEvent): void {
     const diseaseObj = this.typeaheadCtrl.value;
-    console.log(diseaseObj);
     this.diseasesFacade.dispatch(setDisease({disease: {
       id: diseaseObj.gard_id,
       name: diseaseObj.name,
       disease: diseaseObj
     }
   }));
-   // this.query.emit(this.typeaheadCtrl.value);
   }
 
   displayFn(option: any): string {
@@ -114,20 +112,22 @@ export class GardSearchComponent implements OnInit {
       const call = `
       CALL db.index.fulltext.queryNodes("namesAndSynonyms", "name:${event}* OR ${event}*") YIELD node 
       with collect(properties(node)) AS arr 
-      with arr[0..10] AS data
-      RETURN data
+      with arr[0..10] AS typeahead
+      RETURN typeahead
       `;
      // console.log(call);
       this.connectionService.read('gard-data', call)
         .pipe(
           switchMap(res => {
-         //   console.log(res);
-            this.filteredGroups = [{name: 'GARD names', options: res.data}];
-            this.changeRef.markForCheck();
-              return res;
+            console.log(res);
+            if(res.typeahead) {
+              this.filteredGroups = [{name: 'GARD names', options: res.typeahead}];
+              this.changeRef.markForCheck();
+            }
+              return of(res);
             }
           ),
-        ).subscribe( )
+        ).subscribe()
     } else {
     }
   }

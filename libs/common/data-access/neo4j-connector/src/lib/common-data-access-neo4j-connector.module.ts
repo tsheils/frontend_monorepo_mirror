@@ -7,9 +7,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Neo4jConnectionFormComponent } from './neo4j-connection-form/neo4j-connection-form.component';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import * as fromNeo4jdbs from './+state/neo4jdbs.reducer';
-import { Neo4jdbsEffects } from './+state/neo4jdbs.effects';
-import { Neo4jdbsFacade } from './+state/neo4jdbs.facade';
 
 @NgModule({
   imports: [
@@ -17,18 +14,10 @@ import { Neo4jdbsFacade } from './+state/neo4jdbs.facade';
     CustomMaterialModule,
     SharedUiNcatsFormModule,
     FormsModule,
-    ReactiveFormsModule,
-    StoreModule.forFeature(
-      fromNeo4jdbs.NEO4JDBS_FEATURE_KEY,
-      fromNeo4jdbs.reducer,
-      {
-        initialState: fromNeo4jdbs.initialState,
-      }
-    ),
-    EffectsModule.forFeature([Neo4jdbsEffects]),
+    ReactiveFormsModule
   ],
   declarations: [Neo4jConnectionFormComponent],
   exports: [Neo4jConnectionFormComponent],
-  providers: [Neo4jdbsFacade],
+  providers: [],
 })
 export class CommonDataAccessNeo4jConnectorModule {}

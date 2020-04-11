@@ -15,7 +15,6 @@ import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import {DiseasesFacade, StoresDiseasesModule} from "@ncats-frontend-library/stores/diseases";
 import {
   CommonDataAccessNeo4jConnectorModule,
-  Neo4jdbsFacade
 } from "@ncats-frontend-library/common/data-access/neo4j-connector";
 import {DiseasesEffects} from "../../../../libs/stores/diseases/src/lib/+state/diseases/diseases.effects";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
@@ -78,8 +77,7 @@ const ROUTES: Routes = [
     StoreRouterConnectingModule.forRoot()
   ],
   providers: [
-    DiseasesFacade,
-    Neo4jdbsFacade
+    DiseasesFacade
   ],
   bootstrap: [AppComponent]
 })

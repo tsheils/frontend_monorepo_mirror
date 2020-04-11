@@ -708,40 +708,6 @@
         }
       }
     },
-    "ui-gard-gard-disease-header": {
-      "projectType": "library",
-      "root": "libs/ui/gard/gard-disease-header",
-      "sourceRoot": "libs/ui/gard/gard-disease-header/src",
-      "prefix": "ncats-frontend-library",
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/ui/gard/gard-disease-header/tsconfig.lib.json",
-              "libs/ui/gard/gard-disease-header/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/ui/gard/gard-dsrcisease-header/**"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/ui/gard/gard-disease-header/jest.config.js",
-            "tsConfig": "libs/ui/gard/gard-disease-header/tsconfig.spec.json",
-            "setupFile": "libs/ui/gard/gard-disease-header/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "styleext": "scss"
-        }
-      }
-    },
     "ui-gard-gard-footer": {
       "projectType": "library",
       "root": "libs/ui/gard/gard-footer",
@@ -1028,6 +994,96 @@
             "tsConfig": "libs/stores/diseases/tsconfig.spec.json",
             "passWithNoTests": true,
             "setupFile": "libs/stores/diseases/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      }
+    },
+    "backend": {
+      "root": "apps/backend",
+      "sourceRoot": "apps/backend/src",
+      "projectType": "application",
+      "prefix": "backend",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:build",
+          "options": {
+            "outputPath": "dist/apps/backend",
+            "main": "apps/backend/src/main.ts",
+            "tsConfig": "apps/backend/tsconfig.app.json",
+            "assets": ["apps/backend/src/assets"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/backend/src/environments/environment.ts",
+                  "with": "apps/backend/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "backend:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/backend/tsconfig.app.json",
+              "apps/backend/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/backend/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/backend/jest.config.js",
+            "tsConfig": "apps/backend/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "ui-gard-gard-disease-header": {
+      "projectType": "library",
+      "root": "libs/ui/gard/gard-disease-header",
+      "sourceRoot": "libs/ui/gard/gard-disease-header/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ui/gard/gard-disease-header/tsconfig.lib.json",
+              "libs/ui/gard/gard-disease-header/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/ui/gard/gard-disease-header/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ui/gard/gard-disease-header/jest.config.js",
+            "tsConfig": "libs/ui/gard/gard-disease-header/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/ui/gard/gard-disease-header/src/test-setup.ts"
           }
         }
       },

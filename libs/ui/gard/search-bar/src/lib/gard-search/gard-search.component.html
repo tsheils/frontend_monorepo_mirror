@@ -1,10 +1,3 @@
-<!--<ncats-frontend-library-search-bar
-  (inputChangeEvent)="typeahead($event)"
-  (query)="search($event)"
-  [placeholderStr]="'Fetch by disease'"
-  [filteredGroups]="typeaheadSource$"
-></ncats-frontend-library-search-bar>-->
-
 <div class ="search-row">
   <mat-form-field class = "typeahead-field search" [floatLabel] = "'never'">
     <input matInput
@@ -19,8 +12,8 @@
                       [displayWith]="displayFn"
                       [autoActiveFirstOption]="true"
                       class="custom-autocomplete-panel">
-      <mat-optgroup *ngFor="let group of filteredGroups " [label]="group.name">
-        <mat-option *ngFor="let option of group?.options" [value]="option" class="dynamic-height" [ngClass]="checkOrigin(option)">
+      <mat-optgroup *ngFor="let group of filteredGroups" [label]="group.name">
+        <mat-option *ngFor="let option of group.options" [value]="option" class="dynamic-height" [ngClass]="checkOrigin(option)">
           <ng-container [ngSwitch] = checkOrigin(option)>
             <div *ngSwitchCase = "'name'" class="name-options-list">
               <div [innerHTML]= "option.name  | highlight : typeaheadCtrl.value.name ? typeaheadCtrl.value.name : typeaheadCtrl.value "></div>

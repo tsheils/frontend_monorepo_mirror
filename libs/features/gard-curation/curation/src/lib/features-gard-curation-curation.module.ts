@@ -1,9 +1,11 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {
   CURATION_MAIN_COMPONENT,
   CURATION_SIDEPANEL_COMPONENT,
-  CurationFeatureComponent, GARD_DISEASE_SEARCH_COMPONENT, GARD_FOOTER_COMPONENT,
+  CurationFeatureComponent, GARD_DISEASE_HEADER_COMPONENT,
+  GARD_DISEASE_SEARCH_COMPONENT,
+  GARD_FOOTER_COMPONENT,
   GARD_HEADER_COMPONENT
 } from './curation-feature/curation-feature.component';
 import {SharedUiCurationMatrixModule} from "@ncats-frontend-library/shared/ui/curation-matrix";
@@ -16,12 +18,8 @@ import {CurationSidepanelComponent} from "@ncats-frontend-library/ui/gard/curati
 import {DataPanelComponent} from "@ncats-frontend-library/ui/gard/gard-data-viewer";
 import {GardFooterComponent} from "@ncats-frontend-library/ui/gard/gard-footer";
 import {GardSearchComponent, UiGardSearchBarModule} from "@ncats-frontend-library/ui/gard/search-bar";
-import {diseaseInitialState, DiseasesFacade, reducer} from "@ncats-frontend-library/stores/diseases";
-import {StoreDevtoolsModule} from "@ngrx/store-devtools";
-import {EffectsModule} from "@ngrx/effects";
-import {StoreModule} from "@ngrx/store";
-import {DiseasesEffects} from "../../../../../stores/diseases/src/lib/+state/diseases/diseases.effects";
-import {Neo4jdbsEffects} from "../../../../../common/data-access/neo4j-connector/src/lib/+state/neo4jdbs.effects";
+import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
+import {GardDiseaseHeaderComponent} from "@ncats-frontend-library/ui/gard/gard-disease-header";
 
 const ROUTES: Routes = [
   {
@@ -46,6 +44,7 @@ const ROUTES: Routes = [
     DiseasesFacade,
     {provide: GARD_HEADER_COMPONENT, useValue: GardHeaderComponent},
     {provide: CURATION_SIDEPANEL_COMPONENT, useValue: CurationSidepanelComponent},
+    {provide: GARD_DISEASE_HEADER_COMPONENT, useValue: GardDiseaseHeaderComponent},
     {provide: GARD_DISEASE_SEARCH_COMPONENT, useValue: GardSearchComponent},
     {provide: CURATION_MAIN_COMPONENT, useValue: DataPanelComponent},
     {provide: GARD_FOOTER_COMPONENT, useValue: GardFooterComponent}

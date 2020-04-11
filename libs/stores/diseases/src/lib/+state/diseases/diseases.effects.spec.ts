@@ -1,14 +1,14 @@
-import { TestBed, async } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { Observable } from 'rxjs';
+import {Observable} from 'rxjs';
 
-import { provideMockActions } from '@ngrx/effects/testing';
-import { provideMockStore } from '@ngrx/store/testing';
+import {provideMockActions} from '@ngrx/effects/testing';
+import {provideMockStore} from '@ngrx/store/testing';
 
-import { NxModule, DataPersistence } from '@nrwl/angular';
-import { hot } from '@nrwl/angular/testing';
+import {DataPersistence, NxModule} from '@nrwl/angular';
+import {hot} from '@nrwl/angular/testing';
 
-import { DiseasesEffects } from './diseases.effects';
+import {DiseasesEffects} from './diseases.effects';
 import * as DiseasesActions from './diseases.actions';
 
 describe('DiseasesEffects', () => {

@@ -3,7 +3,6 @@ import {Observable, of} from "rxjs";
 import * as neo4j from "neo4j-driver";
 import RxSession from "neo4j-driver/types/session-rx";
 import {fromPromise} from "rxjs/internal/observable/fromPromise";
-import {Neo4jInstanceConfig} from "@ncats-frontend-library/common/data-access/neo4j-connector";
 import {webSocket, WebSocketSubject} from "rxjs/webSocket";
 
 @Injectable({
@@ -15,7 +14,7 @@ export class Neo4jConnectService {
   constructor() {
   }
 
-  createDriver(params: Neo4jInstanceConfig): void {
+  createDriver(params: {name: string, url: string}): void {
         this.instances.set(params.name, webSocket(params.url) );
   }
 

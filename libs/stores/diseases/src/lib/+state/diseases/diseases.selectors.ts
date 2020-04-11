@@ -5,6 +5,7 @@ import {
   DiseasesPartialState,
   diseasesAdapter,
 } from './diseases.reducer';
+import {DiseasesEntity} from "@ncats-frontend-library/stores/diseases";
 
 // Lookup the 'Diseases' feature state managed by NgRx
 export const getDiseasesState = createFeatureSelector<
@@ -52,7 +53,7 @@ export const getSelectedDisease = createSelector(
 
 // returns diseases and selected id to be filtered
 export const getSelected = createSelector(
-  getDiseasesEntities,
+  getSelectedDisease,
   getSelectedId,
-  (entities, selectedId) => selectedId && entities[selectedId].disease
+  (entities, selectedId) =>  selectedId && entities[selectedId]
 );

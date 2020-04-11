@@ -26,7 +26,6 @@ export class GardDataDisplayComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    console.log(this);
     /*if (Array.isArray(this.property)) {
       this.propertyType =  'array';
     } else if (this.property && this.property.propertyType) {

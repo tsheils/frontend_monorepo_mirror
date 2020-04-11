@@ -7,6 +7,7 @@ import {AngularFireModule} from '@angular/fire';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {RouterTestingModule} from '@angular/router/testing';
+import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
 
 describe('SessionGuard', () => {
   let guard: SessionGuard;
@@ -15,10 +16,10 @@ describe('SessionGuard', () => {
     TestBed.configureTestingModule({
       imports: [
         BrowserAnimationsModule,
-        RouterTestingModule,
+        CustomMaterialModule,
+        RouterTestingModule
       ],
       providers: [
-        MatDialog,
         {provide: MAT_DIALOG_DATA, useValue: {}},
         {provide: MatDialogRef, useValue: {}},
       ]
