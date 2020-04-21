@@ -38,13 +38,14 @@ export class DiseasesEffects {
       concatMap(action => {
 //        match p = (d:Disease {gard_id:'${action.disease.disease.gard_id}'})-[]-(:DataRef) RETURN COLLECT(p) as disease;
         const call = `
-match p = (d:Disease {gard_id:'${action.disease.disease.gard_id}'})-[r]-(n:DataRef) with d, r, n 
+match p = (d:Disease {gard_id:'${action.disease.disease.gard_id}'})-[r:Properties]-(n) with d, r, n 
 with distinct properties(d) as disease, {field: r.type, values: collect(properties(n))} as changes
 return {disease: disease,  data: collect(changes)} as data;
         `;
         //  console.log(call);
         return this.neo4jConnectionService.read('gard-data', call).pipe(
           map(response => {
+            console.log(response);
             const resp = response.data;
             const disease = resp.disease;
             if (resp.data && resp.data.length > 0) {
@@ -82,6 +83,30 @@ return {disease: disease,  data: collect(changes)} as data;
           catchError(error => of(DiseasesActions.searchDiseasesFailure(error))),
         )
       }),
+    )
+  });
+
+  fetchStats$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(DiseasesActions.setDiseaseStats),
+      concatMap(action => {
+        const call = `
+        MATCH (d:Disease) WITH COLLECT(d) as diseases, count(d) as diseaseCount
+        UNWIND diseases as disease
+        MATCH (disease:Disease)-[:Properties]-(:Inheritance) with count(Distinct disease) as inheritanceCount, diseaseCount
+        return inheritanceCount, diseaseCount;
+        `;
+        return this.neo4jConnectionService.read('gard-data', call).pipe(
+          map(response => {
+            const stats = {};
+            Object.keys(response).forEach(key => {
+              stats[key] = response[key].low ? response[key].low : response[key].high
+            });
+            return DiseasesActions.setDiseaseStatsSuccess({stats: stats})
+          }),
+          catchError(error => of(DiseasesActions.setDiseaseStatsFailure(error))),
+        )
+      })
     )
   });
 }

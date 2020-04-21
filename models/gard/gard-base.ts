@@ -11,12 +11,12 @@ export class GardBase {
 
 export class GardDataProperty {
   value: string;
-  references: string[];
-  preferred: boolean;
+  reference?: string;
+  displayValue?: string;
+  preferred?: boolean;
 
   constructor (obj: any) {
-    this.value = obj.value;
-    this.references = obj.references ? obj.references : [];
-    this.preferred = obj.preferred;
+    Object.entries((obj)).forEach((prop) => this[prop[0]] = prop[1]);
+
   }
 }

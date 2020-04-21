@@ -121,6 +121,7 @@ export class GardSearchComponent implements OnInit {
           switchMap(res => {
             console.log(res);
             if(res.typeahead) {
+              console.log(res.typeahead);
               this.filteredGroups = [{name: 'GARD names', options: res.typeahead}];
               this.changeRef.markForCheck();
             }

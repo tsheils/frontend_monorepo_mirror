@@ -15,7 +15,7 @@ export class Neo4jConnectService {
   }
 
   createDriver(params: {name: string, url: string}): void {
-        this.instances.set(params.name, webSocket(params.url) );
+        this.instances.set(params.name, webSocket({url: params.url}));
   }
 
   read(instance: string, call: string, params?: any): Observable<any> {

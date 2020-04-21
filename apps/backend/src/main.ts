@@ -1,16 +1,17 @@
 "use strict";
 import {Observable} from "rxjs";
 
-const neo4jUser= "";
-const neo4jPassword = "";
+const neo4jUser= "neo4j";
+const neo4jPassword = "eic1akeghaTha4OhKahr";
 const neo4j = require('neo4j-driver');
 const webSocketServer = require('websocket').server;
 const http = require('http');
- const uri = "bolt://0.0.0.0:7687";
-/**
+// const uri = "bolt://0.0.0.0:7687";
+ const uri = "bolt://gard-dev-neo4j.ncats.io:7687";
+
+ /**
  * this is the default uri for a neo4j instance running locally
  */
-//const uri = "bolt://localhost:7687";
 const driver = neo4j.driver(uri, neo4j.auth.basic(neo4jUser, neo4jPassword), {connectionPoolSize: 50});
 
 // Optional. You will see this name in eg. 'ps' or 'top' command
@@ -39,7 +40,9 @@ server.listen(webSocketsServerPort, function() {
 let wsServer = new webSocketServer({
   // WebSocket server is tied to a HTTP server. WebSocket request is just
   // an enhanced HTTP request. For more info http://tools.ietf.org/html/rfc6455#page-6
-  httpServer: server
+  httpServer: server,
+    maxReceivedFrameSize: 131072,
+    maxReceivedMessageSize: 10 * 1024 * 1024
 });
 
 // This callback function is called every time someone
@@ -78,6 +81,7 @@ wsServer.on('request', function(request) {
           connection.send(JSON.stringify(res.toObject()));
         },
         complete: () => {
+          connection.close();
           session.close();
         },
         error: (error) => {

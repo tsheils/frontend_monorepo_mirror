@@ -9,7 +9,7 @@
 <!--
   <mat-step [completed] = "objectFields">
 -->
-  <mat-step [completed] = "objectFields">
+<!--  <mat-step [completed] = "objectFields">
     <ng-template matStepLabel>Select object field to map</ng-template>
     <ncats-frontend-library-object-tree
       (fieldSelectChange) = "setObjectFields($event)"
@@ -107,7 +107,7 @@
       <button mat-raised-button [color] = "'warn'" matStepperPrevious>Back</button>
       <button mat-raised-button matStepperNext>Next</button>
     </div>
-  </mat-step>
+  </mat-step>-->
   <mat-step >
     <ng-template matStepLabel>Build</ng-template>
     This may take a while.
@@ -116,10 +116,19 @@
 -->
     <button mat-raised-button (click)="runQuery()">Build</button>
 
+    <button mat-raised-button (click)="mapDataDictionary()">Map Data Dictionary</button>
+
+    <button mat-raised-button (click)="createReference()">Save Data Dictionary</button>
+
+
+    <button mat-raised-button (click)="checkSources()">Check Sources</button>
+
 <!--
     <button mat-raised-button (click)="buildInheritance()">Build Inheritance</button>
 -->
+    <button mat-raised-button (click)="buildInheritance2()">Build Inheritance</button>
 
+    <button mat-raised-button (click)="initialBuild()">Initial Build</button>
 <!--
     <button mat-raised-button (click)="initialBuild()">Initial Build</button>
 -->

@@ -126,6 +126,7 @@ export class DiseaseSerializer implements Serializer {
   }
 
   fromJson(json: any): Disease {
+    console.log(json);
     const obj = new Disease();
     Object.entries((json)).forEach((prop) => obj[prop[0]] = prop[1]);
 

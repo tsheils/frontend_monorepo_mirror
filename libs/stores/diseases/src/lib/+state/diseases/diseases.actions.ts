@@ -12,6 +12,9 @@ export enum DiseasesActionsTypes {
   setDisease = '[Diseases] Set Disease',
   setDiseaseSuccess = '[Diseases] Set Disease Success',
   setDiseaseFailure = '[Diseases] Set Disease Failure',
+  setDiseaseStats = '[Diseases] Set Disease Stats',
+  setDiseaseStatsSuccess = '[Diseases] Set Disease Stats Success',
+  setDiseaseStatsFailure = '[Diseases] Set Disease Stats Failure',
 }
 
 export const loadDiseases = createAction(DiseasesActionsTypes.loadDiseases);
@@ -54,5 +57,21 @@ export const setDiseaseSuccess = createAction(
 //errors
 export const setDiseaseFailure = createAction(
   DiseasesActionsTypes.setDiseaseFailure,
+  props<{ error: any }>()
+);
+
+//input
+export const setDiseaseStats = createAction(
+  DiseasesActionsTypes.setDiseaseStats,
+  props<{ }>()
+);
+//output
+export const setDiseaseStatsSuccess = createAction(
+  DiseasesActionsTypes.setDiseaseStatsSuccess,
+  props<{ stats: any }>()
+);
+//errors
+export const setDiseaseStatsFailure = createAction(
+  DiseasesActionsTypes.setDiseaseStatsFailure,
   props<{ error: any }>()
 );

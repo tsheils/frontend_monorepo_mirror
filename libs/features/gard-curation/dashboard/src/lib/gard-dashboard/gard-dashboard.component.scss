@@ -4,6 +4,7 @@
   grid-template-columns: repeat(auto-fill, minmax(20%, 1fr));
   grid-gap: 5em;
   justify-items: center;
+  margin-bottom:5vh;
 }
 
 .tile-grid > mat-card {
@@ -15,7 +16,10 @@
 .dashboard-tile {
   width:100%;
   height:10vh;
+}
+
+.colored {
+  cursor: pointer;
   color: white;
   background-color: #0d7b6c;
-  cursor: pointer;
 }
