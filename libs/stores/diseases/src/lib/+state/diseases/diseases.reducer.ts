@@ -11,6 +11,7 @@ export interface State extends EntityState<DiseasesEntity> {
   loaded: boolean; // has the Diseases list been loaded
   error?: string | null; // last none error (if any)
   selectedDisease?: any;
+  stats? : any;
 }
 
 export interface DiseasesPartialState {
@@ -29,20 +30,26 @@ export const diseaseInitialState: State = diseasesAdapter.getInitialState({
 const diseasesReducer = createReducer(
   diseaseInitialState,
   on(
+    DiseasesActions.setDiseaseStats,
     DiseasesActions.searchDiseases,
+    DiseasesActions.setDisease,
     DiseasesActions.loadDiseases, (state) => ({...state, loaded: false, error: null})
     ),
   on(
-    DiseasesActions.setDisease, (state, {disease}) => diseasesAdapter.addOne(disease, { ...state, selectedId: disease.id, loaded: true })
+    DiseasesActions.setDiseaseStatsSuccess,
+    (state, {stats}) => ({...state, stats: stats, loaded: true})
   ),
   on(
     DiseasesActions.searchDiseasesSuccess,
     DiseasesActions.loadDiseasesSuccess, (state, { diseases }) => {
-    return diseasesAdapter.addMany(diseases, { ...state, loaded: true })
+      console.log(state);
+      console.log(diseases);
+    return diseasesAdapter.setAll(diseases, { ...state, loaded: true })
     }
   ),
   on(
     DiseasesActions.setDiseaseFailure,
+    DiseasesActions.setDiseaseStatsFailure,
     DiseasesActions.searchDiseasesFailure,
     DiseasesActions.loadDiseasesFailure, (state, { error }) => ({
     ...state,

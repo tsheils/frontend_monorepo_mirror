@@ -104,6 +104,13 @@
       ],
       "@ncats-frontend-library/stores/diseases": [
         "libs/stores/diseases/src/index.ts"
+      ],
+      "@ncats-frontend-library/router": ["libs/router/src/index.ts"],
+      "@ncats-frontend-library/stores/router": [
+        "libs/stores/router/src/index.ts"
+      ],
+      "@ncats-frontend-library/stores/store-router": [
+        "libs/stores/store-router/src/index.ts"
       ]
     }
   },

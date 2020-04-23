@@ -1,12 +1,71 @@
+<div fxLayout="row" fxLayoutAlign="space-around center" class="cards-row">
+  <div fxFlex="75">
+    <div class="tile-grid">
+      <mat-card class="dashboard-tile"  [routerLink]="'/diseases'">
+        <h1>{{stats?.diseaseCount}}</h1>
+        <h2>Diseases</h2>
+      </mat-card>
+      <mat-card class="dashboard-tile" [routerLink]="'/diseases'" [queryParams]="{category: 'inherited'}" queryParamsHandling="merge">
+        <h1>{{stats?.inheritanceCount}}</h1>
+        <h2>Inherited or Genetic Diseases</h2>
+      </mat-card>
+      <mat-card class="dashboard-tile" [routerLink]="'/diseases'" [queryParams]="{category: 'inherited', source: true}" queryParamsHandling="merge">
+        <h1>{{stats?.matchCount}}</h1>
+        <h2>Inherited Diseases with source agreement</h2>
+      </mat-card>
+      <mat-card class="dashboard-tile" [routerLink]="'/diseases'" [queryParams]="{category: 'inherited', source: false}" queryParamsHandling="merge">
+        <h1>{{stats?.misMatchCount}}</h1>
+        <h2>Inherited Diseases with source disagreement</h2>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<div fxLayout="row" fxLayoutAlign="space-around center" *ngIf="dataSource.data.length > 0">
+  <div fxFlex=45>
+    <mat-form-field class="full-width-form">
+      <mat-label>Filter {{field}}</mat-label>
+      <input matInput (keyup)="applyFilter($event)">
+    </mat-form-field>
+  </div>
+  <div fxFlex=45>
+    <mat-paginator
+      [length] = stats?.diseaseCount
+      [pageSizeOptions]="[25, 50, 100]"
+      [pageSize]="25"></mat-paginator>
+  </div>
+</div>
+<div fxLayout="row" fxLayoutAlign="space-around center" *ngIf="dataSource && dataSource.data.length > 0">
+  <div fxFlex=90>
+    <table mat-table
+           [dataSource]="dataSource"
+           class="data-table"
+           matSort>
+      <ng-container matColumnDef="gard_id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> GARD id</th>
+        <td mat-cell *matCellDef="let row"> {{row.gard_id}} </td>
+      </ng-container>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Disease Name</th>
+        <td mat-cell *matCellDef="let row"> <div class = "disease-name">{{row.name}}</div><br>
+          Other Names: {{row.synonyms.join(', ') | titlecase}}
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayColumns;"></tr>
+    </table>
+  </div>
+</div>
+
 <div fxLayout="row" fxLayoutAlign="space-around center">
   <div fxFlex="75">
     <div class="tile-grid">
-      <mat-card class="dashboard-tile">Public Data Browser</mat-card>
-      <mat-card class="dashboard-tile" [routerLink]="'/mapper'">Mapper</mat-card>
-      <mat-card class="dashboard-tile" [routerLink]="'/curation'">Curation</mat-card>
-      <mat-card class="dashboard-tile">Annotation</mat-card>
-      <mat-card class="dashboard-tile">Translation</mat-card>
-      <mat-card class="dashboard-tile">Database Stats</mat-card>
+      <mat-card class="dashboard-tile colored">Public Data Browser</mat-card>
+      <mat-card class="dashboard-tile colored" [routerLink]="'/mapper'">Mapper</mat-card>
+      <mat-card class="dashboard-tile colored" [routerLink]="'/curation'">Curation</mat-card>
+      <mat-card class="dashboard-tile colored">Annotation</mat-card>
+      <mat-card class="dashboard-tile colored">Translation</mat-card>
+      <mat-card class="dashboard-tile colored">Database Stats</mat-card>
     </div>
   </div>
 </div>

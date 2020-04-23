@@ -1,41 +1,39 @@
-
-<mat-card *ngFor =" let field of fields" class = "object-fields-display">
-  <mat-card-header> <h3>{{field | titlecase}}</h3></mat-card-header>
+<mat-card *ngFor=" let field of fields" class="object-fields-display">
+  <mat-card-header><h3>{{field | titlecase}}</h3></mat-card-header>
   <mat-card-content>
-          <div *ngIf = "object[field] && editing !== field">
-            <div *ngFor="let value of object[field]">
-              {{value.value}}
-              <span *ngIf="value.references && value.references.length > 0">
+    <div *ngIf="object[field] && editing !== field">
+      <div *ngFor="let value of object[field]">
+        <span>{{value.displayValue || value.value}}</span>
+        <span *ngIf="value.sourceCount">
       &nbsp;
-    <span *ngFor="let ref of value.references">
-      <sup><a href="">{{ref}}</a></sup>
-            &nbsp;
+    <span>
+      <span>{{value.sourceCount.low}} sources</span>
     </span>
     </span>
-            </div>
-          </div>
-    <div fxLayout="row" fxLayoutAlign="space-around center" *ngIf="!object[field] || object[field].length === 0">
-      <div fxFlex="95">
-        <h3>No inheritance data found.</h3>
       </div>
     </div>
-<!--
-          <gard-data-display [property] = object[field]></gard-data-display>
--->
-        <div *ngIf="editing === field">
-          <ncats-frontend-library-curation-matrix
-            [field] = "field"
-            [data] = object
-            (curatedObjectChange)="setCuratedObject($event, field)">
-          </ncats-frontend-library-curation-matrix>
-        </div>
-    <mat-card-actions fxLayoutAlign="end center" *ngIf="object[field] && object[field].length > 0">
-      <div *ngIf = "editing !== field">
-        <button mat-stroked-button [color]="'primary'" (click) = "editing = field">Edit</button>
+    <div fxLayout="row" fxLayoutAlign="space-around center" *ngIf="!object[field] || object[field].length === 0">
+      <div fxFlex="95">
+        <h3>No {{field}} data found.</h3>
       </div>
-      <div *ngIf = "editing === field">
-        <button mat-stroked-button [color]="'warn'" (click) = "editing = null">Cancel</button>
-        <button mat-stroked-button [color]="'primary'" (click) = setObject(field)>Save</button>
+    </div>
+    <!--
+              <gard-data-display [property] = object[field]></gard-data-display>
+    -->
+    <div *ngIf="editing === field">
+      <ncats-frontend-library-curation-matrix
+        [field]="field"
+        [data]=object
+        (curatedObjectChange)="setCuratedObject($event, field)">
+      </ncats-frontend-library-curation-matrix>
+    </div>
+    <mat-card-actions fxLayoutAlign="end center" *ngIf="object[field] && object[field].length > 0">
+      <div *ngIf="editing !== field">
+        <button mat-stroked-button [color]="'primary'" (click)="editing = field">Edit</button>
+      </div>
+      <div *ngIf="editing === field">
+        <button mat-stroked-button [color]="'warn'" (click)="editing = null">Cancel</button>
+        <button mat-stroked-button [color]="'primary'" (click)=setObject(field)>Save</button>
       </div>
     </mat-card-actions>
   </mat-card-content>

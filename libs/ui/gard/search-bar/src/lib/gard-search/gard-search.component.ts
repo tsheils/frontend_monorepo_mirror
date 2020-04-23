@@ -15,6 +15,14 @@ import {DiseaseSerializer} from "../../../../../../../models/gard/disease";
 import {FormControl} from "@angular/forms";
 import {MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from "@angular/material/autocomplete";
 import {DiseasesFacade, setDisease} from "@ncats-frontend-library/stores/diseases";
+import {NavigationExtras, Router} from "@angular/router";
+
+/**
+ * navigation options to merge query parameters that are added on in navigation/query/facets/pagination
+ */
+const navigationExtras: NavigationExtras = {
+  queryParamsHandling: 'merge'
+};
 
 @Component({
   selector: 'ncats-frontend-library-gard-search',
@@ -56,6 +64,7 @@ export class GardSearchComponent implements OnInit {
   constructor(
     private changeRef: ChangeDetectorRef,
     private diseasesFacade: DiseasesFacade,
+    private router: Router,
     private connectionService: Neo4jConnectService
   ) {}
 
@@ -67,16 +76,6 @@ export class GardSearchComponent implements OnInit {
         distinctUntilChanged()
       )
       .subscribe(term => this.typeahead(term));
-
-    /*this.diseasesFacade.searchDiseases$.subscribe( {
-      next: (res) => {
-        console.log(res);
-        this.options.push(res);
-      },
-      complete: () => {
-      this.filteredGroups = [{name: 'GARD names', options: this.options}];
-    }
-    })*/
   }
 
   /**
@@ -85,12 +84,14 @@ export class GardSearchComponent implements OnInit {
    */
   search(event?: MatAutocompleteSelectedEvent): void {
     const diseaseObj = this.typeaheadCtrl.value;
-    this.diseasesFacade.dispatch(setDisease({disease: {
-      id: diseaseObj.gard_id,
-      name: diseaseObj.name,
-      disease: diseaseObj
-    }
-  }));
+    navigationExtras.queryParams = {
+      disease: diseaseObj.gard_id
+    };
+    this._navigate(navigationExtras);
+
+/*
+    this.diseasesFacade.dispatch(setDisease({id: diseaseObj.gard_id}));
+*/
   }
 
   displayFn(option: any): string {
@@ -119,7 +120,6 @@ export class GardSearchComponent implements OnInit {
       this.connectionService.read('gard-data', call)
         .pipe(
           switchMap(res => {
-            console.log(res);
             if(res.typeahead) {
               this.filteredGroups = [{name: 'GARD names', options: res.typeahead}];
               this.changeRef.markForCheck();
@@ -131,4 +131,14 @@ export class GardSearchComponent implements OnInit {
     } else {
     }
   }
+
+  /**
+   * navigate on changes, mainly just changes url, shouldn't reload entire page, just data
+   * @param {NavigationExtras} navExtras
+   * @private
+   */
+  private _navigate(navExtras: NavigationExtras): void {
+    this.router.navigate([], navExtras);
+  }
+
 }

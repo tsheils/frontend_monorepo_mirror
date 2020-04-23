@@ -99,6 +99,9 @@
     },
     "ui-gard-gard-disease-header": {
       "tags": []
+    },
+    "stores-store-router": {
+      "tags": []
     }
   }
 }

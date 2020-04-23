@@ -76,7 +76,8 @@ export class Disease {
   ];
     }
 
-  synonyms: GardDataProperty[];
+    properties: Map<string, any>;
+  synonyms: GardDataProperty[] | string[];
   hpo: GardDataProperty[];
   inheritance: GardDataProperty[];
   xrefs: GardDataProperty[];
@@ -126,12 +127,18 @@ export class DiseaseSerializer implements Serializer {
   }
 
   fromJson(json: any): Disease {
+    console.log(json);
     const obj = new Disease();
     Object.entries((json)).forEach((prop) => obj[prop[0]] = prop[1]);
 
+    if(json.properties) {
+      obj.properties = new Map<string, any>();
+      json.properties.forEach(prop => obj.properties.set(prop.field, prop.values));
+    }
+
     // array of strings
     if (json.synonyms) {
-      obj.synonyms = json.synonyms.map(val => new GardDataProperty({value: val}));
+    //  obj.synonyms = json.synonyms.map(val => new GardDataProperty({value: val}));
     }
 
     // array of strings
@@ -164,8 +171,9 @@ export class DiseaseSerializer implements Serializer {
       delete obj['Diagnosis'];
     }
 
-    if (json.inheritance) {
-      obj.inheritance = json.inheritance.map(val => new GardDataProperty(val));
+
+    if (obj.properties && obj.properties.has('inheritance')) {
+      obj.inheritance = obj.properties.get('inheritance').map(val => new GardDataProperty(val));
     //  delete obj['Inheritance'];
     }
 
@@ -173,6 +181,7 @@ export class DiseaseSerializer implements Serializer {
       obj.statistics = [json.Statistics].map(val => new GardDataProperty({value: val, propertyType: 'html'}));
       delete obj['Statistics'];
     }
+    console.log(obj);
     return obj;
   }
 

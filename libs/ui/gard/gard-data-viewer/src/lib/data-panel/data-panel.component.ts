@@ -63,6 +63,7 @@ export class DataPanelComponent implements OnInit {
   ngOnInit(): void {
     this._data.pipe(
       map(res=> {
+        console.log(res);
          Object.keys(res).forEach( key => this[key] = res[key]);
         this.changeDetectorRef.markForCheck();
         }
