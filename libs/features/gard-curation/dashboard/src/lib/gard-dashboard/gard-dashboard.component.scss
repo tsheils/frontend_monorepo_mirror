@@ -1,3 +1,7 @@
+.cards-row {
+  margin-bottom: 20vh;
+}
+
 .tile-grid {
   display: grid;
   grid-auto-rows: max-content;
@@ -22,4 +26,24 @@
   cursor: pointer;
   color: white;
   background-color: #0d7b6c;
+}
+
+.data-table {
+  width: 100%;
+}
+
+td.mat-cell {
+  padding-right: 2vw;
+  padding-bottom: 1vh;
+  padding-top: 1vh;
+}
+
+.disease-name {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-bottom: -3vh;
+}
+
+.full-width-form{
+  width:100%;
 }

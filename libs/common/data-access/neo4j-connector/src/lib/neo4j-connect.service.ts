@@ -22,32 +22,12 @@ export class Neo4jConnectService {
     const socket =  this.instances.get(instance);
     socket.next({txcType: 'read', call: call, params: params ? params : null});
      return socket;
-    /*const data = [];
-    if (this.instances.has(instance)) {
-      const session: RxSession = this.instances.get(instance).rxSession();
-      return session
-        .readTransaction(txc => txc.run(call, params ? params : null)
-          .records())*/
-   /* } else {
-      console.error("Error - no instances set");
-      return of([]);
-    }*/
   }
 
   write(instance: string, call: string, params?: any): Observable<any> {
     const socket =  this.instances.get(instance);
     socket.next({txcType: 'write', call: call, params: params ? params : null});
     return socket;
-/*    const data = [];
-    if (this.instances.has(instance)) {
-      const session: RxSession = this.instances.get(instance).rxSession();
-      return session
-        .writeTransaction(txc => txc.run(call, params ? params : null)
-          .records())
-    } else {
-      console.error("Error - no instances set");
-      return of([]);
-    }*/
   }
 
   destroy() {

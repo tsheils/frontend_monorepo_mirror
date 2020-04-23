@@ -1092,6 +1092,38 @@
           "style": "scss"
         }
       }
+    },
+    "stores-store-router": {
+      "projectType": "library",
+      "root": "libs/stores/store-router",
+      "sourceRoot": "libs/stores/store-router/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/stores/store-router/tsconfig.lib.json",
+              "libs/stores/store-router/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/stores/store-router/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/stores/store-router/jest.config.js",
+            "tsConfig": "libs/stores/store-router/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/stores/store-router/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      }
     }
   },
   "cli": {

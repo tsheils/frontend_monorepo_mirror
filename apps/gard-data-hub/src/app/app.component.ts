@@ -57,6 +57,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    // todo: this should happen in app_initializer (ans does), but the stats call won't load if this isn't here
     environment.neo4j.forEach(db => {
       this.connectionService.createDriver(db);
     });

@@ -67,16 +67,6 @@ export class GardSearchComponent implements OnInit {
         distinctUntilChanged()
       )
       .subscribe(term => this.typeahead(term));
-
-    /*this.diseasesFacade.searchDiseases$.subscribe( {
-      next: (res) => {
-        console.log(res);
-        this.options.push(res);
-      },
-      complete: () => {
-      this.filteredGroups = [{name: 'GARD names', options: this.options}];
-    }
-    })*/
   }
 
   /**
@@ -85,12 +75,7 @@ export class GardSearchComponent implements OnInit {
    */
   search(event?: MatAutocompleteSelectedEvent): void {
     const diseaseObj = this.typeaheadCtrl.value;
-    this.diseasesFacade.dispatch(setDisease({disease: {
-      id: diseaseObj.gard_id,
-      name: diseaseObj.name,
-      disease: diseaseObj
-    }
-  }));
+    this.diseasesFacade.dispatch(setDisease({id: diseaseObj.gard_id}));
   }
 
   displayFn(option: any): string {
@@ -119,9 +104,7 @@ export class GardSearchComponent implements OnInit {
       this.connectionService.read('gard-data', call)
         .pipe(
           switchMap(res => {
-            console.log(res);
             if(res.typeahead) {
-              console.log(res.typeahead);
               this.filteredGroups = [{name: 'GARD names', options: res.typeahead}];
               this.changeRef.markForCheck();
             }

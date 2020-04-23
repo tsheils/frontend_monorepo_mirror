@@ -7,32 +7,48 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SharedUiHeaderTemplateModule } from '@ncats-frontend-library/shared/ui/header-template';
 import { CustomMaterialModule } from '@ncats-frontend-library/common/ui/custom-material';
 import { SessionGuard } from './session.guard';
-import { StoreModule } from '@ngrx/store';
+import {Store, StoreModule} from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
-import {DiseasesFacade, StoresDiseasesModule} from "@ncats-frontend-library/stores/diseases";
 import {
-  CommonDataAccessNeo4jConnectorModule,
+  DiseasesActionsTypes,
+  DiseasesFacade,
+  loadDiseases,
+  StoresDiseasesModule
+} from "@ncats-frontend-library/stores/diseases";
+import {
+  CommonDataAccessNeo4jConnectorModule, Neo4jConnectService,
 } from "@ncats-frontend-library/common/data-access/neo4j-connector";
-import {DiseasesEffects} from "../../../../libs/stores/diseases/src/lib/+state/diseases/diseases.effects";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {StoreRouterModule} from "@ncats-frontend-library/stores/store-router";
+import {Disease} from "../../../../models/gard/disease";
+
+
+
 
 const ROUTES: Routes = [
   {
     path: '',
+    redirectTo: 'diseases',
+    pathMatch: 'full'
+  },
+  { path: 'index', redirectTo: '/', pathMatch: 'full' },
+  {
+    path: 'diseases',
     pathMatch: 'full',
+    runGuardsAndResolvers: 'paramsOrQueryParamsChange',
     loadChildren: () =>
       import('@ncats-frontend-library/features/gard-curation/dashboard').then(
         m => m.FeaturesGardCurationDashboardModule
       )
   },
-  { path: 'index', redirectTo: '/', pathMatch: 'full' },
   {
     path: 'mapper',
     pathMatch: 'full',
     canActivate: [SessionGuard],
+    runGuardsAndResolvers: 'paramsOrQueryParamsChange',
     loadChildren: () =>
       import('@ncats-frontend-library/features/gard-curation/mapper').then(
         m => m.FeaturesGardCurationMapperModule
@@ -43,6 +59,7 @@ const ROUTES: Routes = [
     pathMatch: 'full',
     canActivate: [SessionGuard],
     data: { path: 'curation' },
+    runGuardsAndResolvers: 'paramsOrQueryParamsChange',
     loadChildren: () =>
       import('@ncats-frontend-library/features/gard-curation/curation').then(
         m => m.FeaturesGardCurationCurationModule
@@ -56,12 +73,16 @@ const ROUTES: Routes = [
     BrowserModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    RouterModule.forRoot(ROUTES, { initialNavigation: 'enabled' }),
+    RouterModule.forRoot(ROUTES, {
+      onSameUrlNavigation: 'reload',
+      initialNavigation: 'enabled'
+    }),
     UiGardGardHeaderModule,
     SharedUiHeaderTemplateModule,
     CustomMaterialModule,
     CommonDataAccessNeo4jConnectorModule,
     StoresDiseasesModule,
+    StoreRouterModule,
     StoreModule.forRoot(
       {},
       {
@@ -77,7 +98,20 @@ const ROUTES: Routes = [
     StoreRouterConnectingModule.forRoot()
   ],
   providers: [
-    DiseasesFacade
+    DiseasesFacade,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (facade: DiseasesFacade, connectionService: Neo4jConnectService) => {
+        return () => {
+          environment.neo4j.forEach(db => {
+            connectionService.createDriver(db);
+          });
+        //  facade.dispatch(loadDiseases());
+        };
+      },
+      multi: true,
+      deps: [DiseasesFacade, Neo4jConnectService]
+    }
   ],
   bootstrap: [AppComponent]
 })

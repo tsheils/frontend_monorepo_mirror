@@ -6,6 +6,8 @@ import {
   diseasesAdapter,
 } from './diseases.reducer';
 import {DiseasesEntity} from "@ncats-frontend-library/stores/diseases";
+import {getMergedRoute} from "../../../../../store-router/src/lib/+state/router-state.selectors";
+import {MergedRoute} from "../../../../../store-router/src/lib/+state/merged-route";
 
 // Lookup the 'Diseases' feature state managed by NgRx
 export const getDiseasesState = createFeatureSelector<
@@ -62,3 +64,13 @@ export const getDiseasesStats = createSelector(
   getDiseasesState,
   (state) => state.stats
 );
+
+export const getDiseases = createSelector(
+  getMergedRoute,
+  getDiseasesState,
+  (route:MergedRoute, state: State) =>  {
+    console.log(route);
+    console.log(state);
+    return Object.values(state.entities).map(entity => entity = entity.disease);
+  }
+)

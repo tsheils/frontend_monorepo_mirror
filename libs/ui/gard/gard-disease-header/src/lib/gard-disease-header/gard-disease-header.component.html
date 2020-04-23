@@ -1,7 +1,7 @@
-<article>
+<article *ngIf="object">
   <div class ="sticky">
-    <mat-toolbar >
-      {{data?.name}}
+    <mat-toolbar>
+      {{object.name}}
     </mat-toolbar>
   </div>
 </article>

@@ -1,13 +1,14 @@
 "use strict";
-import {Observable} from "rxjs";
 
-const neo4jUser= "neo4j";
-const neo4jPassword = "eic1akeghaTha4OhKahr";
 const neo4j = require('neo4j-driver');
 const webSocketServer = require('websocket').server;
 const http = require('http');
-// const uri = "bolt://0.0.0.0:7687";
- const uri = "bolt://gard-dev-neo4j.ncats.io:7687";
+
+const neo4jUser= "";
+const neo4jPassword = "";
+const uri = "bolt://0.0.0.0:7687";
+
+
 
  /**
  * this is the default uri for a neo4j instance running locally
@@ -61,10 +62,12 @@ wsServer.on('request', function(request) {
    * this reads the message, and passes it to the neo4j connection, returning the results
    */
   connection.on('message', function(message) {
+    console.log("new session");
     const session = driver.rxSession();
     const mes = JSON.parse(message.utf8Data);
+    console.log(message);
     if (mes.txcType) {
-      let subscription: Observable<any>;
+      let subscription;
       switch (mes.txcType) {
         case 'write': {
           subscription = session.writeTransaction(txc => txc.run(mes.call, mes.params).records());
@@ -78,13 +81,17 @@ wsServer.on('request', function(request) {
       }
       subscription.subscribe({
         next: res => {
+          console.log("subscription");
+          console.log(JSON.stringify(res.toObject()));
           connection.send(JSON.stringify(res.toObject()));
         },
         complete: () => {
-          connection.close();
+          console.log("comepter");
+         // connection.close();
           session.close();
         },
         error: (error) => {
+          console.log("whay an error")
           console.log(error);
         }
       });

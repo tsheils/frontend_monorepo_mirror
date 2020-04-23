@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {BehaviorSubject} from "rxjs";
 import {Disease} from "../../../../../../../models/gard/disease";
 
@@ -20,22 +20,30 @@ export class GardDiseaseHeaderComponent implements OnInit {
    * @param value
    */
   @Input()
-  set data(value: Disease) {
+  set data(value: any) {
     this._data.next(value);
   }
 
   /**
    * returns value of {BehaviorSubject}
-   * @returns {Disease}
+   * @returns {any}
    */
   get data() {
     return this._data.getValue();
   }
 
+  object: Disease;
 
-  constructor() { }
+
+  constructor(
+    private changeDetectorRef: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
+    this._data.subscribe(res=> {
+      Object.keys(res).forEach( key => this[key] = res[key]);
+      this.changeDetectorRef.markForCheck();
+    })
   }
 
 

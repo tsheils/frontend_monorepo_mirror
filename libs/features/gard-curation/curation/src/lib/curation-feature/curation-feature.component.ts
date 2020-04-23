@@ -62,11 +62,11 @@ export class CurationFeatureComponent implements OnInit {
       section: Position.Header,
       data: {title: this.title}
     },*/
- /*   {
+    {
       token: GARD_DISEASE_HEADER_COMPONENT,
       section: Position.Header,
       dataObservable: this.diseaseObservable$
-    },*/
+    },
    {
       token: GARD_DISEASE_SEARCH_COMPONENT,
       section: Position.Content,
@@ -109,8 +109,9 @@ export class CurationFeatureComponent implements OnInit {
 
   ngOnInit(): void {
     this.diseasesFacade.selectedDisease$.subscribe(res=> {
+      console.log(res);
       if(res && res.disease) {
-        this.disease = this.serializer.fromJson(res.disease);
+        this.disease = res.disease;
         this._diseaseObservableSource.next({object: this.disease, fields: ['inheritance', 'synonyms']});
         this._fieldsObservableSource.next({data: ['inheritance', 'synonyms']});
       //  this.data = {object: this.disease, fields: [{section: 'inheritance'},{section: 'synonyms'}]};
