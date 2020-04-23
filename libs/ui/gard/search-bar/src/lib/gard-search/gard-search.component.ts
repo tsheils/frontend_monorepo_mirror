@@ -15,6 +15,14 @@ import {DiseaseSerializer} from "../../../../../../../models/gard/disease";
 import {FormControl} from "@angular/forms";
 import {MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from "@angular/material/autocomplete";
 import {DiseasesFacade, setDisease} from "@ncats-frontend-library/stores/diseases";
+import {NavigationExtras, Router} from "@angular/router";
+
+/**
+ * navigation options to merge query parameters that are added on in navigation/query/facets/pagination
+ */
+const navigationExtras: NavigationExtras = {
+  queryParamsHandling: 'merge'
+};
 
 @Component({
   selector: 'ncats-frontend-library-gard-search',
@@ -56,6 +64,7 @@ export class GardSearchComponent implements OnInit {
   constructor(
     private changeRef: ChangeDetectorRef,
     private diseasesFacade: DiseasesFacade,
+    private router: Router,
     private connectionService: Neo4jConnectService
   ) {}
 
@@ -75,7 +84,14 @@ export class GardSearchComponent implements OnInit {
    */
   search(event?: MatAutocompleteSelectedEvent): void {
     const diseaseObj = this.typeaheadCtrl.value;
+    navigationExtras.queryParams = {
+      disease: diseaseObj.gard_id
+    };
+    this._navigate(navigationExtras);
+
+/*
     this.diseasesFacade.dispatch(setDisease({id: diseaseObj.gard_id}));
+*/
   }
 
   displayFn(option: any): string {
@@ -115,4 +131,14 @@ export class GardSearchComponent implements OnInit {
     } else {
     }
   }
+
+  /**
+   * navigate on changes, mainly just changes url, shouldn't reload entire page, just data
+   * @param {NavigationExtras} navExtras
+   * @private
+   */
+  private _navigate(navExtras: NavigationExtras): void {
+    this.router.navigate([], navExtras);
+  }
+
 }
