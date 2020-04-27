@@ -1,13 +1,9 @@
 import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
-import {Neo4jConnectService} from "@ncats-frontend-library/common/data-access/neo4j-connector";
-import RxSession from "neo4j-driver/types/session-rx";
-import {DiseasesFacade, setDiseaseStats} from "@ncats-frontend-library/stores/diseases";
+import {DiseasesFacade, Page, setDiseaseStats} from "@ncats-frontend-library/stores/diseases";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
-import {MatTableDataSource} from "@angular/material/table";
 import {SelectionModel} from "@angular/cdk/collections";
 import {NavigationExtras, Router} from "@angular/router";
-import {Disease} from "../../../../../../../models/gard/disease";
 
 
 /**
@@ -44,7 +40,8 @@ export class GardDashboardComponent implements OnInit {
     this.dataSource.paginator = paginator;
   }*/
 
-  dataSource: MatTableDataSource<Disease> = new MatTableDataSource<Disease>();
+//  dataSource: MatTableDataSource<Disease> = new MatTableDataSource<Disease>();
+  dataSource: any;
 
   /**
    * selection model to track selected filters
@@ -60,35 +57,34 @@ export class GardDashboardComponent implements OnInit {
 
   field = "diseases";
 
+  page: Page;
 
   constructor (
     private diseasesFacade: DiseasesFacade,
     private router: Router,
     private changeRef: ChangeDetectorRef
   ) {
-    console.log("new dashboard");
+
     this.diseasesFacade.dispatch(setDiseaseStats({}));
   }
 
 
   ngOnInit(): void {
-    console.log("dfsdfsdfsf");
      this.diseasesFacade.diseases$.subscribe(res => {
-      console.log(res);
-       this.dataSource.data = res;
+     //  this.dataSource.data = res;
+       this.dataSource = res;
        this.changeRef.markForCheck()
     });
 
     this.diseasesFacade.stats$.subscribe(res => {
-      console.log(res);
       this.stats = res;
     });
-    console.log(this);
 
-/*    this.dataSource.paginator.page.subscribe(event => {
-      console.log(event);
-      this.paginationChanges(event);
-    })*/
+    this.diseasesFacade.page$.subscribe(res => {
+      this.page = res;
+    });
+
+
     this.dataSource.paginator = this.paginator;
 
   }
@@ -101,14 +97,17 @@ export class GardDashboardComponent implements OnInit {
     }
   }
 
+
+  // todo pull paginator and functionality into separate library
   /**
    * change pages of list
    * @param event
    */
   paginationChanges(event: any) {
+    console.log(event);
     navigationExtras.queryParams = {
-      page: event.pageIndex + 1,
-      rows: event.pageSize
+      pageIndex: event.pageIndex,
+      pageSize: event.pageSize
     };
     this._navigate(navigationExtras);
   }

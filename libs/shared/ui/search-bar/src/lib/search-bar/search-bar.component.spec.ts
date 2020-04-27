@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SearchBarComponent } from './search-bar.component';
-import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
+import {CustomMaterialModule} from "@ncats-frontend-library/shared/custom-material";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {DisableControlDirective} from "../disable-control.directive";
 import {HighlightPipe} from "../highlight.pipe";

@@ -45,9 +45,6 @@
       "@ncats-frontend-library/shared/ui/ncats-form": [
         "libs/shared/ui/ncats-form/src/index.ts"
       ],
-      "@ncats-frontend-library/common/ui/full-page-search": [
-        "libs/common/ui/full-page-search/src/index.ts"
-      ],
       "@ncats-frontend-library/shared/ui/search-bar": [
         "libs/shared/ui/search-bar/src/index.ts"
       ],

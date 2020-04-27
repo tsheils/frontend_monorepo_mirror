@@ -1,0 +1,15 @@
+<mat-card>
+  <div fxLayout = "row" fxLayoutAlign="space-between center">
+    <div fxFlex="75">
+  <h3>{{disease.name}}</h3>
+ <ul>
+   <li *ngFor = "let synonym of disease.synonyms">
+     {{synonym}}
+   </li>
+ </ul>
+    </div>
+    <div fxFlex="20">
+      <button mat-flat-button [color]="'primary'" (click)="navigate(disease.gard_id)">edit</button>
+    </div>
+  </div>
+</mat-card>

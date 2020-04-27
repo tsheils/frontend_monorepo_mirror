@@ -1,12 +1,8 @@
-import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
 import RxSession from "neo4j-driver/types/session-rx";
-import {Neo4jConnectService} from "@ncats-frontend-library/common/data-access/neo4j-connector";
-import {from, Observable, of, zip} from "rxjs";
-import {concatAll, map, mergeAll, mergeMap, zipAll} from "rxjs/operators";
-import * as neo4j from "neo4j-driver";
-import {fromPromise} from "rxjs/internal-compatibility";
-import Record from 'neo4j-driver/lib/record'
-import {Driver, session} from "neo4j-driver";
+import {map} from "rxjs/operators";
+import {Driver} from "neo4j-driver";
+import {Neo4jConnectService} from "@ncats-frontend-library/shared/data-access/neo4j-connector";
 
 @Component({
   selector: 'ncats-frontend-library-mapper-feature',
@@ -50,7 +46,6 @@ export class MapperFeatureComponent implements OnDestroy {
     RETURN collect(allfields) as data;
     `;
     this.connectionService.read('raw-data', call, {payload: this.allSources}).subscribe(res => {
-        // console.log(res);
       }
     )
   }
@@ -65,7 +60,6 @@ export class MapperFeatureComponent implements OnDestroy {
   }
 
   search(event: any) {
-    console.log(event);
     this.connectionService.read('raw-data', `match p=(n:S_ORDO_ORPHANET{_N_Name: '${event.toUpperCase()}'})-[:R_subClassOf{property:'http://www.orpha.net/ORDO/Orphanet_C016'}]-(i)-[]-(h:S_HP)-[]-(d:DATA) return n._N_Name as disease, i._N_Name as ORPHANET_inheritance,  d.label as HPO_inheritance`)
       .subscribe(res => this.diseaseResult = res);
   }
@@ -113,19 +107,31 @@ export class MapperFeatureComponent implements OnDestroy {
   }
 
   buildInheritance() {
-    const call = `
+
+
+
+
+
+/*    const call = `
 MATCH (n:S_GARD)-[:PAYLOAD]-(d:DATA) WITH n, d.gard_id AS id
 MATCH (n:S_GARD)-[:I_CODE|:N_Name]-(o:S_OMIM)-[:R_rel{name:'has_inheritance_type'}]-(m:S_OMIM) WITH COLLECT(DISTINCT {value: m._N_Name, reference: 'OMIM'}) AS omim, n, id
 MATCH (n:S_GARD)-[:I_CODE|:N_Name]-(o:S_ORDO_ORPHANET)-[:R_subClassOf{property:'http://www.orpha.net/ORDO/Orphanet_C016'}]-(i:S_ORDO_ORPHANET) WITH omim,  collect(Distinct {value: i._N_Name, reference: 'ORPHANET'}) AS orphas, id
 WITH {disease: id, inheritance: omim + orphas} AS ret
   RETURN collect(ret) as data;
+    `;*/
+
+    const call = `
+MATCH (n:S_GARD)-[:PAYLOAD]-(d:DATA) WITH n, d.gard_id AS id
+MATCH (n)-[:I_CODE|:N_Name]-(o:S_OMIM)-[:R_rel{name:'has_inheritance_type'}]-(m:S_OMIM) WITH COLLECT(DISTINCT {value: m._N_Name, reference: 'OMIM'}) AS omim, n, id
+MATCH (n)-[:I_CODE|:N_Name]-(o:S_ORDO_ORPHANET)-[:R_subClassOf{property:'http://www.orpha.net/ORDO/Orphanet_C016'}]-(i:S_ORDO_ORPHANET) WITH omim,  collect(Distinct {value: i._N_Name, reference: 'ORPHANET'}) AS orphas, id
+with size(omim) as omimsize, size(orphas) as orphanetsize, omim, orphas, id
+WITH {disease: id, inheritance: omim + orphas, sources: {orphanet: orphanetsize, omim: omimsize}} AS ret
+  RETURN collect(ret) as data;
     `;
-//    RETURN ret.disease AS disease, ret.omim AS omim, ret.omimhpo AS omimhpo, ret.orpha AS orphanet, ret.orphahpo AS orphahpo LIMIT 10
-console.log(call);
+
     const mainDataMap: Map<string, string[]> = new Map<string, string[]>();
     let data = [];
     this.connectionService.read('raw-data', call).subscribe(res => {
-        console.log(res);
         data = res;
         const inheritanceTerms = `
         MATCH p=()-[r:TermOf]->(t:DataDictionaryTerm) with t
@@ -134,7 +140,6 @@ console.log(call);
         `;
 
         this.connectionService.read('gard-data', inheritanceTerms).subscribe(res => {
-          console.log(res);
           const inheritanceDictionary = res.data;
           data['data'].map(disease => {
             disease.displayValue = [];
@@ -160,7 +165,6 @@ console.log(call);
               return {displayValue: ent[0], inheritance: ent[1]}
             });
           });
-          console.log(data);
           this.writeData(data, 'Inheritance');
         });
   });
@@ -171,7 +175,10 @@ console.log(call);
     const totalRefs = 2;
                   const create = `
 UNWIND {payload} as row // all disease inheritance data
-    match (a:Disease) where a.gard_id = row.disease with a, row //fetch disease
+    match (a2:Disease) where a.gard_id = row.disease with a, row //fetch disease
+    CREATE (a:MainProperty) with a, row //fetch disease
+    set a.field = 'inheritance'
+    set a.sources = row.sources
     FOREACH (noDisplayValue in row.noDisplay | //disease inheritance data
     CREATE (n2:NoDisplayProperty:${type}) //dataRef node for inheritance with hpo mapping
     SET n2 += noDisplayValue
@@ -192,11 +199,7 @@ match (d:DataDictionary {field: '${type.toLowerCase()}'})-[:TermOf]-(t:DataDicti
     )
     return true;
 `;
-
-          console.log("writing");
-          console.log(create);
          this.connectionService.write('gard-data', create, {payload: payload['data']}).subscribe(res => {
-            console.log(res);
           })
   }
 
@@ -227,7 +230,6 @@ return data
         } else {
           this.dictionary.set(entry.displayTerm, entry.alternativeTerms);
         }
-        console.log(this.dictionary);
       })
     )
     ).subscribe(res=> console.log(res));
@@ -239,9 +241,7 @@ return data
       if(entry[0])
       dictionary.push({displayValue:entry[0], alternateValues: entry[1] })
     });
-    console.log(dictionary);
     const payload = {origin: 'hpo', fields: [{field: 'inheritance', terms: dictionary}]};
-    console.log(dictionary);
     const call = `
     match (r:DataDictionary)
         unwind {payload} as term
@@ -264,7 +264,6 @@ RETURN collect(diseases) as data LIMIT 10
 
 this.connectionService.read('gard-data', call).pipe(
   map(res => {
-    console.log(res);
     res.data.map(disease => {
       const inheritanceMap: Map<string, string[]> = new Map<string, string[]>();
       disease.inheritance.forEach(value => {
@@ -277,7 +276,6 @@ this.connectionService.read('gard-data', call).pipe(
           inheritanceMap.set(value.displayValue, [value.reference]);
         }
       });
-      console.log(inheritanceMap);
       [...inheritanceMap.entries()].forEach((key, value) => {
         if(value % totalRefs === 0){
           console.log("match");

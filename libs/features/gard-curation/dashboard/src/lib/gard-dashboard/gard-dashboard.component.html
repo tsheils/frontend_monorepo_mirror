@@ -5,7 +5,7 @@
         <h1>{{stats?.diseaseCount}}</h1>
         <h2>Diseases</h2>
       </mat-card>
-      <mat-card class="dashboard-tile" [routerLink]="'/diseases'" [queryParams]="{category: 'inherited'}" queryParamsHandling="merge">
+      <mat-card class="dashboard-tile" [routerLink]="'/diseases'" [queryParams]="{category: 'inherited'}">
         <h1>{{stats?.inheritanceCount}}</h1>
         <h2>Inherited or Genetic Diseases</h2>
       </mat-card>
@@ -21,7 +21,24 @@
   </div>
 </div>
 
-<div fxLayout="row" fxLayoutAlign="space-around center" *ngIf="dataSource.data.length > 0">
+<div fxLayout="row" fxLayoutAlign="space-around center" *ngIf="dataSource && dataSource.length > 0">
+  <div fxFlex="75">
+    <div fxLayout="row" fxLayoutAlign="end start">
+      <div fxLayout="25">
+        <mat-paginator
+          [pageSize]="page?.pageSize"
+          [pageIndex]="page?.pageIndex"
+          [pageSizeOptions]="[10, 25, 50]"
+          (page)="paginationChanges($event)"
+          [length] = "page?.total"
+        ></mat-paginator>
+      </div>
+    </div>
+  <ncats-frontend-library-disease-list [diseaseList]="dataSource"></ncats-frontend-library-disease-list>
+  </div>
+</div>
+
+<!--<div fxLayout="row" fxLayoutAlign="space-around center" *ngIf="dataSource.data.length > 0">
   <div fxFlex=45>
     <mat-form-field class="full-width-form">
       <mat-label>Filter {{field}}</mat-label>
@@ -55,7 +72,7 @@
       <tr mat-row *matRowDef="let row; columns: displayColumns;"></tr>
     </table>
   </div>
-</div>
+</div>-->
 
 <div fxLayout="row" fxLayoutAlign="space-around center">
   <div fxFlex="75">

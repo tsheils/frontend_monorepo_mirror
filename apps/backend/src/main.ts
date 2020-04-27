@@ -62,10 +62,8 @@ wsServer.on('request', function(request) {
    * this reads the message, and passes it to the neo4j connection, returning the results
    */
   connection.on('message', function(message) {
-    console.log("new session");
     const session = driver.rxSession();
     const mes = JSON.parse(message.utf8Data);
-    console.log(message);
     if (mes.txcType) {
       let subscription;
       switch (mes.txcType) {
@@ -81,17 +79,14 @@ wsServer.on('request', function(request) {
       }
       subscription.subscribe({
         next: res => {
-          console.log("subscription");
-          console.log(JSON.stringify(res.toObject()));
+
           connection.send(JSON.stringify(res.toObject()));
         },
         complete: () => {
-          console.log("comepter");
          // connection.close();
           session.close();
         },
         error: (error) => {
-          console.log("whay an error")
           console.log(error);
         }
       });

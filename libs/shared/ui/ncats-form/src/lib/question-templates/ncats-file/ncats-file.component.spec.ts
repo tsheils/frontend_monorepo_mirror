@@ -4,7 +4,7 @@ import { NcatsFileComponent } from './ncats-file.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { MatDialogModule } from "@angular/material/dialog";
-import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
+import {CustomMaterialModule} from "@ncats-frontend-library/shared/custom-material";
 import {FileQuestion} from "@ncats-frontend-library/shared/ui/ncats-form";
 
 describe('NcatsFileComponent', () => {

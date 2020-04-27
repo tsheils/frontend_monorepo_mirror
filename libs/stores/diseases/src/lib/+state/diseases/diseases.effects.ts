@@ -1,16 +1,13 @@
 import {Injectable} from '@angular/core';
-import {createEffect, Actions, ofType} from '@ngrx/effects';
-import {fetch} from '@nrwl/angular';
-
-import * as fromDiseases from './diseases.reducer';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import * as DiseasesActions from './diseases.actions';
-import {catchError, concatMap, filter, finalize, map, mergeMap, switchMap} from "rxjs/operators";
-import {Neo4jConnectService} from "@ncats-frontend-library/common/data-access/neo4j-connector";
+import {catchError, concatMap, filter, map, mergeMap} from "rxjs/operators";
 import {of} from "rxjs";
 import {ROUTER_NAVIGATION, RouterNavigationAction} from "@ngrx/router-store";
 import {DiseaseService} from "../../disease.service";
 import {Disease, DiseaseSerializer} from "../../../../../../../models/gard/disease";
-import {DiseasesEntity} from "@ncats-frontend-library/stores/diseases";
+import {Page} from "@ncats-frontend-library/stores/diseases";
+import {Neo4jConnectService} from "@ncats-frontend-library/shared/data-access/neo4j-connector";
 
 const serializer: DiseaseSerializer = new DiseaseSerializer();
 
@@ -30,48 +27,68 @@ export class DiseasesEffects {
       }),
       map((r: RouterNavigationAction) => r.payload.routerState.root.queryParams),
       mergeMap((params: any) => {
-        console.log(params);
-
+       const pageSize = params.pageSize ? params.pageSize : 10;
+       const pageIndex = params.pageIndex ? params.pageIndex : 0;
         let call;
         call = `
-          MATCH (n:Disease) 
-          with n 
-          ORDER BY n.name limit 25
-          return collect(properties(n)) as data, count(n) as count       
+          MATCH (d:Disease)  
+          WITH count(d) AS count
+          MATCH (n:Disease)  
+          WITH n, count
+          ORDER BY n.name 
+          SKIP ${pageIndex * pageSize}
+          LIMIT ${pageSize}
+          RETURN COLLECT(PROPERTIES(n)) AS data, count as total       
           `;
         if(params['category'] && params['category'] === 'inherited') {
           call = `
+          MATCH (d:Disease)-[:Properties]-(:Inheritance)
+           WITH COUNT(DISTINCT d) AS count
           MATCH (n:Disease)-[:Properties]-(:Inheritance)
-           with DISTINCT(n)
-           ORDER BY n.name DESC limit 25
-           RETURN collect(properties(n)) as data, count(n) as count
+           WITH DISTINCT(n), count
+           ORDER BY n.name 
+          SKIP ${pageIndex * pageSize}
+          LIMIT ${pageSize}
+           RETURN COLLECT(PROPERTIES(n)) AS data, count as total
           `
         }
         if((params['category'] && params['category'] === 'inherited') && (params['source'] && params['source'] === "true")) {
           call = `
-           MATCH (n:Disease)-[:Properties]-(p:DisplayProperty)-[]-(f:DataRef)
-           with DISTINCT(n) as rr, size(collect(f.value))%2 as inCount
-           where inCount > 0 with inCount, rr
-                      ORDER BY rr.name DESC limit 25
-           RETURN collect(properties(rr)) as data,  count(rr) as count;
+            MATCH p=(disease:Disease)-[r2:Properties]-(:DisplayProperty)-[]-(f2:DataRef) 
+            with {disease: disease, size: size(collect(f2.value))%2 } as results
+            where results.size = 0 with count(results) as count 
+            MATCH (n:Disease)-[r:Properties]-(p:DisplayProperty)-[]-(f:DataRef)
+            with DISTINCT(n) as rr, size(collect(f.value))%2 as inCount, count
+            where inCount = 0 with inCount, rr, count
+           ORDER BY rr.name 
+          SKIP ${pageIndex * pageSize}
+          LIMIT ${pageSize}
+            RETURN collect(properties(rr)) as data, count as total;
           `
         }
         if((params['category'] && params['category'] === 'inherited') && (params['source'] && params['source'] === "false")) {
           call = `
-           MATCH (n:Disease)-[:Properties]-(p:DisplayProperty)-[]-(f:DataRef)
-           with DISTINCT(n) as rr, size(collect(f.value))%2 as inCount
-           where inCount > 0 with inCount, rr
-                      ORDER BY rr.name ASC limit 25
-           RETURN collect(properties(rr)) as data, count(rr) as count 
+            MATCH p=(disease:Disease)-[r2:Properties]-(:DisplayProperty)-[]-(f2:DataRef) 
+            with {disease: disease, size: size(collect(f2.value))%2 } as results
+            where results.size > 0 with count(results) as count 
+            MATCH (n:Disease)-[r:Properties]-(p:DisplayProperty)-[]-(f:DataRef)
+            with DISTINCT(n) as rr, size(collect(f.value))%2 as inCount, count
+            where inCount > 0 with inCount, rr, count
+            ORDER BY rr.name 
+            SKIP ${pageIndex * pageSize}
+            LIMIT ${pageSize}
+            RETURN collect(properties(rr)) as data, count as total;
           `
         }
-
-        console.log(call);
         return this.neo4jConnectionService
           .read('gard-data', call)
           .pipe(
             map((response) => {
-              console.log(response);
+              const page: Page = {
+                pageSize: pageSize,
+                pageIndex: pageIndex,
+              total: response.total ? response.total.low : 0
+              };
               const results: Disease[] = response.data.map(disease => {
                 return {
                   id: disease.gard_id,
@@ -79,7 +96,7 @@ export class DiseasesEffects {
                   disease: serializer.fromJson(disease)
                 }
               });
-              return DiseasesActions.loadDiseasesSuccess({diseases: results})
+              return DiseasesActions.loadDiseasesSuccess({diseases: results, page: page})
             }),
             catchError(error => of(DiseasesActions.loadDiseasesFailure({error})))
           )
@@ -87,67 +104,37 @@ export class DiseasesEffects {
     )
   });
 
-/*
-  setDisease$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(DiseasesActions.setDisease),
-      concatMap(action => {
-        console.log(action);
-        const call = `
-match p = (d:Disease {gard_id:'${action.id}'})-[r:Properties]-(n) with d, r, n
-with distinct d, {field: n.field, values: collect(properties(n))} as changes
-with properties(d) as disease,  collect(changes) as properties
-with disease{ .*, properties: properties} as data
-return data
-        `;
-        return this.neo4jConnectionService.read('gard-data', call).pipe(
-          map(response => {
-            console.log(response);
-            if(response.data) {
-              const resp = response.data;
-              const disease = serializer.fromJson(resp);
-              if (resp.data && resp.data.length > 0) {
-                resp.data.forEach(data => disease[data.field] = data.values);
-              }
-              return DiseasesActions.setDiseaseSuccess({
-                disease: {
-                  id: disease.gard_id,
-                  name: disease.name,
-                  disease: disease
-                }
-              });
-            }
-          }),
-          catchError(error => {
-            console.error(error);
-            return of(DiseasesActions.setDiseaseFailure(error))
-          }),
-        )
-      }),
-    )
-  });
-*/
   setDisease$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ROUTER_NAVIGATION),
       filter((r: RouterNavigationAction) => {
-        console.log(r);
         return r.payload.routerState.root.queryParams['disease']
       }),
       map((r: RouterNavigationAction) => r.payload.routerState.root.queryParams),
       mergeMap((params: any) => {
-        console.log(params);
+        let call;
         const param = {q: params['disease']};
-        const call = `
-match (d:Disease)-[r:Properties]-(n)
+         call = `
+match (d:Disease)-[r:Properties]-(n)-[:ReferenceSource]-(f:DataRef) 
 where d.gard_id = '${params['disease']}' OR d.name = '${params['disease']}'
-with properties(d) as disease, {field: n.field, values: collect(properties(n))} as changes
+with collect(properties(f)) as references, properties(d) as disease, n
+ORDER BY size(references) DESC
+with {field: n.field, values: collect(distinct n{.*, references: references})} as changes, disease
 return disease{ .*, properties: collect(changes)} as data
         `;
+     /*    if (params['edit']){
+           call = `
+           match (d:Disease)-[r:Properties]-(n)
+where d.gard_id = '${params['disease']}' OR d.name = '${params['disease']}' AND n.field = '${params['edit']}'
+match (n)-[:ReferenceSource]-(f:DataRef)
+with collect(properties(f)) as references, properties(d) as disease, n
+with {field: n.field, values: collect(distinct n{.*, references: references})} as changes, disease
+return disease{ .*, properties: collect(changes)} as data
+        `;
+         }*/
 
         return this.neo4jConnectionService.read('gard-data', call).pipe(
           map(response => {
-            console.log(response);
             if(response.data) {
               const resp = response.data;
               const disease = serializer.fromJson(resp);
@@ -210,12 +197,10 @@ with count(results) as matchCount, misMatchCount, inheritanceCount, diseaseCount
         `;
         return this.neo4jConnectionService.read('gard-data', call).pipe(
           map(response => {
-            console.log(response);
             const stats = {};
             Object.keys(response).forEach(key => {
               stats[key] = response[key].low ? response[key].low : response[key].high
             });
-            console.log(stats);
             return DiseasesActions.setDiseaseStatsSuccess({stats: stats})
           }),
           catchError(error => of(DiseasesActions.setDiseaseStatsFailure(error))),

@@ -2,7 +2,7 @@ import { createReducer, on, Action } from '@ngrx/store';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 
 import * as DiseasesActions from './diseases.actions';
-import { DiseasesEntity } from './diseases.models';
+import {DiseasesEntity, Page} from './diseases.models';
 
 export const DISEASES_FEATURE_KEY = 'diseases';
 
@@ -12,6 +12,7 @@ export interface State extends EntityState<DiseasesEntity> {
   error?: string | null; // last none error (if any)
   selectedDisease?: any;
   stats? : any;
+  page?: Page;
 }
 
 export interface DiseasesPartialState {
@@ -41,10 +42,10 @@ const diseasesReducer = createReducer(
   ),
   on(
     DiseasesActions.searchDiseasesSuccess,
-    DiseasesActions.loadDiseasesSuccess, (state, { diseases }) => {
+    DiseasesActions.loadDiseasesSuccess, (state, props) => {
       console.log(state);
-      console.log(diseases);
-    return diseasesAdapter.setAll(diseases, { ...state, loaded: true })
+      console.log(props);
+    return diseasesAdapter.setAll(props.diseases, { ...state, page: props['page'], loaded: true })
     }
   ),
   on(

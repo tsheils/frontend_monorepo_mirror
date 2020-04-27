@@ -11,9 +11,6 @@
     "nx.json": "*"
   },
   "projects": {
-    "ncats-firebase-auth-module": {
-      "tags": []
-    },
     "gard-data-hub": {
       "tags": []
     },
@@ -28,25 +25,37 @@
     "gard-frontend": {
       "tags": []
     },
-    "sidenavs-navigation-sidepanel": {
+    "backend": {
       "tags": []
     },
-    "sidenavs-facet-sidepanel": {
+
+    "features-gard-curation-mapper": {
       "tags": []
     },
-    "common-ui-custom-material": {
+    "features-gard-curation-curation": {
       "tags": []
     },
-    "common-data-access-neo4j-connector": {
+    "features-gard-curation-dashboard": {
       "tags": []
     },
-    "ui-gard-data-display": {
+
+    "shared-auth-ncats-firebase-auth-module": {
       "tags": []
     },
+    "shared-custom-material": {
+      "tags": []
+    },
+    "shared-data-access-neo4j-connector": {
+      "tags": []
+    },
+    "shared-ui-sidenavs-navigation-sidepanel": {
+      "tags": []
+    },
+    "shared-ui-sidenavs-facet-sidepanel": {
+      "tags": []
+    },
+
     "shared-ui-ncats-form": {
-      "tags": []
-    },
-    "common-ui-full-page-search": {
       "tags": []
     },
     "shared-ui-search-bar": {
@@ -55,19 +64,7 @@
     "shared-ui-curation-matrix": {
       "tags": []
     },
-    "ui-gard-curation-sidepanel": {
-      "tags": []
-    },
     "shared-ui-dynamic-app-layout": {
-      "tags": []
-    },
-    "ui-gard-gard-data-viewer": {
-      "tags": []
-    },
-    "ui-gard-gard-header": {
-      "tags": []
-    },
-    "ui-gard-gard-footer": {
       "tags": []
     },
     "shared-ui-mapper-ui": {
@@ -79,25 +76,33 @@
     "shared-ui-header-template": {
       "tags": []
     },
-    "features-gard-curation-mapper": {
+
+    "ui-gard-data-display": {
       "tags": []
     },
-    "features-gard-curation-curation": {
+    "ui-gard-curation-sidepanel": {
       "tags": []
     },
-    "features-gard-curation-dashboard": {
+    "ui-gard-gard-data-viewer": {
+      "tags": []
+    },
+    "ui-gard-gard-header": {
+      "tags": []
+    },
+    "ui-gard-gard-footer": {
       "tags": []
     },
     "ui-gard-search-bar": {
       "tags": []
     },
-    "stores-diseases": {
-      "tags": []
-    },
-    "backend": {
-      "tags": []
-    },
     "ui-gard-gard-disease-header": {
+      "tags": []
+    },
+    "ui-gard-gard-disease-list": {
+      "tags": []
+    },
+
+    "stores-diseases": {
       "tags": []
     },
     "stores-store-router": {

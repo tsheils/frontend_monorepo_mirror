@@ -11,7 +11,6 @@ import {
 import {SharedUiCurationMatrixModule} from "@ncats-frontend-library/shared/ui/curation-matrix";
 import {SharedUiSearchBarModule} from "@ncats-frontend-library/shared/ui/search-bar";
 import {RouterModule, Routes} from "@angular/router";
-import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
 import {SharedUiDynamicAppLayoutModule} from "@ncats-frontend-library/shared/ui/dynamic-app-layout";
 import {GardHeaderComponent} from "@ncats-frontend-library/ui/gard/gard-header";
 import {CurationSidepanelComponent} from "@ncats-frontend-library/ui/gard/curation-sidepanel";
@@ -20,6 +19,7 @@ import {GardFooterComponent} from "@ncats-frontend-library/ui/gard/gard-footer";
 import {GardSearchComponent, UiGardSearchBarModule} from "@ncats-frontend-library/ui/gard/search-bar";
 import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
 import {GardDiseaseHeaderComponent} from "@ncats-frontend-library/ui/gard/gard-disease-header";
+import {CustomMaterialModule} from "@ncats-frontend-library/shared/custom-material";
 
 const ROUTES: Routes = [
   {
