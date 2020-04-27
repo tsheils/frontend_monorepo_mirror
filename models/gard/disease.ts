@@ -127,7 +127,6 @@ export class DiseaseSerializer implements Serializer {
   }
 
   fromJson(json: any): Disease {
-    console.log(json);
     const obj = new Disease();
     Object.entries((json)).forEach((prop) => obj[prop[0]] = prop[1]);
 
@@ -181,7 +180,6 @@ export class DiseaseSerializer implements Serializer {
       obj.statistics = [json.Statistics].map(val => new GardDataProperty({value: val, propertyType: 'html'}));
       delete obj['Statistics'];
     }
-    console.log(obj);
     return obj;
   }
 

@@ -10,3 +10,9 @@ export interface DiseasesEntity {
   name: string;
   disease?: Disease;
 }
+
+export interface Page {
+  pageIndex: number;
+  pageSize: number;
+  total: number;
+}

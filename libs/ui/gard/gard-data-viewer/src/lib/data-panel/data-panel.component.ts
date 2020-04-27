@@ -10,6 +10,14 @@ import {
 import {Disease} from "../../../../../../../models/gard/disease";
 import {BehaviorSubject, Observable} from "rxjs";
 import {map} from "rxjs/operators";
+import {NavigationExtras, Router} from "@angular/router";
+
+/**
+ * navigation options to merge query parameters that are added on in navigation/query/facets/pagination
+ */
+const navigationExtras: NavigationExtras = {
+  queryParamsHandling: 'merge'
+};
 
 @Component({
   selector: 'ncats-frontend-library-data-panel',
@@ -57,13 +65,13 @@ export class DataPanelComponent implements OnInit {
 
   @Output() dataChange: EventEmitter<any> = new EventEmitter<any>();
   constructor(
+    private router : Router,
     private changeDetectorRef: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
     this._data.pipe(
       map(res=> {
-        console.log(res);
          Object.keys(res).forEach( key => this[key] = res[key]);
         this.changeDetectorRef.markForCheck();
         }
@@ -80,5 +88,12 @@ export class DataPanelComponent implements OnInit {
     this.object[field] = this.returnObject[field];
     this.editing = null;
     this.dataChange.emit(this.returnObject[field]);
+  }
+
+  edit(field: string) {
+    navigationExtras.queryParams = {
+      edit: field
+    };
+    this.router.navigate([], navigationExtras);
   }
 }

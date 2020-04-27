@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MapperInterfaceComponent } from './mapper-interface.component';
-import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
+import {CustomMaterialModule} from "@ncats-frontend-library/shared/custom-material";
 import {HighlightPipe} from "./highlight.pipe";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 

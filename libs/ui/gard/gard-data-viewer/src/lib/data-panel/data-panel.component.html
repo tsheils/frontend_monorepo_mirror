@@ -3,11 +3,11 @@
   <mat-card-content>
     <div *ngIf="object[field] && editing !== field">
       <div *ngFor="let value of object[field]">
-        <span>{{value.displayValue || value.value}}</span>
-        <span *ngIf="value.sourceCount">
+        <h4>{{value.displayValue || value.value}}</h4>
+        <span *ngFor="let reference of value.references">
       &nbsp;
     <span>
-      <span>{{value.sourceCount.low}} sources</span>
+      <span>{{reference.reference}}: {{reference.value}}  </span><br>
     </span>
     </span>
       </div>
@@ -29,7 +29,7 @@
     </div>
     <mat-card-actions fxLayoutAlign="end center" *ngIf="object[field] && object[field].length > 0">
       <div *ngIf="editing !== field">
-        <button mat-stroked-button [color]="'primary'" (click)="editing = field">Edit</button>
+        <button mat-stroked-button [color]="'primary'" (click)="edit(field)">Edit</button>
       </div>
       <div *ngIf="editing === field">
         <button mat-stroked-button [color]="'warn'" (click)="editing = null">Cancel</button>
@@ -38,3 +38,6 @@
     </mat-card-actions>
   </mat-card-content>
 </mat-card>
+
+
+

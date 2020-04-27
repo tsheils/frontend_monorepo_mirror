@@ -1,6 +1,6 @@
 import { async, TestBed } from '@angular/core/testing';
 import { UiGardCurationSidepanelModule } from './ui-gard-curation-sidepanel.module';
-import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
+import {CustomMaterialModule} from "@ncats-frontend-library/shared/custom-material";
 
 describe('UiGardCurationSidepanelModule', () => {
   beforeEach(async(() => {

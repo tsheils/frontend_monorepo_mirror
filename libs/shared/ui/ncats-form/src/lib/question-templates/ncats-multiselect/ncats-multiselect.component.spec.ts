@@ -3,7 +3,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {NcatsMultiselectComponent} from './ncats-multiselect.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
+import {CustomMaterialModule} from "@ncats-frontend-library/shared/custom-material";
 import {MultiselectQuestion} from "@ncats-frontend-library/shared/ui/ncats-form";
 
 describe('NcatsMultiselectComponent', () => {

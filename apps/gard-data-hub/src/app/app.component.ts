@@ -5,16 +5,13 @@ import {MatDialog} from "@angular/material/dialog";
 import {QuestionBase, TextboxQuestion} from "@ncats-frontend-library/shared/ui/ncats-form";
 import {Router} from "@angular/router";
 import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
-import {map} from "rxjs/operators";
+import {environment} from "../environments/environment";
 import {
   Neo4jConnectionFormComponent,
   Neo4jConnectService
-} from "@ncats-frontend-library/common/data-access/neo4j-connector";
-import {Store} from "@ngrx/store";
-import {Disease} from "../../../../models/gard/disease";
-import {environment} from "../environments/environment";
+} from "@ncats-frontend-library/shared/data-access/neo4j-connector";
 
- export const QUESTIONS: QuestionBase<any>[] = [
+export const QUESTIONS: QuestionBase<any>[] = [
   new TextboxQuestion({
   key: 'url',
   label: 'Database Url',

@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CurationMatrixComponent } from './curation-matrix.component';
-import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
+import {CustomMaterialModule} from "@ncats-frontend-library/shared/custom-material";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {RouterTestingModule} from "@angular/router/testing";
 import {StoreModule} from "@ngrx/store";

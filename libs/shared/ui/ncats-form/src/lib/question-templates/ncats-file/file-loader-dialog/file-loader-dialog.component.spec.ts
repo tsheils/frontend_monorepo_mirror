@@ -5,7 +5,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {DndDirective} from "./dnd.directive";
 import { MatDialogRef } from "@angular/material/dialog";
-import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
+import {CustomMaterialModule} from "@ncats-frontend-library/shared/custom-material";
 
 describe('FileLoaderDialogComponent', () => {
   let component: FileLoaderDialogComponent;

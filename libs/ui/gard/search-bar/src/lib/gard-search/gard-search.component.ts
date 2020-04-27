@@ -1,5 +1,6 @@
 import {
-  ChangeDetectionStrategy, ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -8,14 +9,14 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import {debounceTime, distinctUntilChanged, finalize, switchMap, zipAll} from "rxjs/operators";
-import {BehaviorSubject, Observable, of} from "rxjs";
-import {Neo4jConnectService} from "@ncats-frontend-library/common/data-access/neo4j-connector";
+import {debounceTime, distinctUntilChanged, switchMap} from "rxjs/operators";
+import {of} from "rxjs";
 import {DiseaseSerializer} from "../../../../../../../models/gard/disease";
 import {FormControl} from "@angular/forms";
 import {MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from "@angular/material/autocomplete";
-import {DiseasesFacade, setDisease} from "@ncats-frontend-library/stores/diseases";
+import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
 import {NavigationExtras, Router} from "@angular/router";
+import {Neo4jConnectService} from "@ncats-frontend-library/shared/data-access/neo4j-connector";
 
 /**
  * navigation options to merge query parameters that are added on in navigation/query/facets/pagination
@@ -87,11 +88,7 @@ export class GardSearchComponent implements OnInit {
     navigationExtras.queryParams = {
       disease: diseaseObj.gard_id
     };
-    this._navigate(navigationExtras);
-
-/*
-    this.diseasesFacade.dispatch(setDisease({id: diseaseObj.gard_id}));
-*/
+    this.router.navigate([], navigationExtras);
   }
 
   displayFn(option: any): string {
@@ -131,14 +128,4 @@ export class GardSearchComponent implements OnInit {
     } else {
     }
   }
-
-  /**
-   * navigate on changes, mainly just changes url, shouldn't reload entire page, just data
-   * @param {NavigationExtras} navExtras
-   * @private
-   */
-  private _navigate(navExtras: NavigationExtras): void {
-    this.router.navigate([], navExtras);
-  }
-
 }

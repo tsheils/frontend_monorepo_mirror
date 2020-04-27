@@ -1,12 +1,10 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, InjectionToken, OnInit} from '@angular/core';
 import RxSession from "neo4j-driver/types/session-rx";
-import {BehaviorSubject, from, Observable, of} from "rxjs";
-import {concatAll, map, mergeMap, switchMap} from "rxjs/operators";
+import {BehaviorSubject, Observable} from "rxjs";
 import {Disease, DiseaseSerializer} from "../../../../../../../models/gard/disease";
 import {PanelConfig, Position} from "@ncats-frontend-library/shared/ui/dynamic-app-layout";
 import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
-import * as DiseasesActions from "../../../../../../stores/diseases/src/lib/+state/diseases/diseases.actions";
-import {Neo4jConnectService} from "@ncats-frontend-library/common/data-access/neo4j-connector";
+import {Neo4jConnectService} from "@ncats-frontend-library/shared/data-access/neo4j-connector";
 
 
 export const GARD_HEADER_COMPONENT = new InjectionToken<string>('GardHeaderComponent');
@@ -109,7 +107,6 @@ export class CurationFeatureComponent implements OnInit {
 
   ngOnInit(): void {
     this.diseasesFacade.selectedDisease$.subscribe(res=> {
-      console.log(res);
       if(res && res.disease) {
         this.disease = res.disease;
         this._diseaseObservableSource.next({object: this.disease, fields: ['inheritance', 'synonyms']});

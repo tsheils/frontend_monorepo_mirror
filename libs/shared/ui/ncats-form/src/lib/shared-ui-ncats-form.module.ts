@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {ReactiveFormsModule} from "@angular/forms";
-import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
+import {CustomMaterialModule} from "@ncats-frontend-library/shared/custom-material";
 import {NcatsFileComponent} from "./question-templates/ncats-file/ncats-file.component";
 import {NcatsMultiselectComponent} from "./question-templates/ncats-multiselect/ncats-multiselect.component";
 import {NcatsDropdownComponent} from "./question-templates/ncats-dropdown/ncats-dropdown.component";

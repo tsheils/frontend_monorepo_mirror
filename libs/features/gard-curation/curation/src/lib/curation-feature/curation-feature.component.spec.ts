@@ -8,7 +8,7 @@ import {
   GARD_DISEASE_SEARCH_COMPONENT,
   GARD_FOOTER_COMPONENT
 } from './curation-feature.component';
-import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
+import {CustomMaterialModule} from "@ncats-frontend-library/shared/custom-material";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {SharedUiSearchBarModule} from "@ncats-frontend-library/shared/ui/search-bar";
 import {

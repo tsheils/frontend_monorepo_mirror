@@ -22,6 +22,8 @@ export class DiseasesFacade {
 
   searchDiseases$ = this.store.pipe(select(DiseasesSelectors.searchDiseasesEntities));
 
+  page$ = this.store.pipe(select(DiseasesSelectors.getPage));
+
   constructor(private store: Store<fromDiseases.DiseasesPartialState>) {
   }
   dispatch(action: Action) {

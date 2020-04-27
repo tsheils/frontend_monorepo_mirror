@@ -1,13 +1,17 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { GardDashboardComponent } from './gard-dashboard.component';
-import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
+import {GardDashboardComponent} from './gard-dashboard.component';
+import {CustomMaterialModule} from "@ncats-frontend-library/shared/custom-material";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {SharedUiCurationMatrixModule} from "@ncats-frontend-library/shared/ui/curation-matrix";
-import {SharedUiSearchBarModule} from "@ncats-frontend-library/shared/ui/search-bar";
 import {RouterTestingModule} from "@angular/router/testing";
+import {UiGardGardDiseaseListModule} from "@ncats-frontend-library/ui/gard/gard-disease-list";
+import {DiseasesFacade, StoresDiseasesModule} from "@ncats-frontend-library/stores/diseases";
+import {MockStore, provideMockStore} from "@ngrx/store/testing";
+import {StoreModule} from "@ngrx/store";
 
 describe('GardDashboardComponent', () => {
+  let store: MockStore;
+  const initialState = { loggedIn: false };
   let component: GardDashboardComponent;
   let fixture: ComponentFixture<GardDashboardComponent>;
 
@@ -16,7 +20,13 @@ describe('GardDashboardComponent', () => {
       imports: [
         CustomMaterialModule,
         BrowserAnimationsModule,
-        RouterTestingModule
+        RouterTestingModule,
+        UiGardGardDiseaseListModule,
+        StoreModule.forRoot({})
+      ],
+      providers: [
+        DiseasesFacade,
+        provideMockStore({ initialState }),
       ],
       declarations: [ GardDashboardComponent ]
     })
@@ -26,8 +36,11 @@ describe('GardDashboardComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(GardDashboardComponent);
     component = fixture.componentInstance;
+    component.dataSource = {};
+    store = TestBed.inject(MockStore);
     fixture.detectChanges();
   });
+
 
   it('should create', () => {
     expect(component).toBeTruthy();

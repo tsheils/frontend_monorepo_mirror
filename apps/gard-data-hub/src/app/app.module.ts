@@ -1,31 +1,25 @@
-import { BrowserModule } from '@angular/platform-browser';
+import {BrowserModule} from '@angular/platform-browser';
 import {APP_INITIALIZER, NgModule} from '@angular/core';
-import { AppComponent } from './app.component';
-import { RouterModule, Routes } from '@angular/router';
-import { UiGardGardHeaderModule } from '@ncats-frontend-library/ui/gard/gard-header';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SharedUiHeaderTemplateModule } from '@ncats-frontend-library/shared/ui/header-template';
-import { CustomMaterialModule } from '@ncats-frontend-library/common/ui/custom-material';
-import { SessionGuard } from './session.guard';
-import {Store, StoreModule} from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { environment } from '../environments/environment';
-import { StoreRouterConnectingModule } from '@ngrx/router-store';
-import {
-  DiseasesActionsTypes,
-  DiseasesFacade,
-  loadDiseases,
-  StoresDiseasesModule
-} from "@ncats-frontend-library/stores/diseases";
-import {
-  CommonDataAccessNeo4jConnectorModule, Neo4jConnectService,
-} from "@ncats-frontend-library/common/data-access/neo4j-connector";
-import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {AppComponent} from './app.component';
+import {RouterModule, Routes} from '@angular/router';
+import {UiGardGardHeaderModule} from '@ncats-frontend-library/ui/gard/gard-header';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {SharedUiHeaderTemplateModule} from '@ncats-frontend-library/shared/ui/header-template';
+import {SessionGuard} from './session.guard';
+import {StoreModule} from '@ngrx/store';
+import {EffectsModule} from '@ngrx/effects';
+import {StoreDevtoolsModule} from '@ngrx/store-devtools';
+import {environment} from '../environments/environment';
+import {StoreRouterConnectingModule} from '@ngrx/router-store';
+import {DiseasesFacade, StoresDiseasesModule} from "@ncats-frontend-library/stores/diseases";
+
+import {HttpClientModule} from "@angular/common/http";
 import {StoreRouterModule} from "@ncats-frontend-library/stores/store-router";
-import {Disease} from "../../../../models/gard/disease";
-
-
+import {CustomMaterialModule} from "@ncats-frontend-library/shared/custom-material";
+import {
+  CommonDataAccessNeo4jConnectorModule,
+  Neo4jConnectService
+} from "@ncats-frontend-library/shared/data-access/neo4j-connector";
 
 
 const ROUTES: Routes = [

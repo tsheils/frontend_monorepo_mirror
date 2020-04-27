@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { DiseasesEntity } from './diseases.models';
+import {DiseasesEntity, Page} from './diseases.models';
 import {Disease} from "../../../../../../../models/gard/disease";
 import {MergedRoute} from "../../../../../store-router/src/lib/+state/merged-route";
 
@@ -27,7 +27,7 @@ export const loadDiseases = createAction(
 
 export const loadDiseasesSuccess = createAction(
   DiseasesActionsTypes.loadDiseasesSuccess,
-  props<{ diseases: Disease[] }>()
+  props<{ diseases: Disease[], page: Page }>()
 );
 
 export const loadDiseasesFailure = createAction(

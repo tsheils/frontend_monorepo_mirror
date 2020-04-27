@@ -4,7 +4,7 @@ import { NcatsTextboxComponent } from './ncats-textbox.component';
 
 import {ReactiveFormsModule} from "@angular/forms";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {CustomMaterialModule} from "@ncats-frontend-library/common/ui/custom-material";
+import {CustomMaterialModule} from "@ncats-frontend-library/shared/custom-material";
 import {TextboxQuestion} from "@ncats-frontend-library/shared/ui/ncats-form";
 
 describe('NcatsTextboxComponent', () => {
