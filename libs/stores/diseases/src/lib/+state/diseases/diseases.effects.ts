@@ -114,12 +114,13 @@ export class DiseasesEffects {
       mergeMap((params: any) => {
         let call;
          call = `
-match (d:Disease)-[r:Properties]-(n)-[:ReferenceSource]-(f:DataRef) 
-where d.gard_id = '${params['disease']}' OR d.name = '${params['disease']}'
+         match (d:Disease)
+         where d.gard_id = '${params['disease']}' OR d.name = '${params['disease']}'
+optional match (d)-[r:Properties]-(n)-[:ReferenceSource]-(f:DataRef) 
 with collect(properties(f)) as references, properties(d) as disease, n
 ORDER BY size(references) DESC
-with {field: n.field, values: collect(distinct n{.*, references: references})} as changes, disease
-return disease{ .*, properties: collect(changes)} as data
+with {field: n.field, values: collect(distinct n{.*, references: references})} as changes, disease 
+return disease{ .*, properties: collect(changes)} as data;
         `;
      /*    if (params['edit']){
            call = `

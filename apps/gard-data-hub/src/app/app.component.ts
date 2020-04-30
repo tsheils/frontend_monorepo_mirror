@@ -97,7 +97,10 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   search(params: NavigationExtras) {
-    this.router.navigate(['curation'], params);
+    console.log(params);
+    params.replaceUrl = true;
+    params.queryParamsHandling = '';
+    this.router.navigate(['/curation'], params);
   }
 
   ngOnDestroy(): void {

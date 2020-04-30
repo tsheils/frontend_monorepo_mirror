@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ReferenceDisplayComponent } from './reference-display.component';
+import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
 
 describe('ReferenceDisplayComponent', () => {
   let component: ReferenceDisplayComponent;
@@ -8,7 +9,8 @@ describe('ReferenceDisplayComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ReferenceDisplayComponent ]
+      declarations: [ ReferenceDisplayComponent ],
+      providers: [DiseasesFacade]
     })
     .compileComponents();
   }));

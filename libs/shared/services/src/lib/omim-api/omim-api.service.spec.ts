@@ -1,12 +1,17 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { OmimApiService } from './omim-api.service';
+import {OmimApiService} from './omim-api.service';
+import {HttpClientTestingModule} from "@angular/common/http/testing";
 
 describe('OmimApiService', () => {
   let service: OmimApiService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      imports: [
+        HttpClientTestingModule
+      ],
+    });
     service = TestBed.inject(OmimApiService);
   });
 

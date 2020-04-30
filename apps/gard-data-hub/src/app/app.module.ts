@@ -70,6 +70,7 @@ const ROUTES: Routes = [
     HttpClientModule,
     BrowserAnimationsModule,
     RouterModule.forRoot(ROUTES, {
+      scrollPositionRestoration: 'enabled',
       onSameUrlNavigation: 'reload',
       initialNavigation: 'enabled'
     }),

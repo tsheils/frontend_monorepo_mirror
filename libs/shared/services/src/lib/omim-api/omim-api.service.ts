@@ -28,7 +28,7 @@ headers: HttpHeaders;
   }
 
 fetch(params: OmimParams): Observable<any> {
-    const url = `${OMIMAPI}${params.omimId}${INCLUDE}${params.fields ? params.fields.join(',') : 'text,references'}${FORMAT}${params.format ? params.format : 'json'}`;
+    const url = `${OMIMAPI}${params.omimId}${INCLUDE}${params.fields ? params.fields.join(',') : 'text,referenceList'}${FORMAT}${params.format ? params.format : 'json'}`;
 return this.http.get(url,{headers: this.headers});
 }
 }
