@@ -6,7 +6,7 @@
            [matAutocomplete]="auto"
            [formControl]="typeaheadCtrl"
            class ="'input-field'">
-    <mat-label class="search-label">Fetch by disease</mat-label>
+    <mat-label class="search-label">Search GARD</mat-label>
     <mat-autocomplete #auto="matAutocomplete"
                       (optionSelected) = "search($event)"
                       [displayWith]="displayFn"

@@ -4,13 +4,15 @@ import { DataPanelComponent } from './data-panel/data-panel.component';
 import {UiGardDataDisplayModule} from "@ncats-frontend-library/ui/gard/data-display";
 import {SharedUiCurationMatrixModule} from "@ncats-frontend-library/shared/ui/curation-matrix";
 import {CustomMaterialModule} from "@ncats-frontend-library/shared/custom-material";
+import {UiGardReferenceDisplayModule} from "@ncats-frontend-library/ui/gard/reference-display";
 
 @NgModule({
   imports: [
     CommonModule,
     UiGardDataDisplayModule,
     SharedUiCurationMatrixModule,
-    CustomMaterialModule
+    CustomMaterialModule,
+    UiGardReferenceDisplayModule
   ],
   declarations: [
     DataPanelComponent

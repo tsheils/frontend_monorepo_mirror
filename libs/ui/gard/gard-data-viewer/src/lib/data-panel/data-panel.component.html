@@ -7,7 +7,7 @@
         <span *ngFor="let reference of value.references">
       &nbsp;
     <span>
-      <span>{{reference.reference}}: {{reference.value}}  </span><br>
+      {{reference.value}}: <ncats-frontend-library-reference-display [reference]="reference"></ncats-frontend-library-reference-display><br>
     </span>
     </span>
       </div>

@@ -1,7 +1,7 @@
 module.exports = {
   name: 'sidenavs-navigation-sidepanel',
-  preset: '../../../jest.config.js',
-  coverageDirectory: '../../../coverage/libs/sidenavs/navigation-sidepanel',
+  preset: '../../../../../jest.config.js',
+  coverageDirectory: '../../../../../coverage/libs/sidenavs/navigation-sidepanel',
   snapshotSerializers: [
     'jest-preset-angular/build/AngularNoNgAttributesSnapshotSerializer.js',
     'jest-preset-angular/build/AngularSnapshotSerializer.js',

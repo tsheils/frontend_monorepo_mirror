@@ -27,7 +27,7 @@ export const loadDiseases = createAction(
 
 export const loadDiseasesSuccess = createAction(
   DiseasesActionsTypes.loadDiseasesSuccess,
-  props<{ diseases: Disease[], page: Page }>()
+  props<{ diseases: DiseasesEntity[], page: Page }>()
 );
 
 export const loadDiseasesFailure = createAction(

@@ -1,10 +1,16 @@
-import { async, TestBed } from '@angular/core/testing';
-import { UiGardGardDiseaseListModule } from './ui-gard-gard-disease-list.module';
+import {async, TestBed} from '@angular/core/testing';
+import {UiGardGardDiseaseListModule} from './ui-gard-gard-disease-list.module';
+import {CustomMaterialModule} from "@ncats-frontend-library/shared/custom-material";
 
 describe('UiGardGardDiseaseListModule', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [UiGardGardDiseaseListModule],
+      imports: [
+        CustomMaterialModule,
+        UiGardGardDiseaseListModule
+      ],
+      declarations: [
+      ],
     }).compileComponents();
   }));
 

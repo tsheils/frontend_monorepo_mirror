@@ -1,6 +1,12 @@
-import { DiseasesEntity } from './diseases.models';
+import {DiseasesEntity, Page} from './diseases.models';
 import * as DiseasesActions from './diseases.actions';
 import { State, diseaseInitialState, reducer } from './diseases.reducer';
+
+const page: Page = {
+  total: 666,
+  pageIndex: 1,
+  pageSize:10
+};
 
 describe('Diseases Reducer', () => {
   const createDiseasesEntity = (id: string, name = '') =>
@@ -17,7 +23,7 @@ describe('Diseases Reducer', () => {
         createDiseasesEntity('PRODUCT-AAA'),
         createDiseasesEntity('PRODUCT-zzz'),
       ];
-      const action = DiseasesActions.loadDiseasesSuccess({ diseases });
+      const action = DiseasesActions.loadDiseasesSuccess({ diseases, page });
 
       const result: State = reducer(diseaseInitialState, action);
 

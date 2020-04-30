@@ -1,3 +1,26 @@
-.main-content {
-  margin-top: 60px;
+@import "mapper-theme";
+
+  .toolbar-template {
+    background-color: mat-color($app-primary);
+  }
+a.home-link {
+  color: white;
 }
+
+.header-link-button {
+  color: white;
+}
+
+.ncats-sidenav-content {
+margin-top:60px;
+}
+
+  .main-content {
+    margin-top: 60px;
+  }
+
+  .header-search {
+    width: 30vw;
+    padding-right: 2vw;
+    color: white;
+  }

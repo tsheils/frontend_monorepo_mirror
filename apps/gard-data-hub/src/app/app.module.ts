@@ -13,13 +13,15 @@ import {environment} from '../environments/environment';
 import {StoreRouterConnectingModule} from '@ngrx/router-store';
 import {DiseasesFacade, StoresDiseasesModule} from "@ncats-frontend-library/stores/diseases";
 
-import {HttpClientModule} from "@angular/common/http";
+import {HttpClientModule, HttpHeaders} from "@angular/common/http";
 import {StoreRouterModule} from "@ncats-frontend-library/stores/store-router";
 import {CustomMaterialModule} from "@ncats-frontend-library/shared/custom-material";
 import {
   CommonDataAccessNeo4jConnectorModule,
   Neo4jConnectService
 } from "@ncats-frontend-library/shared/data-access/neo4j-connector";
+import {UiGardSearchBarModule} from "@ncats-frontend-library/ui/gard/search-bar";
+import {OmimApiService} from "../../../../libs/shared/services/src/lib/omim-api/omim-api.service";
 
 
 const ROUTES: Routes = [
@@ -89,22 +91,28 @@ const ROUTES: Routes = [
     ),
     EffectsModule.forRoot([]),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
-    StoreRouterConnectingModule.forRoot()
+    StoreRouterConnectingModule.forRoot(),
+    UiGardSearchBarModule
   ],
   providers: [
     DiseasesFacade,
     {
       provide: APP_INITIALIZER,
-      useFactory: (facade: DiseasesFacade, connectionService: Neo4jConnectService) => {
+      useFactory: (facade: DiseasesFacade, connectionService: Neo4jConnectService, omimApiService: OmimApiService) => {
         return () => {
           environment.neo4j.forEach(db => {
             connectionService.createDriver(db);
           });
+          omimApiService.setHeaders(
+            new HttpHeaders({
+                  'Content-Type': 'text/plain',
+                  'ApiKey' : environment.omimkey
+                }))
         //  facade.dispatch(loadDiseases());
         };
       },
       multi: true,
-      deps: [DiseasesFacade, Neo4jConnectService]
+      deps: [DiseasesFacade, Neo4jConnectService, OmimApiService]
     }
   ],
   bootstrap: [AppComponent]

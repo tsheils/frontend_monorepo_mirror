@@ -48,7 +48,7 @@ export class SidenavPanelComponent implements OnInit, AfterContentInit {
     class: 'filters-panel',
     opened: true,
     fixedInViewport: true,
-    fixedTopGap: 120,
+    fixedTopGap: 66,
     role: 'directory'
   };
 

@@ -1,9 +1,9 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 
 import RxSession from "neo4j-driver/types/session-rx";
 import {MatDialog} from "@angular/material/dialog";
 import {QuestionBase, TextboxQuestion} from "@ncats-frontend-library/shared/ui/ncats-form";
-import {Router} from "@angular/router";
+import {NavigationExtras, Router} from "@angular/router";
 import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
 import {environment} from "../environments/environment";
 import {
@@ -36,7 +36,8 @@ export const QUESTIONS: QuestionBase<any>[] = [
 @Component({
   selector: 'ncats-frontend-library-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'gard-data-hub';
@@ -93,6 +94,10 @@ export class AppComponent implements OnInit, OnDestroy {
       this.session = null;
     }
     this.router.navigate(['/']);
+  }
+
+  search(params: NavigationExtras) {
+    this.router.navigate(['curation'], params);
   }
 
   ngOnDestroy(): void {
