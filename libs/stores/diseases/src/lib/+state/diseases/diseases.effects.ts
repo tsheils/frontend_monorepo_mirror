@@ -6,7 +6,7 @@ import {of} from "rxjs";
 import {ROUTER_NAVIGATION, RouterNavigationAction} from "@ngrx/router-store";
 import {DiseaseService} from "../../disease.service";
 import {Disease, DiseaseSerializer} from "../../../../../../../models/gard/disease";
-import {Page} from "@ncats-frontend-library/stores/diseases";
+import {DiseasesEntity, Page} from "@ncats-frontend-library/stores/diseases";
 import {Neo4jConnectService} from "@ncats-frontend-library/shared/data-access/neo4j-connector";
 
 const serializer: DiseaseSerializer = new DiseaseSerializer();
@@ -89,7 +89,7 @@ export class DiseasesEffects {
                 pageIndex: pageIndex,
               total: response.total ? response.total.low : 0
               };
-              const results: Disease[] = response.data.map(disease => {
+              const results: DiseasesEntity[] = response.data.map(disease => {
                 return {
                   id: disease.gard_id,
                   name: disease.name,
@@ -113,14 +113,14 @@ export class DiseasesEffects {
       map((r: RouterNavigationAction) => r.payload.routerState.root.queryParams),
       mergeMap((params: any) => {
         let call;
-        const param = {q: params['disease']};
          call = `
-match (d:Disease)-[r:Properties]-(n)-[:ReferenceSource]-(f:DataRef) 
-where d.gard_id = '${params['disease']}' OR d.name = '${params['disease']}'
+         match (d:Disease)
+         where d.gard_id = '${params['disease']}' OR d.name = '${params['disease']}'
+optional match (d)-[r:Properties]-(n)-[:ReferenceSource]-(f:DataRef) 
 with collect(properties(f)) as references, properties(d) as disease, n
 ORDER BY size(references) DESC
-with {field: n.field, values: collect(distinct n{.*, references: references})} as changes, disease
-return disease{ .*, properties: collect(changes)} as data
+with {field: n.field, values: collect(distinct n{.*, references: references})} as changes, disease 
+return disease{ .*, properties: collect(changes)} as data;
         `;
      /*    if (params['edit']){
            call = `

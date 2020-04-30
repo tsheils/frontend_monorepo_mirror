@@ -13,5 +13,6 @@ export const environment = {
       name: 'gard-data',
       url: 'ws://localhost:1338'
     }*/
-  ]
+  ],
+  omimkey: ''
 };

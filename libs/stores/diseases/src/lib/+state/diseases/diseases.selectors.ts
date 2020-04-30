@@ -69,9 +69,9 @@ export const getDiseases = createSelector(
   getMergedRoute,
   getDiseasesState,
   (route:MergedRoute, state: State) =>  {
-    return Object.values(state.entities).map(entity => entity = entity.disease);
+    return Object.values(state.entities).map(entity => entity.disease);
   }
-)
+);
 
 export const getPage = createSelector(
   getDiseasesState,

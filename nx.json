@@ -28,7 +28,6 @@
     "backend": {
       "tags": []
     },
-
     "features-gard-curation-mapper": {
       "tags": []
     },
@@ -38,7 +37,6 @@
     "features-gard-curation-dashboard": {
       "tags": []
     },
-
     "shared-auth-ncats-firebase-auth-module": {
       "tags": []
     },
@@ -54,7 +52,6 @@
     "shared-ui-sidenavs-facet-sidepanel": {
       "tags": []
     },
-
     "shared-ui-ncats-form": {
       "tags": []
     },
@@ -76,7 +73,6 @@
     "shared-ui-header-template": {
       "tags": []
     },
-
     "ui-gard-data-display": {
       "tags": []
     },
@@ -101,11 +97,16 @@
     "ui-gard-gard-disease-list": {
       "tags": []
     },
-
     "stores-diseases": {
       "tags": []
     },
     "stores-store-router": {
+      "tags": []
+    },
+    "ui-gard-reference-display": {
+      "tags": []
+    },
+    "shared-services": {
       "tags": []
     }
   }

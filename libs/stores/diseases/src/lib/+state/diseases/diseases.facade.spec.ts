@@ -7,11 +7,18 @@ import {Store, StoreModule} from '@ngrx/store';
 
 import {NxModule} from '@nrwl/angular';
 
-import {DiseasesEntity} from './diseases.models';
+import {DiseasesEntity, Page} from './diseases.models';
 import {DiseasesEffects} from './diseases.effects';
 import {DiseasesFacade} from './diseases.facade';
 import * as DiseasesActions from './diseases.actions';
 import {DISEASES_FEATURE_KEY, reducer, State,} from './diseases.reducer';
+import {Disease} from "../../../../../../../models/gard/disease";
+
+const page: Page = {
+  total: 666,
+  pageIndex: 1,
+  pageSize:10
+};
 
 interface TestSchema {
   diseases: State;
@@ -24,6 +31,7 @@ describe('DiseasesFacade', () => {
     ({
       id,
       name: name || `name-${id}`,
+      disease: {} as Disease
     } as DiseasesEntity);
 
   beforeEach(() => {});
@@ -96,6 +104,7 @@ describe('DiseasesFacade', () => {
               createDiseasesEntity('AAA'),
               createDiseasesEntity('BBB'),
             ],
+            page: page
           })
         );
 

@@ -62,14 +62,14 @@ export class CurationFeatureComponent implements OnInit {
     },*/
     {
       token: GARD_DISEASE_HEADER_COMPONENT,
-      section: Position.Header,
+      section: Position.Content,
       dataObservable: this.diseaseObservable$
     },
-   {
+   /*{
       token: GARD_DISEASE_SEARCH_COMPONENT,
       section: Position.Content,
     //  dataObservable: this.diseaseObservable$
-    },
+    },*/
     {
       token: CURATION_MAIN_COMPONENT,
       section: Position.Content,

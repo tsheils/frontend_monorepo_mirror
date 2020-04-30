@@ -41,8 +41,14 @@ const diseasesReducer = createReducer(
     (state, {stats}) => ({...state, stats: stats, loaded: true})
   ),
   on(
-    DiseasesActions.searchDiseasesSuccess,
-    DiseasesActions.loadDiseasesSuccess, (state, props) => {
+    DiseasesActions.searchDiseasesSuccess, (state, props) => {
+  console.log(state);
+  console.log(props);
+  return diseasesAdapter.setAll(props.diseases, { ...state, page: props['page'], loaded: true })
+}
+),
+ on(
+   DiseasesActions.loadDiseasesSuccess, (state, props) => {
       console.log(state);
       console.log(props);
     return diseasesAdapter.setAll(props.diseases, { ...state, page: props['page'], loaded: true })

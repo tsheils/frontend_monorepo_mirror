@@ -11,9 +11,8 @@ export class DiseasesFacade {
   // action for disease pagination
   diseases$ = this.store.pipe(select(DiseasesSelectors.getDiseases));
 
-/*
   loaded$ = this.store.pipe(select(DiseasesSelectors.getDiseasesLoaded));
-*/
+
   stats$ = this.store.pipe(select(DiseasesSelectors.getDiseasesStats));
 
   allDiseases$ = this.store.pipe(select(DiseasesSelectors.getAllDiseases));

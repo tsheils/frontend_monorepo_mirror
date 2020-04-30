@@ -65,7 +65,6 @@ export class GardSearchComponent implements OnInit {
   constructor(
     private changeRef: ChangeDetectorRef,
     private diseasesFacade: DiseasesFacade,
-    private router: Router,
     private connectionService: Neo4jConnectService
   ) {}
 
@@ -88,7 +87,7 @@ export class GardSearchComponent implements OnInit {
     navigationExtras.queryParams = {
       disease: diseaseObj.gard_id
     };
-    this.router.navigate([], navigationExtras);
+    this.query.emit(navigationExtras);
   }
 
   displayFn(option: any): string {

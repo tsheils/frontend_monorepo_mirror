@@ -9,5 +9,6 @@ export const environment = {
       name: 'raw-data',
       url: 'wss://gard-dev-neo4j.ncats.io:1338'
     }
-  ]
+  ],
+  omimkey: ''
 };

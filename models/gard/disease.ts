@@ -76,47 +76,49 @@ export class Disease {
   ];
     }
 
-    properties: Map<string, any>;
-  synonyms: GardDataProperty[] | string[];
-  hpo: GardDataProperty[];
-  inheritance: GardDataProperty[];
-  xrefs: GardDataProperty[];
-  is_rare: boolean;
-  uri: string;
-  gard_id: string;
-  name: string;
-  categories: GardDataProperty[];
+    properties?: Map<string, any>;
+  synonyms?: GardDataProperty[] | string[];
+  hpo?: GardDataProperty[];
+  inheritance?: GardDataProperty[];
+  xrefs?: GardDataProperty[];
+  is_rare?: boolean;
+  uri?: string;
+  gard_id?: string;
+  name?: string;
+  categories?: GardDataProperty[];
   /**
    * Diagnosis source text
    */
-  diagnosis: GardDataProperty[];
+  diagnosis?: GardDataProperty[];
 
   /**
    * Progression source Text
    */
-  progression: GardDataProperty[];
+  progression?: GardDataProperty[];
 
-  statistics: GardDataProperty[];
-  created: any; // neo4j number object {high, low}
-  id: any; // neo4j number object {high, low}
+  statistics?: GardDataProperty[];
+  created?: any; // neo4j number object {high, low}
+  id?: any; // neo4j number object {high, low}
 
-  ageOfOnset: AGE_OF_ONSET[];
-  epidemology: Epidemology;
+  ageOfOnset?: AGE_OF_ONSET[];
+  epidemology?: Epidemology;
 
 // todo: should this just be 1 object?
-  cause: GardDataProperty[];
-  causeStatus: CAUSE_STATUS;
-  causeType: Cause;
+  cause?: GardDataProperty[];
+  causeStatus?: CAUSE_STATUS;
+  causeType?: Cause;
 
-  geneticEtiology: Etiology[];
+  geneticEtiology?: Etiology[];
 
 // todo create mesh service
-  meshTerms: string[];
+  meshTerms?: string[];
 
 // todo - this should be a list of treatment objects
-  treatments: GardDataProperty[];
+  treatments?: GardDataProperty[];
 
-  clinicalGuideline: 'Diagnostic' | 'Treatment';
+  clinicalGuideline?: 'Diagnostic' | 'Treatment';
+  codes?: string[];
+  omimCodes?: string[];
 }
 
 export class DiseaseSerializer implements Serializer {
@@ -180,6 +182,21 @@ export class DiseaseSerializer implements Serializer {
       obj.statistics = [json.Statistics].map(val => new GardDataProperty({value: val, propertyType: 'html'}));
       delete obj['Statistics'];
     }
+
+    if(obj.codes) {
+      obj.omimCodes = [];
+      obj.codes.forEach(code => {
+        const omim = code.split('OMIM:');
+        if(omim.length > 1) {
+          console.log(omim);
+          obj.omimCodes.push(omim[1]);
+        }
+      });
+      if(obj.omimCodes.length === 0) {
+        delete obj.omimCodes;
+      }
+    }
+
     return obj;
   }
 

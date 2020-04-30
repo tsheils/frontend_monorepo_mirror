@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DiseaseListComponent } from './disease-list.component';
+import {DiseaseListCardComponent} from "../disease-list-card/disease-list-card.component";
+import {CustomMaterialModule} from "@ncats-frontend-library/shared/custom-material";
 
 describe('DiseaseListComponent', () => {
   let component: DiseaseListComponent;
@@ -8,7 +10,8 @@ describe('DiseaseListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DiseaseListComponent ]
+      declarations: [ DiseaseListComponent, DiseaseListCardComponent ],
+      imports: [CustomMaterialModule]
     })
     .compileComponents();
   }));

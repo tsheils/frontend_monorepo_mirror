@@ -1,14 +1,14 @@
 import { async, TestBed } from '@angular/core/testing';
-import { StoresStoreRouterModule } from './stores-store-router.module';
+import { StoreRouterModule } from './stores-store-router.module';
 
-describe('StoresStoreRouterModule', () => {
+describe('StoreRouterModule', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [StoresStoreRouterModule],
+      imports: [StoreRouterModule],
     }).compileComponents();
   }));
 
   it('should create', () => {
-    expect(StoresStoreRouterModule).toBeDefined();
+    expect(StoreRouterModule).toBeDefined();
   });
 });

@@ -3,6 +3,12 @@ import RxSession from "neo4j-driver/types/session-rx";
 import {map} from "rxjs/operators";
 import {Driver} from "neo4j-driver";
 import {Neo4jConnectService} from "@ncats-frontend-library/shared/data-access/neo4j-connector";
+import {PanelConfig, Position} from "@ncats-frontend-library/shared/ui/dynamic-app-layout";
+import {
+  CURATION_MAIN_COMPONENT,
+  CURATION_SIDEPANEL_COMPONENT,
+  GARD_DISEASE_HEADER_COMPONENT, GARD_DISEASE_SEARCH_COMPONENT, GARD_FOOTER_COMPONENT
+} from "../../../../curation/src/lib/curation-feature/curation-feature.component";
 
 @Component({
   selector: 'ncats-frontend-library-mapper-feature',
@@ -28,6 +34,8 @@ export class MapperFeatureComponent implements OnDestroy {
   driver: Driver;
 
   dictionary: Map<string, string[]> = new Map<string, string[]>();
+
+
 
   constructor(
     private changeRef: ChangeDetectorRef,
@@ -107,19 +115,6 @@ export class MapperFeatureComponent implements OnDestroy {
   }
 
   buildInheritance() {
-
-
-
-
-
-/*    const call = `
-MATCH (n:S_GARD)-[:PAYLOAD]-(d:DATA) WITH n, d.gard_id AS id
-MATCH (n:S_GARD)-[:I_CODE|:N_Name]-(o:S_OMIM)-[:R_rel{name:'has_inheritance_type'}]-(m:S_OMIM) WITH COLLECT(DISTINCT {value: m._N_Name, reference: 'OMIM'}) AS omim, n, id
-MATCH (n:S_GARD)-[:I_CODE|:N_Name]-(o:S_ORDO_ORPHANET)-[:R_subClassOf{property:'http://www.orpha.net/ORDO/Orphanet_C016'}]-(i:S_ORDO_ORPHANET) WITH omim,  collect(Distinct {value: i._N_Name, reference: 'ORPHANET'}) AS orphas, id
-WITH {disease: id, inheritance: omim + orphas} AS ret
-  RETURN collect(ret) as data;
-    `;*/
-
     const call = `
 MATCH (n:S_GARD)-[:PAYLOAD]-(d:DATA) WITH n, d.gard_id AS id
 MATCH (n)-[:I_CODE|:N_Name]-(o:S_OMIM)-[:R_rel{name:'has_inheritance_type'}]-(m:S_OMIM) WITH COLLECT(DISTINCT {value: m._N_Name, reference: 'OMIM'}) AS omim, n, id

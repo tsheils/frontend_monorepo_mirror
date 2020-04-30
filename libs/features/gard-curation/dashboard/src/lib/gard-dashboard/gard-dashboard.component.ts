@@ -4,6 +4,12 @@ import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {SelectionModel} from "@angular/cdk/collections";
 import {NavigationExtras, Router} from "@angular/router";
+import {PanelConfig, Position} from "@ncats-frontend-library/shared/ui/dynamic-app-layout";
+import {
+  CURATION_MAIN_COMPONENT,
+  CURATION_SIDEPANEL_COMPONENT,
+  GARD_DISEASE_HEADER_COMPONENT, GARD_DISEASE_SEARCH_COMPONENT, GARD_FOOTER_COMPONENT
+} from "../../../../curation/src/lib/curation-feature/curation-feature.component";
 
 
 /**
@@ -19,6 +25,8 @@ const navigationExtras: NavigationExtras = {
   styleUrls: ['./gard-dashboard.component.scss']
 })
 export class GardDashboardComponent implements OnInit {
+
+
   stats = {
     diseaseCount: 0,
     inheritanceCount: 0,
@@ -95,6 +103,10 @@ export class GardDashboardComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  diseaseSearch(navExtras: NavigationExtras) {
+    this.router.navigate(['curation'], navExtras)
   }
 
 

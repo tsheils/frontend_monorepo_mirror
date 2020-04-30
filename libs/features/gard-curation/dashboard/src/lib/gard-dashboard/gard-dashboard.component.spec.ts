@@ -8,6 +8,7 @@ import {UiGardGardDiseaseListModule} from "@ncats-frontend-library/ui/gard/gard-
 import {DiseasesFacade, StoresDiseasesModule} from "@ncats-frontend-library/stores/diseases";
 import {MockStore, provideMockStore} from "@ngrx/store/testing";
 import {StoreModule} from "@ngrx/store";
+import {UiGardSearchBarModule} from "@ncats-frontend-library/ui/gard/search-bar";
 
 describe('GardDashboardComponent', () => {
   let store: MockStore;
@@ -22,6 +23,7 @@ describe('GardDashboardComponent', () => {
         BrowserAnimationsModule,
         RouterTestingModule,
         UiGardGardDiseaseListModule,
+        UiGardSearchBarModule,
         StoreModule.forRoot({})
       ],
       providers: [
