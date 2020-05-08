@@ -401,7 +401,7 @@
         }
       }
     },
-    "shared-auth-firebase-auth-module": {
+    "shared-auth-ncats-firebase-auth-module": {
       "projectType": "library",
       "root": "libs/shared/auth/ncats-firebase-auth-module",
       "sourceRoot": "libs/shared/auth/ncats-firebase-auth-module/src",
@@ -435,7 +435,7 @@
         }
       }
     },
-    "shared-ui-custom-material": {
+    "shared-custom-material": {
       "projectType": "library",
       "root": "libs/shared/custom-material",
       "sourceRoot": "libs/shared/custom-material/src",
@@ -1114,41 +1114,6 @@
             "tsConfig": "libs/stores/store-router/tsconfig.spec.json",
             "passWithNoTests": true,
             "setupFile": "libs/stores/store-router/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
-      }
-    },
-    "ui-gard-reference-display": {
-      "projectType": "library",
-      "root": "libs/ui/gard/reference-display",
-      "sourceRoot": "libs/ui/gard/reference-display/src",
-      "prefix": "ncats-frontend-library",
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/ui/gard/reference-display/tsconfig.lib.json",
-              "libs/ui/gard/reference-display/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/ui/gard/reference-display/**"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/ui/gard/reference-display/jest.config.js",
-            "tsConfig": "libs/ui/gard/reference-display/tsconfig.spec.json",
-            "passWithNoTests": true,
-            "setupFile": "libs/ui/gard/reference-display/src/test-setup.ts"
           }
         }
       },

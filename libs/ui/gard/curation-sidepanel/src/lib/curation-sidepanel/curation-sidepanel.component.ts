@@ -94,7 +94,7 @@ export class CurationSidepanelComponent implements OnInit, OnChanges {
    */
   toggleMenu() {
     this.open = !this.open;
-    this.menuToggle.emit();
+    this.menuToggle.emit(this.open);
   }
 
   /**

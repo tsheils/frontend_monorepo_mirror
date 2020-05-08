@@ -55,11 +55,6 @@ export class CurationFeatureComponent implements OnInit {
       section: Position.Left,
       dataObservable: this.fieldsObservable$
     },
-    /*{
-      token: GARD_HEADER_COMPONENT,
-      section: Position.Header,
-      data: {title: this.title}
-    },*/
     {
       token: GARD_DISEASE_HEADER_COMPONENT,
       section: Position.Content,
@@ -75,11 +70,11 @@ export class CurationFeatureComponent implements OnInit {
       section: Position.Content,
       dataObservable: this.diseaseObservable$
     },
-    {
+/*    {
       token: GARD_FOOTER_COMPONENT,
       section: Position.Footer //,
       // dataObservable: this.diseaseObservable$
-    }
+    }*/
   ];
 
   data: {
@@ -95,6 +90,14 @@ export class CurationFeatureComponent implements OnInit {
     inheritance: []
   };
 
+  displayFields = [
+    {section: 'codes', label: 'External Identifiers'},
+    {section: 'synonyms', label: 'Synonyms'},
+    {section: 'inheritance', label: 'Inheritance'},
+    {section: 'sources', label: 'References'}
+    ];
+
+
   serializer: DiseaseSerializer = new DiseaseSerializer();
 
   constructor(
@@ -109,8 +112,8 @@ export class CurationFeatureComponent implements OnInit {
     this.diseasesFacade.selectedDisease$.subscribe(res=> {
       if(res && res.disease) {
         this.disease = res.disease;
-        this._diseaseObservableSource.next({object: this.disease, fields: ['inheritance', 'synonyms']});
-        this._fieldsObservableSource.next({data: ['inheritance', 'synonyms']});
+        this._diseaseObservableSource.next({object: this.disease, fields: this.displayFields});
+        this._fieldsObservableSource.next({data: this.displayFields});
       //  this.data = {object: this.disease, fields: [{section: 'inheritance'},{section: 'synonyms'}]};
         this.changeRef.markForCheck();
       }

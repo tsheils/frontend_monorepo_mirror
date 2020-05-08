@@ -11,6 +11,7 @@ import {Disease} from "../../../../../../../models/gard/disease";
 import {BehaviorSubject, Observable} from "rxjs";
 import {map} from "rxjs/operators";
 import {NavigationExtras, Router} from "@angular/router";
+import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
 
 /**
  * navigation options to merge query parameters that are added on in navigation/query/facets/pagination
@@ -27,57 +28,32 @@ const navigationExtras: NavigationExtras = {
 })
 export class DataPanelComponent implements OnInit {
 
-  @Input() fields: string[];
+  @Input() field: {section: string, label?: string};
+  @Input() data: any;
 
-  @Input() object: Disease;
-
-  /**
-   * initialize a private variable _data, it's a BehaviorSubject
-   * @type {BehaviorSubject<any>}
-   * @private
-   */
-  protected _data = new BehaviorSubject<any>({});
-
-  /**
-   * pushes changed data to {BehaviorSubject}
-   * @param value
-   */
-  @Input()
-  set data(value: any) {
-    if (value.data) {
-      this._data.next(value.data);
-    } else {
-      this._data.next(value);
-    }
-  }
-
-  /**
-   * returns value of {BehaviorSubject}
-   * @returns {any}
-   */
-  get data() {
-    return this._data.getValue();
-  }
-
-  editing: string;
+  editing: boolean;
 
   returnObject: Disease;
+
+  // todo: does this need to be added?
+  @Input() disease: Disease;
 
   @Output() dataChange: EventEmitter<any> = new EventEmitter<any>();
   constructor(
     private router : Router,
+    private diseaseFacade: DiseasesFacade,
     private changeDetectorRef: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
-    this._data.pipe(
-      map(res=> {
-         Object.keys(res).forEach( key => this[key] = res[key]);
-        this.changeDetectorRef.markForCheck();
-        }
-
-      )
-    ).subscribe()
+    // todo unsubscribe on destroy
+    this.diseaseFacade.selectedDisease$.subscribe(res=> {
+      if(res && res.disease) {
+        this.disease = res.disease;
+       // this.data = this.disease.properties.get(this.field.section);
+      }
+    });
+    this.changeDetectorRef.detectChanges();
   }
 
   setCuratedObject(object, field): void {
@@ -85,12 +61,13 @@ export class DataPanelComponent implements OnInit {
   }
 
   setObject(field: string): void {
-    this.object[field] = this.returnObject[field];
+    this.data = this.returnObject[field];
     this.editing = null;
     this.dataChange.emit(this.returnObject[field]);
   }
 
   edit(field: string) {
+    this.editing = true;
     navigationExtras.queryParams = {
       edit: field
     };

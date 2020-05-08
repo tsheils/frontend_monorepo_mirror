@@ -1,0 +1,6 @@
+<div *ngIf = "fields" class = "grid-list">
+  <div *ngFor="let field of fields">
+    <ncats-frontend-library-data-panel [field]="field" [data]="object[field.section]"></ncats-frontend-library-data-panel>
+  </div>
+</div>
+

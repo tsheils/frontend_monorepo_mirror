@@ -35,6 +35,9 @@ const ROUTES: Routes = [
     path: 'diseases',
     pathMatch: 'full',
     runGuardsAndResolvers: 'paramsOrQueryParamsChange',
+    data: {
+      hideSearch: true
+    },
     loadChildren: () =>
       import('@ncats-frontend-library/features/gard-curation/dashboard').then(
         m => m.FeaturesGardCurationDashboardModule

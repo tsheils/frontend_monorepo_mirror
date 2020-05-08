@@ -69,11 +69,11 @@ $curationsecondary: (
 );
 
 $app-primary: mat-palette($curationprimary);
-$app-primary:  mat-palette($curationsecondary);
+$app-secondary:  mat-palette($curationsecondary);
 
 
 $app-warn:    mat-palette($mat-red);
 
-$app-theme: mat-light-theme($app-primary, $app-primary, $app-warn);
+$app-theme: mat-light-theme($app-primary, $app-secondary, $app-warn);
 
 @include angular-material-theme($app-theme);

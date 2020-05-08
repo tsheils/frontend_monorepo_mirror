@@ -3,7 +3,7 @@ import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import RxSession from "neo4j-driver/types/session-rx";
 import {MatDialog} from "@angular/material/dialog";
 import {QuestionBase, TextboxQuestion} from "@ncats-frontend-library/shared/ui/ncats-form";
-import {NavigationExtras, Router} from "@angular/router";
+import {ActivatedRoute, NavigationEnd, NavigationExtras, Router} from "@angular/router";
 import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
 import {environment} from "../environments/environment";
 import {
@@ -44,10 +44,12 @@ export class AppComponent implements OnInit, OnDestroy {
   session: RxSession;
   links: any[] = [];
   disease: any;
+  hideSearch = false;
 
   constructor (
     public dialog: MatDialog,
     private router: Router,
+    private _route: ActivatedRoute,
     private diseasesFacade: DiseasesFacade,
    private connectionService: Neo4jConnectService
   ) {
@@ -55,10 +57,18 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // todo: this should happen in app_initializer (ans does), but the stats call won't load if this isn't here
+    // todo: this should happen in app_initializer (and does), but the stats call won't load if this isn't here
     environment.neo4j.forEach(db => {
       this.connectionService.createDriver(db);
     });
+
+    this.router.events
+      .subscribe((e: any) => {
+        // If it is a NavigationEnd event re-initalise the component
+        if (e instanceof NavigationEnd) {
+          this.hideSearch = e.url === '/diseases';
+        }
+      });
 
    /* this.diseasesFacade.selectedDisease$.subscribe(res=> {
       if(res) {
@@ -97,7 +107,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   search(params: NavigationExtras) {
-    console.log(params);
     params.replaceUrl = true;
     params.queryParamsHandling = '';
     this.router.navigate(['/curation'], params);
