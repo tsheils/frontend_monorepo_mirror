@@ -6,7 +6,7 @@ import {SharedUiCurationMatrixModule} from "@ncats-frontend-library/shared/ui/cu
 import {UiGardDataDisplayModule} from "@ncats-frontend-library/ui/gard/data-display";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {RouterTestingModule} from "@angular/router/testing";
-import {UiGardReferenceDisplayModule} from "@ncats-frontend-library/ui/gard/reference-display";
+import {UiGardSourceDisplayModule} from "@ncats-frontend-library/ui/gard/source-display";
 
 describe('DataPanelComponent', () => {
   let component: DataPanelComponent;
@@ -20,7 +20,7 @@ describe('DataPanelComponent', () => {
         UiGardDataDisplayModule,
         BrowserAnimationsModule,
         RouterTestingModule,
-        UiGardReferenceDisplayModule
+        UiGardSourceDisplayModule
       ],
       declarations: [ DataPanelComponent ]
     })

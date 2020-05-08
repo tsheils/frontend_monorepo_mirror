@@ -1,7 +1,7 @@
 <mat-card>
   <div fxLayout = "row" fxLayoutAlign="space-between start">
     <div fxFlex="75">
-  <h3>{{disease?.name}}</h3>
+  <h3 class ="disease-name">{{disease?.name}}</h3>
     </div>
     <div fxFlex="10">
       <button mat-flat-button [color]="'primary'" (click)="navigate(disease.gard_id)">edit</button>
@@ -9,11 +9,11 @@
   </div>
       <div fxLayout = "row" fxLayoutAlign="space-between center">
         <div fxFlex="75">
- <ul *ngIf=" disease && disease.synonyms">
-   <li *ngFor = "let synonym of disease?.synonyms">
-     {{synonym}}
-   </li>
- </ul>
+ <sdiv *ngIf=" disease && disease.synonyms">
+   <div *ngFor = "let synonym of disease?.synonyms" class = "synonyms">
+     <ncats-frontend-library-data-property-display [data]="synonym" [disease]="disease"></ncats-frontend-library-data-property-display>
+   </div>
+ </sdiv>
     </div>
   </div>
 </mat-card>

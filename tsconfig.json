@@ -92,9 +92,6 @@
         "libs/stores/store-router/src/index.ts"
       ],
       "@ncats-frontend-library/styles": ["libs/styles/src/index.ts"],
-      "@ncats-frontend-library/ui/gard/reference-display": [
-        "libs/ui/gard/reference-display/src/index.ts"
-      ],
       "@ncats-frontend-library/shared/services": [
         "libs/shared/services/src/index.ts"
       ]

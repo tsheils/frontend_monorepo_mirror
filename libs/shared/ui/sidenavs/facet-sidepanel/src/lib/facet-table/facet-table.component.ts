@@ -56,7 +56,6 @@ export class FacetTableComponent implements OnInit, OnDestroy {
     this.filterSelection.changed
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(change => {
-        console.log(change);
         // todo add event emitter
       });
   }

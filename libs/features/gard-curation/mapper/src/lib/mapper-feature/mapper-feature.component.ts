@@ -9,6 +9,8 @@ import {
   CURATION_SIDEPANEL_COMPONENT,
   GARD_DISEASE_HEADER_COMPONENT, GARD_DISEASE_SEARCH_COMPONENT, GARD_FOOTER_COMPONENT
 } from "../../../../curation/src/lib/curation-feature/curation-feature.component";
+import {GardReference} from "../../../../../../../models/gard/gard-reference";
+import {GardDataProperty, GardDataPropertySerializer} from "../../../../../../../models/gard/gard-base";
 
 @Component({
   selector: 'ncats-frontend-library-mapper-feature',
@@ -34,7 +36,7 @@ export class MapperFeatureComponent implements OnDestroy {
   driver: Driver;
 
   dictionary: Map<string, string[]> = new Map<string, string[]>();
-
+  gardPropertySerializer: GardDataPropertySerializer = new GardDataPropertySerializer();
 
 
   constructor(
@@ -85,33 +87,143 @@ export class MapperFeatureComponent implements OnDestroy {
   }
 
 
-  initialBuild() {
+  initialBuild2() {
     const diseases: any[] = [];
-        const call = `
+    const call = `
         match (n:S_GARD)-[]-(d:DATA) 
         return d.name as name, d.gard_id as gard_id, n.N_Name as synonyms, n._N_Name as synonymsString, n.I_CODE as codes;
         `;
-        this.connectionService.read('raw-data', call)
-          .subscribe({
-            next: (res) => {
-              const resObject: any = res;
-              if (!Array.isArray(resObject.synonyms)) {
-                resObject.synonyms = [resObject.synonyms];
-              }
-              if (!Array.isArray(resObject.codes)) {
-                resObject.codes = [resObject.codes];
-              }
-              diseases.push(resObject)
-            },
-            complete: () => {
-              const writecall = `
+    this.connectionService.read('raw-data', call)
+      .subscribe({
+        next: (res) => {
+          const resObject: any = res;
+          if (!Array.isArray(resObject.synonyms)) {
+            resObject.synonyms = [resObject.synonyms];
+          }
+          if (!Array.isArray(resObject.codes)) {
+            resObject.codes = [resObject.codes];
+          }
+          diseases.push(resObject)
+        },
+        complete: () => {
+          const writecall = `
               UNWIND {payload} as data
               CREATE (n:Disease)
               SET n += data
+              SET n.dateCreated = ${Date.now().toString()} ;
                return count(n)`;
-              this.connectionService.write('gard-data', writecall, {payload: diseases}).subscribe(res => console.log(res))
+          this.connectionService.write('gard-data', writecall, {payload: diseases}).subscribe(res => console.log(res))
+        }
+      });
+  }
+
+  initialBuild() {
+    const diseases: any[] = [];
+    const call = `
+        match (n:S_GARD)-[]-(d:DATA) 
+        return d.name as name, d.gard_id as gard_id, n.N_Name as synonyms, n._N_Name as synonymsString, n.I_CODE as codes;
+        `;
+    this.connectionService.read('raw-data', call)
+      .subscribe({
+        next: (res) => {
+          const resObject: any = res;
+          if (!Array.isArray(resObject.synonyms)) {
+            resObject.synonyms = [resObject.synonyms];
+          }
+          if (!Array.isArray(resObject.codes)) {
+            resObject.codes = [resObject.codes];
+          }
+          if (resObject.codes) {
+            const externalLinks = [];
+            resObject.omimCodes = [];
+            resObject.sources = [];
+            resObject.codes = resObject.codes.map(code => {
+              const splitCode = code.split(':');
+              const reference: GardReference = new GardReference({source: splitCode[0]});
+              if (reference.url) {
+                reference.url = reference.url.concat(splitCode[1]);
+              }
+              const codeObj: GardDataProperty = this.gardPropertySerializer.fromJson({
+                // references: [reference],
+                source: splitCode[0],
+                value: splitCode[1],
+                displayValue: code,
+              });
+              if (splitCode[0] === 'OMIM') {
+                resObject.omimCodes.push(splitCode[1]);
+              }
+              resObject.sources.push(reference);
+              //  externalLinks.push(codeObj);
+              return codeObj;
+            });
+
+            if (resObject.omimCodes.length === 0) {
+              delete resObject.omimCodes;
             }
-          });
+
+
+            //  resObject.codes = [externalLinks];
+          }
+          console.log(resObject);
+          diseases.push(resObject)
+        },
+        complete: () => {
+          const writecall = `
+              UNWIND {payload} as data
+              CREATE (n:Disease)
+              set n.name = data.name 
+              set n.gard_id = data.gard_id
+              set n.synonyms = data.synonyms
+              set n.synonymsString = data.synonymsString
+              SET n.dateCreated = ${Date.now().toString()} 
+         
+              CREATE (d2:MainProperty:Synonyms) //dataRef node for synonym
+              set d2.field = 'synonyms'
+              set d2.count = size(data.synonyms)
+              SET d2.dateCreated = ${Date.now().toString()} 
+              CREATE (n)-[:Properties { dateCreated: '${Date.now().toString()}' }]->(d2) // link disease to synonym display node
+              
+              CREATE (d3:MainProperty:Codes) //dataRef node for synonym
+              set d3.field = 'codes'
+              set d3.count = size(data.codes)
+              SET d3.dateCreated = ${Date.now().toString()} 
+              CREATE (n)-[:Properties { dateCreated: '${Date.now().toString()}'}]->(d3) // link disease to synonym display node
+              
+              CREATE (d4:MainProperty:Sources) //dataRef node for synonym
+              set d4.field = 'sources'
+              set d4.count = size(data.sources)
+              SET d4.dateCreated = ${Date.now().toString()} 
+              CREATE (n)-[:Properties { dateCreated: '${Date.now().toString()}' }]->(d4) // link disease to synonym display node
+
+              FOREACH (source in data.sources | //disease code data
+              CREATE (src:Property:DataSource) //dataRef node for code
+              SET src = source // set node
+              SET src.dateCreated = ${Date.now().toString()} 
+              MERGE (d4)-[:DisplayValue { dateCreated: '${Date.now().toString()}' }]->(src)  // link disease to code display node
+              ) with data, n, d2, d3, d4
+
+              FOREACH (s in data.synonyms | //disease synonym data
+              CREATE (d:Property:Synonym) //dataRef node for synonym
+              SET d.displayValue = s // set node
+              SET d.sourceCount = 1 // default setting - this will be modified with new name sources
+              SET d.dateCreated = ${Date.now().toString()} 
+              MERGE (d2)-[:DisplayValue { dateCreated: '${Date.now().toString()}' }]->(d) // link disease to synonym display node
+              ) with data, n, d2, d3  
+                         
+              FOREACH (cs in data.codes | //disease synonym data
+              CREATE (cd:Property:Code) //dataRef node for synonym
+              SET cd = cs // set node
+              SET cd.sourceCount = 1 // default setting - this will be modified with new name sources
+              SET cd.dateCreated = ${Date.now().toString()} 
+              MERGE p2=(d3)-[:DisplayValue { dateCreated: '${Date.now().toString()}' }]->(cd) // link disease to synonym display node
+              ) with data, n 
+              MATCH (n)-[]-(:MainProperty)-[]->(c:Code) with n, c
+              MATCH (n)-[]-(:MainProperty)-[]->(ds:DataSource) WHERE ds.source = c.source with n, c, ds
+              CREATE (c)-[:DataSourceReference { dateCreated: '${Date.now().toString()}' }]->(ds)
+              return count(n)`;
+          this.connectionService.write('gard-data', writecall, {payload: diseases}).subscribe(res => console.log(res))
+        }
+      });
   }
 
   buildInheritance() {
@@ -119,22 +231,23 @@ export class MapperFeatureComponent implements OnDestroy {
 MATCH (n:S_GARD)-[:PAYLOAD]-(d:DATA) WITH n, d.gard_id AS id
 MATCH (n)-[:I_CODE|:N_Name]-(o:S_OMIM)-[:R_rel{name:'has_inheritance_type'}]-(m:S_OMIM) WITH COLLECT(DISTINCT {value: m._N_Name, reference: 'OMIM'}) AS omim, n, id
 MATCH (n)-[:I_CODE|:N_Name]-(o:S_ORDO_ORPHANET)-[:R_subClassOf{property:'http://www.orpha.net/ORDO/Orphanet_C016'}]-(i:S_ORDO_ORPHANET) WITH omim,  collect(Distinct {value: i._N_Name, reference: 'ORPHANET'}) AS orphas, id
-with size(omim) as omimsize, size(orphas) as orphanetsize, omim, orphas, id
-WITH {disease: id, inheritance: omim + orphas, sources: {orphanet: orphanetsize, omim: omimsize}} AS ret
+with omim, orphas, id
+WITH {disease: id, inheritance: omim + orphas} AS ret
   RETURN collect(ret) as data;
     `;
 
     const mainDataMap: Map<string, string[]> = new Map<string, string[]>();
     let data = [];
     this.connectionService.read('raw-data', call).subscribe(res => {
-        data = res;
-        const inheritanceTerms = `
+      data = res;
+      const inheritanceTerms = `
         MATCH p=()-[r:TermOf]->(t:DataDictionaryTerm) with t
         unwind t.alternateValues as av
         return collect(distinct {display: t.displayValue,alt:av}) as data
         `;
 
-        this.connectionService.read('gard-data', inheritanceTerms).subscribe(res => {
+      this.connectionService.read('gard-data', inheritanceTerms).subscribe(res => {
+        if (res.data) {
           const inheritanceDictionary = res.data;
           data['data'].map(disease => {
             disease.displayValue = [];
@@ -161,41 +274,59 @@ WITH {disease: id, inheritance: omim + orphas, sources: {orphanet: orphanetsize,
             });
           });
           this.writeData(data, 'Inheritance');
-        });
-  });
-}
+        }
+      });
+    });
+  }
 
 
   writeData(payload: any, type: string) {
     const totalRefs = 2;
-                  const create = `
-UNWIND {payload} as row // all disease inheritance data
-    match (a2:Disease) where a.gard_id = row.disease with a, row //fetch disease
-    CREATE (a:MainProperty) with a, row //fetch disease
-    set a.field = 'inheritance'
-    set a.sources = row.sources
-    FOREACH (noDisplayValue in row.noDisplay | //disease inheritance data
-    CREATE (n2:NoDisplayProperty:${type}) //dataRef node for inheritance with hpo mapping
-    SET n2 += noDisplayValue
-    SET n2.sourceCount = 1
-create p2=(a)-[r2:Properties { dateCreated: ${Date.now()}}]->(n2)// link disease to inheritance display node
-) with row, a
-    unwind row.displayValue as displayValue //disease inheritance data
-    CREATE (n:DisplayProperty:${type}) //dataRef node for inheritance
-    SET n.displayValue = displayValue.displayValue // set node
-    set n.sourceCount = size(displayValue.inheritance)
-CREATE p=(a)-[r:Properties { dateCreated: ${Date.now()}}]->(n) with a, p, n, displayValue, row // link disease to inheritance display node
-match (d:DataDictionary {field: '${type.toLowerCase()}'})-[:TermOf]-(t:DataDictionaryTerm {displayValue: displayValue.displayValue }) //get dictionary
-    CREATE p3=(n)-[r3:HasDisplayTerm]->(t) with distinct displayValue, row, a, n, t
-  FOREACH (inheritance in displayValue.inheritance |
-    CREATE (ref:DataRef:${type}) //dataRef node for inheritance 
-    SET ref += inheritance
-    CREATE p4=(n)-[r4: ReferenceSource { dateCreated: ${Date.now()}}]->(ref)  // link disease to inheritance node
-    )
-    return true;
+    const create = `
+      UNWIND {payload} as row // all disease inheritance data
+      MATCH (a2:Disease) where a2.gard_id = row.disease with a2, row //fetch disease
+      CREATE (a:MainProperty:${type}s) with a, a2, row //dataRef node for inheritance
+      SET a.field = '${type.toLowerCase()}'
+      SET a.count = size(row['${type.toLowerCase()}'])
+      SET a.dateCreated = ${Date.now().toString()} 
+      CREATE (a2)-[:Properties { dateCreated: ${Date.now().toString()} }]->(a) // link disease to inheritance display node
+         
+      FOREACH (noDisplayValue in row.noDisplay | //disease inheritance data
+      CREATE (n2:Property:NoDisplayProperty:${type}) //dataRef node for inheritance with hpo mapping
+      SET n2 += noDisplayValue
+      SET n2.sourceCount = 1
+      SET n2.dateCreated = ${Date.now().toString()} 
+      create p2=(a)-[r2:Value { dateCreated: ${Date.now().toString()} }]->(n2)// link disease to inheritance display node
+      ) with row, a, a2 
+      
+      unwind row.displayValue as displayValue //disease inheritance data
+      CREATE (n:Property:DisplayProperty:${type}) //dataRef node for inheritance
+      SET n.displayValue = displayValue.displayValue // set node
+      set n.sourceCount = size(displayValue.inheritance)
+      SET n.dateCreated = ${Date.now().toString()} 
+      CREATE p=(a)-[r:DisplayValue { dateCreated: ${Date.now().toString()} }]->(n) with a, p, n, displayValue, row ,a2// link disease to inheritance display node
+
+      match (d:DataDictionary {field: '${type.toLowerCase()}'})-[:TermOf]-(t:DataDictionaryTerm {displayValue: displayValue.displayValue }) //get dictionary
+      CREATE p3=(n)-[r3:HasDisplayTerm]->(t) with distinct displayValue, row, a, n, t, a2
+     
+      FOREACH (term in displayValue['${type.toLowerCase()}'] |
+      CREATE (ref:DataRef) //dataRef node for inheritance 
+      SET ref += term
+      CREATE p4=(n)-[r4: ReferenceSource { dateCreated: '${Date.now().toString()}'}]->(ref)  // link disease to inheritance node
+      ) with a2
+    
+    OPTIONAL MATCH (a2)-[]-(:MainProperty)-[]-(:DisplayProperty)-[]-(d2:DataRef) with a2, d2
+    Optional MATCH (a2)-[]-(:MainProperty)-[]-(ds:DataSource) WHERE ds.source = d2.reference with a2,d2,ds 
+    WHERE ds IS NOT NULL
+    MERGE (d2)-[:DataSourceReference { dateCreated: ${Date.now().toString()} }]->(ds) with a2
+    OPTIONAL MATCH (a2)-[]-(:MainProperty)-[]-(dd:NoDisplayProperty) with a2, dd
+    Optional MATCH (a2)-[]-(:MainProperty)-[]-(ds2:DataSource) WHERE ds2.source = dd.reference with a2,dd,ds2 
+    WHERE ds2 IS NOT NULL
+    MERGE (dd)-[:DataSourceReference { dateCreated: '${Date.now().toString()}' }]->(ds2)
+      return true;
 `;
-         this.connectionService.write('gard-data', create, {payload: payload['data']}).subscribe(res => {
-          })
+    this.connectionService.write('gard-data', create, {payload: payload['data']}).subscribe(res => {
+    })
   }
 
   mapDataDictionary() {
@@ -215,26 +346,26 @@ return data
     `;
 
     this.connectionService.read('raw-data', dictionary).pipe(
-      map(res=>
-      res.forEach(entry => {
-        let disp = [];
-        if (this.dictionary.has(entry.displayTerm)) {
-          disp = this.dictionary.get(entry.displayTerm);
-          const terms = [... new Set(disp.concat(entry.alternativeTerms))];
-          this.dictionary.set(entry.displayTerm, terms);
-        } else {
-          this.dictionary.set(entry.displayTerm, entry.alternativeTerms);
-        }
-      })
-    )
-    ).subscribe(res=> console.log(res));
- }
+      map(res =>
+        res.forEach(entry => {
+          let disp = [];
+          if (this.dictionary.has(entry.displayTerm)) {
+            disp = this.dictionary.get(entry.displayTerm);
+            const terms = [...new Set(disp.concat(entry.alternativeTerms))];
+            this.dictionary.set(entry.displayTerm, terms);
+          } else {
+            this.dictionary.set(entry.displayTerm, entry.alternativeTerms);
+          }
+        })
+      )
+    ).subscribe();
+  }
 
   createReference() {
     const dictionary = [];
     Array.from(this.dictionary.entries()).forEach(entry => {
-      if(entry[0])
-      dictionary.push({displayValue:entry[0], alternateValues: entry[1] })
+      if (entry[0])
+        dictionary.push({displayValue: entry[0], alternateValues: entry[1]})
     });
     const payload = {origin: 'hpo', fields: [{field: 'inheritance', terms: dictionary}]};
     const call = `
@@ -246,40 +377,39 @@ return data
       create p=(r)-[:TermOf]->(l)
 return p;
     `;
-   this.connectionService.write('gard-data', call, {payload:dictionary}).subscribe(res=> console.log(res));
+    this.connectionService.write('gard-data', call, {payload: dictionary}).subscribe(res => console.log(res));
   }
 
   checkSources() {
     const totalRefs = 2;
-const call =`
+    const call = `
 MATCH p=(d:Disease)-[r:Properties]-(i:Inheritance) with distinct(d), collect(properties(i)) as inheritances
 with { disease: d.gard_id, inheritance: inheritances} as diseases
 RETURN collect(diseases) as data LIMIT 10
 `;
 
-this.connectionService.read('gard-data', call).pipe(
-  map(res => {
-    res.data.map(disease => {
-      const inheritanceMap: Map<string, string[]> = new Map<string, string[]>();
-      disease.inheritance.forEach(value => {
-        if(inheritanceMap.has(value.displayValue)) {
-          let refs = inheritanceMap.get(value.displayValue);
-          refs.push(value.reference);
-          refs = Array.from(new Set(refs));
-          inheritanceMap.set(value.displayValue, refs);
-        } else {
-          inheritanceMap.set(value.displayValue, [value.reference]);
-        }
-      });
-      [...inheritanceMap.entries()].forEach((key, value) => {
-        if(value % totalRefs === 0){
-          console.log("match");
-        }
+    this.connectionService.read('gard-data', call).pipe(
+      map(res => {
+        res.data.map(disease => {
+          const inheritanceMap: Map<string, string[]> = new Map<string, string[]>();
+          disease.inheritance.forEach(value => {
+            if (inheritanceMap.has(value.displayValue)) {
+              let refs = inheritanceMap.get(value.displayValue);
+              refs.push(value.reference);
+              refs = Array.from(new Set(refs));
+              inheritanceMap.set(value.displayValue, refs);
+            } else {
+              inheritanceMap.set(value.displayValue, [value.reference]);
+            }
+          });
+          [...inheritanceMap.entries()].forEach((key, value) => {
+            if (value % totalRefs === 0) {
+              console.log("match");
+            }
+          })
+        })
       })
-    })
-  })
-).subscribe(res => {
-    console.log(res);
+    ).subscribe(res => {
     })
   }
 

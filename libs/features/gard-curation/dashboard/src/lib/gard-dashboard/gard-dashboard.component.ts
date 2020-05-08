@@ -79,13 +79,14 @@ export class GardDashboardComponent implements OnInit {
 
   ngOnInit(): void {
      this.diseasesFacade.diseases$.subscribe(res => {
-     //  this.dataSource.data = res;
        this.dataSource = res;
        this.changeRef.markForCheck()
     });
 
     this.diseasesFacade.stats$.subscribe(res => {
-      this.stats = res;
+      if(res && res.diseaseCount) {
+        this.stats = res;
+      }
     });
 
     this.diseasesFacade.page$.subscribe(res => {
@@ -116,7 +117,6 @@ export class GardDashboardComponent implements OnInit {
    * @param event
    */
   paginationChanges(event: any) {
-    console.log(event);
     navigationExtras.queryParams = {
       pageIndex: event.pageIndex,
       pageSize: event.pageSize

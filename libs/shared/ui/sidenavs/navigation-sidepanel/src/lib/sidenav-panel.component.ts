@@ -1,4 +1,4 @@
-import {AfterContentInit, AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {AfterContentInit, Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {NavSectionsService} from './services/nav-sections.service';
 import {ActivatedRoute, Router} from '@angular/router';
 /*import {PanelOptions} from '../../pharos-main/pharos-main.component';
@@ -12,7 +12,8 @@ import {Location, ViewportScroller} from '@angular/common';
 @Component({
   selector: 'fel-sidenav-panel',
   templateUrl: './sidenav-panel.component.html',
-  styleUrls: ['./sidenav-panel.component.scss']
+  styleUrls: ['./sidenav-panel.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class SidenavPanelComponent implements OnInit, AfterContentInit {
 

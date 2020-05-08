@@ -4,7 +4,7 @@
       <mat-icon>close</mat-icon>
     </button>
   </div>
-  <div class="mat-title">Jump to section:</div><br>
+  <div class="mat-title main-title">Jump to section:</div>
   <div class="toc-wrapper" *ngIf="data && data.length > 0">
     <div class="toc">
       <mat-nav-list >
@@ -13,7 +13,7 @@
            class="list-button"
            (click)="scroll(section.section ? section.section : section )"
            [ngClass]="{'active': isActive(section.section ? section.section : section)}">
-          {{section.label ? section.label : section}}
+          {{section.label ? section.label : section | titlecase}}
         </a>
       </mat-nav-list>
     </div>

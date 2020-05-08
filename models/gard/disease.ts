@@ -1,7 +1,9 @@
 import {Serializer} from "../serializer";
-import {GardDataProperty} from "./gard-base";
+import {GardBase, GardDataProperty, GardDataPropertySerializer} from "./gard-base";
 import {DomSanitizer} from "@angular/platform-browser";
 import {Inject, Optional, SecurityContext} from "@angular/core";
+import {Publication} from "../publication";
+import {GardReference} from "./gard-reference";
 
 enum AGE_OF_ONSET {
   none = 'no_age_of_onset_information',
@@ -53,33 +55,43 @@ export class Etiology {
   inheritancePattern: string; // todo should be enum
 }
 
-export class Disease {
+export class Disease extends GardBase {
 
-   static displayFields() {
+  static displayFields() {
     return [
-    'synonyms',
-    'hpo',
-    'inheritance',
-    'categories',
-    'diagnosis',
-    'progression',
-    'statistics',
-    'ageOfOnset',
-    'epidemology',
-    'cause',
-    'causeStatus',
-    'causeType',
-    'geneticEtiology',
-    'meshTerms',
-    'treatments',
-    'clinicalGuideline'
-  ];
-    }
+      'synonyms',
+      'hpo',
+      'inheritance',
+      'categories',
+      'diagnosis',
+      'progression',
+      'statistics',
+      'ageOfOnset',
+      'epidemology',
+      'cause',
+      'causeStatus',
+      'causeType',
+      'geneticEtiology',
+      'meshTerms',
+      'treatments',
+      'clinicalGuideline'
+    ];
+  }
 
-    properties?: Map<string, any>;
-  synonyms?: GardDataProperty[] | string[];
-  hpo?: GardDataProperty[];
+  // done
+  properties?: Map<string, any>;
+  sourcesMap?: Map<string, any>;
+  externalLinks?: GardDataProperty[];
+  omimCodes?: string[];
+
+  // in progress
   inheritance?: GardDataProperty[];
+  synonyms?: GardDataProperty[];
+  references?: Publication[];
+  sources?: GardReference[];
+
+
+  hpo?: GardDataProperty[];
   xrefs?: GardDataProperty[];
   is_rare?: boolean;
   uri?: string;
@@ -117,8 +129,7 @@ export class Disease {
   treatments?: GardDataProperty[];
 
   clinicalGuideline?: 'Diagnostic' | 'Treatment';
-  codes?: string[];
-  omimCodes?: string[];
+
 }
 
 export class DiseaseSerializer implements Serializer {
@@ -130,31 +141,52 @@ export class DiseaseSerializer implements Serializer {
 
   fromJson(json: any): Disease {
     const obj = new Disease();
+    const gardPropertySerializer = new GardDataPropertySerializer();
     Object.entries((json)).forEach((prop) => obj[prop[0]] = prop[1]);
 
-    if(json.properties) {
-      obj.properties = new Map<string, any>();
-      json.properties.forEach(prop => obj.properties.set(prop.field, prop.values));
+    if (json.properties) {
+      /*if (json.properties.sources) {
+        obj.sourcesMap = new Map<string, any>();
+        json.properties.sources.forEach(source => obj.sourcesMap.set(source.source, source));
+      }*/
+      json.properties.forEach(prop => {
+     //   if(prop.field !== 'sources') {
+          obj[prop.field] = prop.values.map(val => gardPropertySerializer.fromJson(val));
+     /*   }
+        if(prop.field === 'sources') {
+          obj.sources = prop.values.map(val => {
+            console.log(val);
+           return  new GardReference(val)
+          });
+        }*/
+      });
+
+      /*if (obj.sources) {
+        obj.sourcesMap = new Map<string, any>();
+        obj.sources.forEach(source => obj.sourcesMap.set(source.source, source));
+        Object.values(obj).forEach(val => {
+          console.log(typeof val);
+        })
+      }*/
+    }
+// todo parse this object to a date
+   if(json.dateCreated) {
+  // obj.dateCreated = json.dateCreated.toString()
     }
 
-    // array of strings
-    if (json.synonyms) {
-    //  obj.synonyms = json.synonyms.map(val => new GardDataProperty({value: val}));
-    }
-
-    // array of strings
+  /*  // array of strings
     if (json.categories) {
-      obj.categories = json.categories.map(val => new GardDataProperty({value: val}));
+      obj.categories = json.categories.map(val => gardPropertySerializer.fromJson({value: val}));
     }
 
     // array of strings
     if (json.xrefs) {
-      obj.xrefs = json.xrefs.map(val => new GardDataProperty({value: val}));
+      obj.xrefs = json.xrefs.map(val => gardPropertySerializer.fromJson({value: val}));
     }
 
     // array of strings
     if (json.HPO) {
-      obj.hpo = json.HPO.map(val => new GardDataProperty({value: val}));
+      obj.hpo = json.HPO.map(val => gardPropertySerializer.fromJson({value: val}));
       delete obj['HPO'];
     }
 
@@ -163,67 +195,42 @@ export class DiseaseSerializer implements Serializer {
     }
 
     if (json.Cause) {
-      obj.cause = json.Cause.map(val => new GardDataProperty({value: val, propertyType: 'html'}));
+      obj.cause = json.Cause.map(val => gardPropertySerializer.fromJson({value: val, propertyType: 'html'}));
       delete obj['Cause'];
     }
 
     if (json.Diagnosis) {
-      obj.diagnosis = json.Diagnosis.map(val => new GardDataProperty({value: val, propertyType: 'html'}));
+      obj.diagnosis = json.Diagnosis.map(val => gardPropertySerializer.fromJson({value: val, propertyType: 'html'}));
       delete obj['Diagnosis'];
     }
 
 
-    if (obj.properties && obj.properties.has('inheritance')) {
-      obj.inheritance = obj.properties.get('inheritance').map(val => new GardDataProperty(val));
-    //  delete obj['Inheritance'];
-    }
 
     if (json.Statistics) {
-      obj.statistics = [json.Statistics].map(val => new GardDataProperty({value: val, propertyType: 'html'}));
+      obj.statistics = [json.Statistics].map(val => gardPropertySerializer.fromJson({value: val, propertyType: 'html'}));
       delete obj['Statistics'];
-    }
-
-    if(obj.codes) {
-      obj.omimCodes = [];
-      obj.codes.forEach(code => {
-        const omim = code.split('OMIM:');
-        if(omim.length > 1) {
-          console.log(omim);
-          obj.omimCodes.push(omim[1]);
-        }
-      });
-      if(obj.omimCodes.length === 0) {
-        delete obj.omimCodes;
-      }
-    }
-
+    }*/
     return obj;
   }
 
-  toJson(object: any): any {
-  }
-
-  _asProperties(object: any): any {
-  }
-
-  /**
+/*  /!**
    * recursive mapping function
    * @param obj
    * @return {{}}
    * @private
-   */
+   *!/
   private _mapField(obj: any) {
     const retObj: any = Object.assign({}, obj);
     Object.keys(obj).map(objField => {
       if (Array.isArray(obj[objField])) {
         retObj[objField] = obj[objField].map(arrObj => this._mapField(arrObj));
       } else {
-        retObj[objField] = new GardDataProperty({value: objField, references: []});
+        retObj[objField] = gardPropertySerializer.fromJson({value: objField, references: []});
       }
     });
     if (obj.__typename) {
       delete retObj.__typename;
     }
     return retObj;
-  }
+  }*/
 }

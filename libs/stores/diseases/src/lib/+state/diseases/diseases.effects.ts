@@ -31,25 +31,31 @@ export class DiseasesEffects {
        const pageIndex = params.pageIndex ? params.pageIndex : 0;
         let call;
         call = `
-          MATCH (d:Disease)  
-          WITH count(d) AS count
-          MATCH (n:Disease)  
-          WITH n, count
-          ORDER BY n.name 
+        MATCH (n:Disease) WITH count(n) AS count
+         match (d:Disease)-[:Properties]-(p:MainProperty)-[]-(pp:Property)
+         optional match (pp)-[]->(ds1:DataSource) with pp, d, p, ds1, count
+         optional match (pp)-[]-(n:DataRef)-[]->(ds:DataSource) with n, pp, d, p, ds1, ds, count
+         with distinct pp{.*, sources: collect(properties(ds1)), references:collect(n{.*, reference: properties(ds)})} as datarefs, p, d, pp, count
+         with {field: p.field, values: collect(properties(datarefs))} as datas, d, count
+         with d{.*, properties: collect(datas)} as diseaseObj, d, count
+          ORDER BY d.name 
           SKIP ${pageIndex * pageSize}
           LIMIT ${pageSize}
-          RETURN COLLECT(PROPERTIES(n)) AS data, count as total       
+          return collect(diseaseObj) as data, count as total
           `;
         if(params['category'] && params['category'] === 'inherited') {
           call = `
-          MATCH (d:Disease)-[:Properties]-(:Inheritance)
-           WITH COUNT(DISTINCT d) AS count
-          MATCH (n:Disease)-[:Properties]-(:Inheritance)
-           WITH DISTINCT(n), count
-           ORDER BY n.name 
+     match (n:Disease)-[:Properties]-(:Inheritances)-[]-(:Property) with count(distinct n) as count
+ match (d:Disease)-[:Properties]-(p:MainProperty)-[]-(pp:Property)
+         optional match (pp)-[]->(ds1:DataSource) with pp, d, p, ds1, count
+         optional match (pp)-[]-(n:DataRef)-[]->(ds:DataSource) with n, pp, d, p, ds1, ds, count
+         with distinct pp{.*, sources: collect(properties(ds1)), references:collect(n{.*, reference: properties(ds)})} as datarefs, p, d, pp, count
+         with {field: p.field, values: collect(properties(datarefs))} as datas, d, count
+         with d{.*, properties: collect(datas)} as diseaseObj, d, count
+          ORDER BY d.name 
           SKIP ${pageIndex * pageSize}
           LIMIT ${pageSize}
-           RETURN COLLECT(PROPERTIES(n)) AS data, count as total
+          return collect(diseaseObj) as data, count as total
           `
         }
         if((params['category'] && params['category'] === 'inherited') && (params['source'] && params['source'] === "true")) {
@@ -68,11 +74,11 @@ export class DiseasesEffects {
         }
         if((params['category'] && params['category'] === 'inherited') && (params['source'] && params['source'] === "false")) {
           call = `
-            MATCH p=(disease:Disease)-[r2:Properties]-(:DisplayProperty)-[]-(f2:DataRef) 
-            with {disease: disease, size: size(collect(f2.value))%2 } as results
+            MATCH p=(disease:Disease)-[r2:Properties]-(:Inheritances)-[]-(f2:Property) 
+            with distinct {disease: disease, size: f2.sourceCount%2 } as results
             where results.size > 0 with count(results) as count 
-            MATCH (n:Disease)-[r:Properties]-(p:DisplayProperty)-[]-(f:DataRef)
-            with DISTINCT(n) as rr, size(collect(f.value))%2 as inCount, count
+            MATCH (n:Disease)-[r:Properties]-(p:Inheritances)-[]-(f:Property)
+            with DISTINCT(n) as rr, f.sourceCount%2 as inCount, count
             where inCount > 0 with inCount, rr, count
             ORDER BY rr.name 
             SKIP ${pageIndex * pageSize}
@@ -114,13 +120,14 @@ export class DiseasesEffects {
       mergeMap((params: any) => {
         let call;
          call = `
-         match (d:Disease)
+         match (d:Disease)-[:Properties]-(p:MainProperty)-[]-(pp:Property)
          where d.gard_id = '${params['disease']}' OR d.name = '${params['disease']}'
-optional match (d)-[r:Properties]-(n)-[:ReferenceSource]-(f:DataRef) 
-with collect(properties(f)) as references, properties(d) as disease, n
-ORDER BY size(references) DESC
-with {field: n.field, values: collect(distinct n{.*, references: references})} as changes, disease 
-return disease{ .*, properties: collect(changes)} as data;
+         optional match (pp)-[]->(ds1:DataSource) with pp, d, p, ds1
+         optional match (pp)-[]-(n:DataRef)-[]->(ds:DataSource) with n, pp, d, p, ds1, ds
+         with distinct pp{.*, sources: collect(properties(ds1)), references:collect(n{.*, reference: properties(ds)})} as datarefs, p, d, pp
+         with {field: p.field, values: collect(properties(datarefs))} as datas, d
+         with d{.*, properties: collect(datas)} as diseaseObj, d
+         return diseaseObj as data;
         `;
      /*    if (params['edit']){
            call = `
@@ -138,9 +145,9 @@ return disease{ .*, properties: collect(changes)} as data
             if(response.data) {
               const resp = response.data;
               const disease = serializer.fromJson(resp);
-              if (resp.data && resp.data.length > 0) {
+             /* if (resp.data && resp.data.length > 0) {
                 resp.data.forEach(data => disease[data.field] = data.values);
-              }
+              }*/
               return DiseasesActions.setDiseaseSuccess({
                 disease: {
                   id: disease.gard_id,
@@ -184,15 +191,14 @@ return disease{ .*, properties: collect(changes)} as data
         const call = `
 MATCH (d:Disease) WITH COLLECT(d) as diseases, count(d) as diseaseCount
 UNWIND diseases as disease
-MATCH (disease:Disease)-[:Properties]-(:Inheritance) with count(Distinct disease) as inheritanceCount, diseaseCount
-MATCH p=(disease:Disease)-[:Properties]-(n:DisplayProperty)-[]-(f:DataRef) 
-with {disease: disease.gard_id, size: size(collect(f.value))%2 } as results, inheritanceCount, diseaseCount
+MATCH (disease)-[:Properties]-(i:Inheritances) with count(Distinct disease) as inheritanceCount, diseaseCount MATCH (disease)-[:Properties]-(i:Inheritances)-[]-(n:Property) 
+with distinct {disease: disease.gard_id, size: n.sourceCount%2 } as results, inheritanceCount, diseaseCount
 where results.size > 0
 with count(results) as misMatchCount, inheritanceCount, diseaseCount
-MATCH p=(disease:Disease)-[:Properties]-(n:DisplayProperty)-[]-(f:DataRef) 
-with {disease: disease.gard_id, size: size(collect(f.value))%2 } as results, inheritanceCount, diseaseCount,misMatchCount
+MATCH (disease)-[:Properties]-(i:Inheritances)-[]-(n:Property) 
+with distinct {disease: disease.gard_id, size: n.sourceCount%2 } as results, inheritanceCount, diseaseCount, misMatchCount
 where results.size = 0
-with count(results) as matchCount, misMatchCount, inheritanceCount, diseaseCount
+with count(results) as matchCount, inheritanceCount, diseaseCount, misMatchCount
         return inheritanceCount, diseaseCount, misMatchCount, matchCount;
         `;
         return this.neo4jConnectionService.read('gard-data', call).pipe(

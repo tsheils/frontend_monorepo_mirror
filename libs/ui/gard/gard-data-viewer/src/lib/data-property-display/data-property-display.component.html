@@ -1,0 +1,61 @@
+<ng-container [ngSwitch]="subType()">
+  <div *ngSwitchCase="'sources'">
+      <span *ngFor="let source of data.sources">
+  <span *ngIf = "source.url; else noLink">
+    <a href= {{source.url}} target="_blank" referrerpolicy="no-referrer">{{data.displayValue ? data.displayValue : (data.value + ': ' + source.source)}}</a> <span *ngIf = "omimRefs.length > 0">{{omimRefs.length}} sources</span>
+  </span>
+  <ng-template #noLink>
+     {{data.displayValue || data.value}}<span *ngIf = "omimRefs.length > 0">{{omimRefs.length}} sources</span>
+    </ng-template>
+    </span>
+  </div>
+<div *ngSwitchCase="'references'">
+  <span>{{data.displayValue || data.value}}</span><br>
+  <span *ngFor="let reference of data.references">
+  <span *ngIf = "reference.url; else noRefLink">
+    <a href= {{reference.url}} target="_blank" referrerpolicy="no-referrer">{{reference.value}}</a> <span *ngIf = "omimRefs.length > 0">{{omimRefs.length}} sources</span><br>
+  </span>
+  <ng-template #noRefLink>
+    <span *ngIf="reference.source; else noSource">
+    <a href= {{reference.source.url}} target="_blank" referrerpolicy="no-referrer">{{reference.value + ': ' + reference.source['source']}}</a> <span *ngIf = "omimRefs.length > 0">{{omimRefs.length}} sources</span><br>
+    </span>
+    <ng-template #noSource>
+           {{reference.value}}<span *ngIf = "omimRefs.length > 0">{{omimRefs.length}} sources</span>
+    </ng-template>
+    </ng-template>
+    <br>
+    </span>
+  </div>
+<div *ngSwitchCase="'source'">
+  <a href= {{data.source.url}} target="_blank" referrerpolicy="no-referrer">{{data.value || data['source']}}</a> <span *ngIf = "omimRefs.length > 0">{{omimRefs.length}} sources</span><br>
+</div>
+  <div *ngSwitchDefault>
+    <span>{{data.displayValue || data.value || data['source']}}</span>
+  </div>
+</ng-container>
+
+
+
+<!--
+
+<div *ngIf="data && data.sources else noRefs">
+  <span *ngFor="let source of data.sources">
+  <span *ngIf = "source.url; else noLink">
+    <a href= {{source.url}} target="_blank" referrerpolicy="no-referrer">{{data.displayValue ? data.displayValue : (data.value + ': ' + source.source)}}</a> <span *ngIf = "omimRefs.length > 0">{{omimRefs.length}} sources</span>
+  </span>
+  <ng-template #noLink>
+     {{data.displayValue || data.value}}<span *ngIf = "omimRefs.length > 0">{{omimRefs.length}} sources</span>
+    </ng-template>
+    </span>
+</div>
+<ng-template #noRefs>
+ <span>{{data.displayValue || data.value}}</span>
+</ng-template>
+<div *ngIf="data.sources">
+  <div *ngFor="let source of data.sources" class = "sub-list">
+&lt;!&ndash;
+    <ncats-frontend-library-data-property-display [data]="source"></ncats-frontend-library-data-property-display>
+&ndash;&gt;
+  </div>
+</div>
+-->

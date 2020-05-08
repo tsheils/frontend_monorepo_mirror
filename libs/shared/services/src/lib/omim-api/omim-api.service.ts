@@ -23,7 +23,6 @@ headers: HttpHeaders;
   ) { }
 
   setHeaders(headers: HttpHeaders) {
-    console.log("setting key");
     this.headers = headers;
   }
 

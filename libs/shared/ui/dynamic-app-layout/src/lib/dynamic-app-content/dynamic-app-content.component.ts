@@ -90,6 +90,9 @@ export class DynamicAppContentComponent implements OnInit, OnDestroy {
    */
   isSmallScreen = false;
 
+  leftPortalOutletClosed = false;
+  rightPortalOutletClosed = false;
+
   /**
    * add necessary services
    * @param {Router} router
@@ -115,23 +118,7 @@ export class DynamicAppContentComponent implements OnInit, OnDestroy {
    */
   ngOnInit() {
     this.isSmallScreen = this.breakpointObserver.isMatched('(max-width: 599px)');
-    /*if (this._route && this._route.snapshot.data) {
-      this.data = this._route.snapshot.data;
-      if (this.data && this.data.components) {
-        this.components = this.data.components;
-      }
-    }*/
     this.makeComponents();
-
-    /*this.router.events
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe((e: any) => {
-        // If it is a NavigationEnd event re-initalise the component
-        if (e instanceof NavigationEnd) {
-          this.data = this._route.snapshot.data;
-          this.makeComponents();
-        }
-      });*/
   }
 
   /**
@@ -146,16 +133,8 @@ export class DynamicAppContentComponent implements OnInit, OnDestroy {
           // make component
           const instance: ComponentRef<any> = this.loadedComponents.get(component.token);
           if (!instance) {
-            const dynamicChildToken: Type<any> = this._injector.get<Type<any>>(component.token);
-            if (component.section) {
-              portalOutlet = this[component.section];
-            } else {
-              portalOutlet = this.contentPortalOutlet;
-            }
-            const componentPortal = new ComponentPortal<any>(
-              dynamicChildToken
-            );
-            const componentInstance: ComponentRef<any> = portalOutlet.attachComponentPortal(componentPortal);
+            const componentInstance: ComponentRef<any> = this.createComponentInstance(component, portalOutlet);
+            componentInstance.instance.config = component;
             if (component.data) {
               componentInstance.instance.data = component.data;
             }
@@ -167,11 +146,20 @@ export class DynamicAppContentComponent implements OnInit, OnDestroy {
             }
 
             // left side panel functionality
+
+            if (component.section === 'leftPortalOutlet' || component.section === 'rightPortalOutlet') {
+            }
+
+
             if (component.section === 'leftPortalOutlet' && componentInstance.instance['panelOptions']) {
               Object.entries(componentInstance.instance['panelOptions']).forEach(ent => this.leftPanelInstance[ent[0]] = ent[1]);
               // handle emitted close events
               if (componentInstance.instance.menuToggle) {
-                componentInstance.instance.menuToggle.subscribe(res => this.leftPanelInstance.toggle(res));
+                componentInstance.instance.menuToggle.subscribe(res => {
+                  this.leftPortalOutletClosed = !res;
+                  this.leftPanelInstance.toggle(res);
+                  this.changeRef.markForCheck();
+                });
               }
             }
 
@@ -180,7 +168,11 @@ export class DynamicAppContentComponent implements OnInit, OnDestroy {
               Object.entries(componentInstance.instance['panelOptions']).forEach(ent => this.rightPanelInstance[ent[0]] = ent[1]);
               // handle emitted close events
               if (componentInstance.instance.menuToggle) {
-                componentInstance.instance.menuToggle.subscribe(res => this.rightPanelInstance.toggle(res));
+                componentInstance.instance.menuToggle.subscribe(res => {
+                  this.rightPortalOutletClosed = true;
+                  this.rightPanelInstance.toggle(res);
+                  this.changeRef.markForCheck();
+                });
               }
             }
 
@@ -220,14 +212,38 @@ export class DynamicAppContentComponent implements OnInit, OnDestroy {
    */
   close() {
     [...this.loadedComponents.values()].forEach(component => {
-      if (component.instance.fullWidth && component.instance.panelOptions) {
-        component.instance.fullWidth = false;
+      if (component.instance.panelOptions) {
         component.instance.panelOptions.opened = false;
         component.instance.changeRef.markForCheck();
       }
     });
   }
 
+  openSidenav(section: string) {
+    [...this.loadedComponents.values()].forEach(component => {
+      if (component.instance.panelOptions) {
+        if(component.instance.config.section === section) {
+          this[`${section + 'Closed'}`] = true;
+          component.instance.toggleMenu();
+          this.changeRef.markForCheck();
+          component.instance.changeRef.markForCheck();
+        }
+      }
+    })
+  }
+
+  createComponentInstance(component: PanelConfig, portalOutlet: CdkPortalOutlet): ComponentRef<any> {
+    const dynamicChildToken: Type<any> = this._injector.get<Type<any>>(component.token);
+    if (component.section) {
+      portalOutlet = this[component.section];
+    } else {
+      portalOutlet = this.contentPortalOutlet;
+    }
+    const componentPortal = new ComponentPortal<any>(
+      dynamicChildToken
+    );
+    return portalOutlet.attachComponentPortal(componentPortal);
+  }
 
 
   /**

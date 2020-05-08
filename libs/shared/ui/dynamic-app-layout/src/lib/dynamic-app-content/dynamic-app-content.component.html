@@ -1,9 +1,11 @@
-<ng-container id="headertemplate" #headertemplate cdkPortalOutlet></ng-container>
+<ng-container id="headertemplate" #headertemplate cdkPortalOutlet>
+</ng-container>
 <mat-sidenav-container class="main-content" [autosize]= autosize>
   <mat-sidenav #leftpanel [opened]="!isSmallScreen" [mode]="'side'">
     <!-- sidenav content -->
     <nav>
-      <ng-container id="lefttemplate" #lefttemplate cdkPortalOutlet></ng-container>
+      <ng-container id="lefttemplate" #lefttemplate cdkPortalOutlet>
+      </ng-container>
     </nav>
   </mat-sidenav>
 
@@ -15,6 +17,20 @@
   </mat-sidenav>
 
   <mat-sidenav-content (click)="close()" class="ncats-sidenav-content" role="main" id="scrollspy-main">
+    <div fxLayout="row" fxLayoutAlign="start start" class="sidenav-buttons" *ngIf="leftpanel">
+      <div fxFlex="5">
+        <button type="button"  class="sidenavToggle" mat-raised-button [color]="'primary'" (click)="openSidenav('leftPortalOutlet')">
+          {{leftPortalOutletClosed === true ? 'Show ' : 'Hide '}} Shortcuts <mat-icon>filter_list</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="end start" class="sidenav-buttons" *ngIf="rightpanel && rightPortalOutletClosed">
+      <div fxFlex="5">
+        <button type="button"  class="sidenavToggle" mat-raised-button [color]="'primary'" (click)="openSidenav('rightPortalOutlet')">
+          Show Shortcuts <mat-icon>filter_list</mat-icon>
+        </button>
+      </div>
+    </div>
 
     <ng-container id="contenttemplate" #contenttemplate cdkPortalOutlet>
     </ng-container>

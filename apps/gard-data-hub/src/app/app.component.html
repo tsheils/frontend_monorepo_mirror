@@ -1,10 +1,10 @@
 <div class = "gard-header">
 <ncats-frontend-library-header-template [links]="links">
   <div class="title">
-    <h1 class="toolbar-dark" ><a routerLink="/" class ="home-link">GARD Data Hub</a> </h1>
+    <h1 class="toolbar-dark" ><a routerLink="/diseases" class ="home-link">GARD Data Hub</a> </h1>
   </div>
   <div class="right-options" fxLayoutAlign="space-around center">
-    <ncats-frontend-library-gard-search (query)="search($event)" class="header-search "></ncats-frontend-library-gard-search>
+    <ncats-frontend-library-gard-search (query)="search($event)" class="header-search" *ngIf="!hideSearch"></ncats-frontend-library-gard-search>
     <!--<button *ngIf="!session" mat-flat-button (click)="connect()">Connect</button>
     <button *ngIf="session" mat-flat-button [color]="'primary'" (click)="disconnect()">Disconnect</button>
     &nbsp;&nbsp;-->
