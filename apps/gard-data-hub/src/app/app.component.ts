@@ -53,7 +53,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private diseasesFacade: DiseasesFacade,
    private connectionService: Neo4jConnectService
   ) {
-    this.links = [{link:'mapper'}, {link: 'curation', label: 'curation'}];
+    //this.links = [{link:'mapper'}, {link: 'curation', label: 'curation'}];
   }
 
   ngOnInit() {

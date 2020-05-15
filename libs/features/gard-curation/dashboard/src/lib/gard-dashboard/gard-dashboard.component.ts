@@ -67,6 +67,8 @@ export class GardDashboardComponent implements OnInit {
 
   page: Page;
 
+  loaded = false;
+
   constructor (
     private diseasesFacade: DiseasesFacade,
     private router: Router,
@@ -91,6 +93,10 @@ export class GardDashboardComponent implements OnInit {
 
     this.diseasesFacade.page$.subscribe(res => {
       this.page = res;
+    });
+
+this.diseasesFacade.loaded$.subscribe(res => {
+      this.loaded = res;
     });
 
 

@@ -46,7 +46,7 @@ export class DiseasesEffects {
         if(params['category'] && params['category'] === 'inherited') {
           call = `
      match (n:Disease)-[:Properties]-(:Inheritances)-[]-(:Property) with count(distinct n) as count
- match (d:Disease)-[:Properties]-(p:MainProperty)-[]-(pp:Property)
+          match (d:Disease)-[:Properties]-(p:MainProperty)-[]-(pp:Property)
          optional match (pp)-[]->(ds1:DataSource) with pp, d, p, ds1, count
          optional match (pp)-[]-(n:DataRef)-[]->(ds:DataSource) with n, pp, d, p, ds1, ds, count
          with distinct pp{.*, sources: collect(properties(ds1)), references:collect(n{.*, reference: properties(ds)})} as datarefs, p, d, pp, count
@@ -60,30 +60,38 @@ export class DiseasesEffects {
         }
         if((params['category'] && params['category'] === 'inherited') && (params['source'] && params['source'] === "true")) {
           call = `
-            MATCH p=(disease:Disease)-[r2:Properties]-(:DisplayProperty)-[]-(f2:DataRef) 
-            with {disease: disease, size: size(collect(f2.value))%2 } as results
-            where results.size = 0 with count(results) as count 
-            MATCH (n:Disease)-[r:Properties]-(p:DisplayProperty)-[]-(f:DataRef)
-            with DISTINCT(n) as rr, size(collect(f.value))%2 as inCount, count
-            where inCount = 0 with inCount, rr, count
-           ORDER BY rr.name 
-          SKIP ${pageIndex * pageSize}
-          LIMIT ${pageSize}
-            RETURN collect(properties(rr)) as data, count as total;
+           MATCH p=(d:Disease)-[r2:Properties]-(:Inheritances)-[]-(f2:Property) 
+            where (f2.sourceCount %2) = 0 
+            with distinct d
+            with count(d) as count
+             match (d)-[:Properties]-(p:MainProperty)-[]-(pp:Property)
+         optional match (pp)-[]->(ds1:DataSource) with pp, d, p, ds1, count
+         optional match (pp)-[]-(n:DataRef)-[]->(ds:DataSource) with n, pp, d, p, ds1, ds, count
+         with distinct pp{.*, sources: collect(properties(ds1)), references:collect(n{.*, reference: properties(ds)})} as datarefs, p, d, pp, count
+         with {field: p.field, values: collect(properties(datarefs))} as datas, d, count
+         with d{.*, properties: collect(datas)} as diseaseObj, d, count
+          ORDER BY d.name 
+            SKIP ${pageIndex * pageSize}
+            LIMIT ${pageSize}
+            return collect(diseaseObj) as data, count as total
           `
         }
         if((params['category'] && params['category'] === 'inherited') && (params['source'] && params['source'] === "false")) {
           call = `
-            MATCH p=(disease:Disease)-[r2:Properties]-(:Inheritances)-[]-(f2:Property) 
-            with distinct {disease: disease, size: f2.sourceCount%2 } as results
-            where results.size > 0 with count(results) as count 
-            MATCH (n:Disease)-[r:Properties]-(p:Inheritances)-[]-(f:Property)
-            with DISTINCT(n) as rr, f.sourceCount%2 as inCount, count
-            where inCount > 0 with inCount, rr, count
-            ORDER BY rr.name 
+            MATCH p=(d:Disease)-[r2:Properties]-(:Inheritances)-[]-(f2:Property) 
+            where (f2.sourceCount %2) > 0 
+            with distinct d
+            with count(d) as count
+             match (d)-[:Properties]-(p:MainProperty)-[]-(pp:Property)
+         optional match (pp)-[]->(ds1:DataSource) with pp, d, p, ds1, count
+         optional match (pp)-[]-(n:DataRef)-[]->(ds:DataSource) with n, pp, d, p, ds1, ds, count
+         with distinct pp{.*, sources: collect(properties(ds1)), references:collect(n{.*, reference: properties(ds)})} as datarefs, p, d, pp, count
+         with {field: p.field, values: collect(properties(datarefs))} as datas, d, count
+         with d{.*, properties: collect(datas)} as diseaseObj, d, count
+          ORDER BY d.name 
             SKIP ${pageIndex * pageSize}
             LIMIT ${pageSize}
-            RETURN collect(properties(rr)) as data, count as total;
+            return collect(diseaseObj) as data, count as total
           `
         }
         return this.neo4jConnectionService
@@ -214,5 +222,19 @@ with count(results) as matchCount, inheritanceCount, diseaseCount, misMatchCount
       })
     )
   });
+
+
+  isLoading$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(ROUTER_NAVIGATION),
+      filter((r: RouterNavigationAction) => {
+        return r.payload.routerState.url.startsWith('/diseases')
+      }),
+      mergeMap(() => {
+        return of(DiseasesActions.loadDiseases());
+      })
+    )
+  });
 }
+
 

@@ -30,8 +30,7 @@
     </div>
   </div>
 </div>
-
-<div fxLayout="row" fxLayoutAlign="space-around center" *ngIf="dataSource && dataSource.length > 0">
+<div fxLayout="row" fxLayoutAlign="space-around center">
   <div fxFlex="75">
     <div fxLayout="row" fxLayoutAlign="end start">
       <div fxLayout="25">
@@ -44,7 +43,7 @@
         ></mat-paginator>
       </div>
     </div>
-  <ncats-frontend-library-disease-list [diseaseList]="dataSource"></ncats-frontend-library-disease-list>
+  <ncats-frontend-library-disease-list [diseaseList]="dataSource" [loaded] = loaded></ncats-frontend-library-disease-list>
   </div>
 </div>
 
