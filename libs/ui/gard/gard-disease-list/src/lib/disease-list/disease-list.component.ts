@@ -8,6 +8,7 @@ import {Disease} from "../../../../../../../models/gard/disease";
 })
 export class DiseaseListComponent implements OnInit {
 @Input() diseaseList: Disease[];
+@Input() loaded = false;
   constructor() { }
 
   ngOnInit(): void {

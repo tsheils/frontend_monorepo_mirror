@@ -4,10 +4,15 @@ const neo4j = require('neo4j-driver');
 const webSocketServer = require('websocket').server;
 const http = require('http');
 
+/*const neo4jUser= "neo4j";
+const neo4jPassword = "vei1jeiceiK3Ohyaelai";
+// const uri = "bolt://0.0.0.0:7687";
+const uri = "bolt://gard-dev.ncats.io:7687";*/
+
 const neo4jUser= "neo4j";
 const neo4jPassword = "tim";
-// const uri = "bolt://0.0.0.0:7687";
 const uri = "bolt://localhost:7687";
+
 
 
 

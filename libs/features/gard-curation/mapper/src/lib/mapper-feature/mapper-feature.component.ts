@@ -23,6 +23,7 @@ export class MapperFeatureComponent implements OnDestroy {
   session: RxSession;
   writesession: RxSession;
   objectFields: any;
+  pairs: any[] = []
 
   diseaseResult: any;
   diseaseResults: any[] = [];
@@ -217,8 +218,8 @@ export class MapperFeatureComponent implements OnDestroy {
               SET cd.dateCreated = ${Date.now().toString()} 
               MERGE p2=(d3)-[:DisplayValue { dateCreated: '${Date.now().toString()}' }]->(cd) // link disease to synonym display node
               ) with data, n 
-              MATCH (n)-[]-(:MainProperty)-[]->(c:Code) with n, c
-              MATCH (n)-[]-(:MainProperty)-[]->(ds:DataSource) WHERE ds.source = c.source with n, c, ds
+              optional MATCH (n)-[]-(:Codes)-[]->(c:Code) with n, c
+              optional MATCH (n)-[]-(:Sources)-[]->(ds:DataSource) WHERE ds.source = c.source with n, c, ds
               CREATE (c)-[:DataSourceReference { dateCreated: '${Date.now().toString()}' }]->(ds)
               return count(n)`;
           this.connectionService.write('gard-data', writecall, {payload: diseases}).subscribe(res => console.log(res))
@@ -246,9 +247,9 @@ WITH {disease: id, inheritance: omim + orphas} AS ret
         return collect(distinct {display: t.displayValue,alt:av}) as data
         `;
 
-      this.connectionService.read('gard-data', inheritanceTerms).subscribe(res => {
-        if (res.data) {
-          const inheritanceDictionary = res.data;
+      this.connectionService.read('gard-data', inheritanceTerms).subscribe(terms => {
+        if (terms.data) {
+          const inheritanceDictionary = terms.data;
           data['data'].map(disease => {
             disease.displayValue = [];
             disease.noDisplay = [];
@@ -281,6 +282,7 @@ WITH {disease: id, inheritance: omim + orphas} AS ret
 
 
   writeData(payload: any, type: string) {
+    console.log(payload);
     const totalRefs = 2;
     const create = `
       UNWIND {payload} as row // all disease inheritance data
@@ -326,6 +328,7 @@ WITH {disease: id, inheritance: omim + orphas} AS ret
       return true;
 `;
     this.connectionService.write('gard-data', create, {payload: payload['data']}).subscribe(res => {
+      console.log(res);
     })
   }
 
@@ -358,7 +361,7 @@ return data
           }
         })
       )
-    ).subscribe();
+    ).subscribe(res => console.log(res));
   }
 
   createReference() {
@@ -410,9 +413,99 @@ RETURN collect(diseases) as data LIMIT 10
         })
       })
     ).subscribe(res => {
+      console.log(res);
     })
   }
 
+  getHierarchy() {
+    console.log("get hierarchy");
+    const call = `
+match(n)--(d:DATA) where d.id='MONDO:0009061' with n,d match p=(n:S_MONDO)-[e:R_subClassOf*0..]->(m:S_MONDO)-[:PAYLOAD]-(l:DATA) where all(x in e where n.source=x.source or n.source in x.source) and not 'TRANSIENT' in labels(m) with distinct l, p,n, d ,m
+with collect(p) as paths
+CALL apoc.convert.toTree(paths) yield value
+return value
+    `;
+
+    this.connectionService.read('raw-data', call).pipe(
+      map(res => {
+          const map = this.mapEntry(res.value);
+          console.log(map);
+          this.flattenTree(map);
+          console.log(this.pairs);
+          this.writeTree(this.pairs);
+
+      })).subscribe()
+  }
+
+  mapEntry(entry) {
+    if (entry.payload) {
+      entry.payload = entry.payload.map(payload => payload = {mid: payload.id, label: payload.label})
+    }
+    if(entry.r_subclassof) {
+      entry.r_subclassof = entry.r_subclassof.map(subentry => this.mapEntry(subentry))
+    }
+  //  console.log(entry);
+    return {node: entry.payload[0], parents: entry.r_subclassof}
+    ;
+
+  }
+
+   flattenTree(tree, parent?) {
+      if(parent) {
+        this.pairs.push({parent: tree.node, child: parent});
+      }
+      if(tree.parents) {
+        tree.parents.forEach(parent => this.flattenTree(parent, tree.node));
+      }/* else {
+        if(parent) {
+          this.pairs.push({parent: tree.node, child: parent});
+        }
+      }*/
+   }
+
+
+   writeTree(payload) {
+    const nodeMap: Map<string, any> = new Map<any, any>();
+    payload.forEach(pair => {
+      if(nodeMap.has(pair.parent.mid)) {
+        const nodes = nodeMap.get(pair.parent.mid);
+        nodes.children.set(pair.child.mid, pair.child);
+        nodeMap.set(pair.parent.mid, nodes);
+      } else {
+        const children: Map<string, any> = new Map<string, any>();
+        children.set(pair.child.mid, pair.child);
+        nodeMap.set(pair.parent.mid, {node: pair.parent, children: children});
+      }
+    });
+    console.log(nodeMap);
+  const values: any[] = Array.from(nodeMap.values()).map(parent => {
+    console.log(parent);
+    return {parent: parent.node, children: Array.from(parent.children.values())};
+    });
+    console.log(values);
+
+    //parent = {parent: parent.parent, children: Array.from(parent.entries()})
+
+
+
+    console.log('writing tree');
+    const call = `
+          UNWIND {payload} as row // all hierarchy pairs
+        MERGE (p:HierarchyNode {mid: row.parent.mid})
+         SET p = row.parent
+        SET p.dateCreated = '${Date.now().toString()}' 
+        FOREACH (child in row.children | //disease inheritance data
+        MERGE (c:HierarchyNode {mid: child.mid})
+          SET c = child
+          SET c.dateCreated = '${Date.now().toString()}' 
+        CREATE (c)-[:IsAChild {dateCreated: '${Date.now().toString()}'}]->(p)
+      ) with row, p
+        RETURN count(p);
+    `;
+     this.connectionService.write('gard-data', call, {payload: values}).subscribe(res => {
+       console.log(res);
+     })
+   }
 
   ngOnDestroy() {
 

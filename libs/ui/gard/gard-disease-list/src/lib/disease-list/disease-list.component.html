@@ -1,4 +1,10 @@
-
-<div *ngFor="let disease of diseaseList" class="grid-list">
-  <ncats-frontend-library-disease-list-card [disease]="disease"></ncats-frontend-library-disease-list-card>
+<div *ngIf="!loaded" fxLayoutAlign="center center">
+  <mat-progress-bar [color]="'primary'" [mode]="'indeterminate'"></mat-progress-bar>
 </div>
+  <div *ngFor="let disease of diseaseList" class="grid-list">
+    <ncats-frontend-library-disease-list-card [disease]="disease"></ncats-frontend-library-disease-list-card>
+  </div>
+
+
+
+
