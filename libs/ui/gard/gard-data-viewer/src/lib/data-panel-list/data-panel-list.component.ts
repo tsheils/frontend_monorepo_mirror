@@ -59,5 +59,11 @@ export class DataPanelListComponent implements OnInit {
     ).subscribe()
   }
 
-
+  getDataType(data: any): string {
+    if (data.children || data[0].tree) {
+      return 'tree';
+    } else {
+      return 'list'
+    }
+  }
 }

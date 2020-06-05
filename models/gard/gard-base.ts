@@ -32,6 +32,10 @@ export class GardDataProperty {
   fromJson(json: any): GardDataProperty {
     const obj = new GardDataProperty();
     Object.entries((json)).forEach((prop) => obj[prop[0]] = prop[1]);
+    if(json.props) {
+      Object.entries((json.props)).forEach((prop) => obj[prop[0]] = prop[1]);
+      delete obj['props'];
+    }
 
     if (json.references) {
       obj.references = [];

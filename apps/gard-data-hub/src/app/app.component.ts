@@ -69,13 +69,6 @@ export class AppComponent implements OnInit, OnDestroy {
           this.hideSearch = e.url === '/diseases';
         }
       });
-
-   /* this.diseasesFacade.selectedDisease$.subscribe(res=> {
-      if(res) {
-        console.log(res);
-        this.disease = res.disease;
-      }
-    });*/
   }
 
   connect(): void {
@@ -116,7 +109,6 @@ export class AppComponent implements OnInit, OnDestroy {
     this.connectionService.destroy();
     if(this.session) {
       this.session.close();
-   //   this.connectionService.driver.close();
     }
   }
 

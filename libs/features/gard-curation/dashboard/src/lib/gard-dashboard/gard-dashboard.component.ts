@@ -26,6 +26,35 @@ const navigationExtras: NavigationExtras = {
 })
 export class GardDashboardComponent implements OnInit {
 
+/*
+  components: PanelConfig[] = [
+    {
+      token: CURATION_SIDEPANEL_COMPONENT,
+      section: Position.Left,
+      dataObservable: this.facetsObservable$
+    },
+   /!* {
+      token: GARD_DISEASE_HEADER_COMPONENT,
+      section: Position.Content,
+      dataObservable: this.diseaseObservable$
+    },*!/
+    /!*{
+       token: GARD_DISEASE_SEARCH_COMPONENT,
+       section: Position.Content,
+     //  dataObservable: this.diseaseObservable$
+     },*!/
+    {
+      token: CURATION_MAIN_COMPONENT,
+      section: Position.Content,
+      dataObservable: this.diseaseObservable$
+    },
+    /!*    {
+          token: GARD_FOOTER_COMPONENT,
+          section: Position.Footer //,
+          // dataObservable: this.diseaseObservable$
+        }*!/
+  ];
+*/
 
   stats = {
     diseaseCount: 0,

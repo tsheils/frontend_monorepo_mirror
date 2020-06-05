@@ -89,6 +89,7 @@ export class Disease extends GardBase {
   synonyms?: GardDataProperty[];
   references?: Publication[];
   sources?: GardReference[];
+  hierarchies: any;
 
 
   hpo?: GardDataProperty[];
@@ -133,6 +134,7 @@ export class Disease extends GardBase {
 }
 
 export class DiseaseSerializer implements Serializer {
+  private gardPropertySerializer = new GardDataPropertySerializer();
 
   constructor(
     // @Inject(DomSanitizer) public sanitizer: DomSanitizer
@@ -141,7 +143,6 @@ export class DiseaseSerializer implements Serializer {
 
   fromJson(json: any): Disease {
     const obj = new Disease();
-    const gardPropertySerializer = new GardDataPropertySerializer();
     Object.entries((json)).forEach((prop) => obj[prop[0]] = prop[1]);
 
     if (json.properties) {
@@ -150,15 +151,24 @@ export class DiseaseSerializer implements Serializer {
         json.properties.sources.forEach(source => obj.sourcesMap.set(source.source, source));
       }*/
       json.properties.forEach(prop => {
-     //   if(prop.field !== 'sources') {
-          obj[prop.field] = prop.values.map(val => gardPropertySerializer.fromJson(val));
-     /*   }
-        if(prop.field === 'sources') {
-          obj.sources = prop.values.map(val => {
-            console.log(val);
-           return  new GardReference(val)
-          });
-        }*/
+        //   if(prop.field !== 'sources') {
+        obj[prop.field] =  prop.values.map(val => {
+          if(val.tree) {
+            val.tree = this._mapEntry(val.tree)
+          } else {
+            val = this.gardPropertySerializer.fromJson(val);
+          }
+          return val;
+        })
+      //  });
+        /*   }
+           if(prop.field === 'sources') {
+             obj.sources = prop.values.map(val => {
+               console.log(val);
+              return  new GardReference(val)
+             });
+           }*/
+       // console.log(obj);
       });
 
       /*if (obj.sources) {
@@ -170,67 +180,90 @@ export class DiseaseSerializer implements Serializer {
       }*/
     }
 // todo parse this object to a date
-   if(json.dateCreated) {
-  // obj.dateCreated = json.dateCreated.toString()
+    if (json.dateCreated) {
+      // obj.dateCreated = json.dateCreated.toString()
     }
 
-  /*  // array of strings
-    if (json.categories) {
-      obj.categories = json.categories.map(val => gardPropertySerializer.fromJson({value: val}));
-    }
-
-    // array of strings
-    if (json.xrefs) {
-      obj.xrefs = json.xrefs.map(val => gardPropertySerializer.fromJson({value: val}));
-    }
-
-    // array of strings
-    if (json.HPO) {
-      obj.hpo = json.HPO.map(val => gardPropertySerializer.fromJson({value: val}));
-      delete obj['HPO'];
-    }
-
-    if (json.created) {
-      obj.created = new Date(json.created.low).toString();
-    }
-
-    if (json.Cause) {
-      obj.cause = json.Cause.map(val => gardPropertySerializer.fromJson({value: val, propertyType: 'html'}));
-      delete obj['Cause'];
-    }
-
-    if (json.Diagnosis) {
-      obj.diagnosis = json.Diagnosis.map(val => gardPropertySerializer.fromJson({value: val, propertyType: 'html'}));
-      delete obj['Diagnosis'];
-    }
-
-
-
-    if (json.Statistics) {
-      obj.statistics = [json.Statistics].map(val => gardPropertySerializer.fromJson({value: val, propertyType: 'html'}));
-      delete obj['Statistics'];
+    /*if (obj.hierarchies) {
+      console.log(obj.hierarchies)
+      const hh = this._mapEntry(obj.hierarchies.tree);
+      console.log(hh);
     }*/
+
+    /*  // array of strings
+      if (json.categories) {
+        obj.categories = json.categories.map(val => gardPropertySerializer.fromJson({value: val}));
+      }
+
+      // array of strings
+      if (json.xrefs) {
+        obj.xrefs = json.xrefs.map(val => gardPropertySerializer.fromJson({value: val}));
+      }
+
+      // array of strings
+      if (json.HPO) {
+        obj.hpo = json.HPO.map(val => gardPropertySerializer.fromJson({value: val}));
+        delete obj['HPO'];
+      }
+
+      if (json.created) {
+        obj.created = new Date(json.created.low).toString();
+      }
+
+      if (json.Cause) {
+        obj.cause = json.Cause.map(val => gardPropertySerializer.fromJson({value: val, propertyType: 'html'}));
+        delete obj['Cause'];
+      }
+
+      if (json.Diagnosis) {
+        obj.diagnosis = json.Diagnosis.map(val => gardPropertySerializer.fromJson({value: val, propertyType: 'html'}));
+        delete obj['Diagnosis'];
+      }
+
+
+
+      if (json.Statistics) {
+        obj.statistics = [json.Statistics].map(val => gardPropertySerializer.fromJson({value: val, propertyType: 'html'}));
+        delete obj['Statistics'];
+      }*/
     return obj;
   }
 
-/*  /!**
-   * recursive mapping function
-   * @param obj
-   * @return {{}}
-   * @private
-   *!/
-  private _mapField(obj: any) {
-    const retObj: any = Object.assign({}, obj);
-    Object.keys(obj).map(objField => {
-      if (Array.isArray(obj[objField])) {
-        retObj[objField] = obj[objField].map(arrObj => this._mapField(arrObj));
-      } else {
-        retObj[objField] = gardPropertySerializer.fromJson({value: objField, references: []});
+  /*  /!**
+     * recursive mapping function
+     * @param obj
+     * @return {{}}
+     * @private
+     *!/
+    private _mapField(obj: any) {
+      const retObj: any = Object.assign({}, obj);
+      Object.keys(obj).map(objField => {
+        if (Array.isArray(obj[objField])) {
+          retObj[objField] = obj[objField].map(arrObj => this._mapField(arrObj));
+        } else {
+          retObj[objField] = gardPropertySerializer.fromJson({value: objField, references: []});
+        }
+      });
+      if (obj.__typename) {
+        delete retObj.__typename;
       }
-    });
-    if (obj.__typename) {
-      delete retObj.__typename;
+      return retObj;
+    }*/
+  private _mapEntry(entry) {
+    return {
+        value: entry.value,
+        label: entry.label,
+      children: entry.isaparent ? entry.isaparent.map(subentry => this._mapEntry(subentry)) : undefined
+    };
+  }
+
+/*  private _flattenTree(tree, level, parent?) {
+    if(parent && tree) {
+      this.pairs.push({parent: tree.node, child: parent, level: level - 1});
     }
-    return retObj;
-  }*/
+    if(tree.parents) {
+      tree.parents.forEach(parent => this.flattenTree(parent, level + 1,  tree.node));
+    }*/
+ // }
+
 }

@@ -105,6 +105,12 @@
     },
     "shared-services": {
       "tags": []
+    },
+    "stores-filters": {
+      "tags": []
+    },
+    "ui-gard-navigation-tree": {
+      "tags": []
     }
   }
 }

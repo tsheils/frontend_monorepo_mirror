@@ -93,6 +93,7 @@ export class CurationFeatureComponent implements OnInit {
   displayFields = [
     {section: 'codes', label: 'External Identifiers'},
     {section: 'synonyms', label: 'Synonyms'},
+    {section: 'hierarchies', label: 'Disease Hierarchy'},
     {section: 'inheritance', label: 'Inheritance'},
     {section: 'sources', label: 'References'}
     ];

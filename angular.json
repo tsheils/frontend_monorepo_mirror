@@ -1154,6 +1154,73 @@
           "style": "scss"
         }
       }
+    },
+    "stores-filters": {
+      "projectType": "library",
+      "root": "libs/stores/filters",
+      "sourceRoot": "libs/stores/filters/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/stores/filters/tsconfig.lib.json",
+              "libs/stores/filters/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/stores/filters/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/stores/filters/jest.config.js",
+            "tsConfig": "libs/stores/filters/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/stores/filters/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      }
+    },
+    "ui-gard-navigation-tree": {
+      "projectType": "library",
+      "root": "libs/ui/gard/navigation-tree",
+      "sourceRoot": "libs/ui/gard/navigation-tree/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ui/gard/navigation-tree/tsconfig.lib.json",
+              "libs/ui/gard/navigation-tree/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/ui/gard/navigation-tree/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ui/gard/navigation-tree/jest.config.js",
+            "tsConfig": "libs/ui/gard/navigation-tree/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/ui/gard/navigation-tree/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      }
     }
   },
   "cli": {

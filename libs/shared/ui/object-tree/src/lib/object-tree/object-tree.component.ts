@@ -9,28 +9,20 @@ import {SelectionModel} from "@angular/cdk/collections";
  * Each node has a name and an optional list of children.
  */
 interface FieldNode {
-  field: string;
+  label: string;
+  value?: string;
+  count?: number;
   children?: FieldNode[];
 }
 
 /** Flat to-do item node with expandable and level information */
 export class FieldFlatNode {
-  field: string;
+  label: string;
   level: number;
+  value?: string;
+  count?: number;
   expandable: boolean;
 }
-
-const TREE_DATA: FieldNode[] = [
-  {
-    field: 'Disease',
-    children: [
-      {field: 'Inheritance'},
-      {field: 'Prevalence'},
-      {field: 'Synonyms'},
-    ]
-  }
-];
-
 
 @Component({
   selector: 'ncats-frontend-library-object-tree',
@@ -39,9 +31,13 @@ const TREE_DATA: FieldNode[] = [
 })
 export class ObjectTreeComponent {
   @Output() fieldSelectChange: EventEmitter<any> = new EventEmitter<any>();
+  @Output() nodeExpandChange: EventEmitter<any> = new EventEmitter<any>();
 
 
   @Input() selectable = false;
+  @Input() dynamic = false;
+
+  @Input()data: FieldNode;
   /** Map from flat node to nested node. This helps us finding the nested node to be modified */
   flatNodeMap = new Map<FieldFlatNode, FieldNode>();
 
@@ -67,30 +63,38 @@ export class ObjectTreeComponent {
       this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl<FieldFlatNode>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+  }
 
-      this.dataSource.data = TREE_DATA;
+  ngOnInit() {
+    this.dataSource.data = [this.data];
+    this.treeControl.expand(this.treeControl.dataNodes[0]);
   }
 
   getLevel = (node: FieldFlatNode) => node.level;
 
   isExpandable = (node: FieldFlatNode) => node.expandable;
 
-  getChildren = (node: FieldNode): FieldNode[] => node.children;
+  getChildren = (node: FieldNode): FieldNode[] => {
+  //  console.log(node);
+    return node.children;
+  }
 
   hasChild = (_: number, _nodeData: FieldFlatNode) => _nodeData.expandable;
 
-  hasNoContent = (_: number, _nodeData: FieldFlatNode) => _nodeData.field === '';
+  hasNoContent = (_: number, _nodeData: FieldFlatNode) => _nodeData.label === '';
 
   /**
    * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
    */
   transformer = (node: FieldNode, level: number) => {
     const existingNode = this.nestedNodeMap.get(node);
-    const flatNode = existingNode && existingNode.field === node.field
+    const flatNode = existingNode && existingNode.label === node.label
       ? existingNode
       : new FieldFlatNode();
-    flatNode.field = node.field;
+    flatNode.label = node.label;
     flatNode.level = level;
+    flatNode.value = node.value;
+    flatNode.count = node.count;
     flatNode.expandable = !!node.children;
     this.flatNodeMap.set(flatNode, node);
     this.nestedNodeMap.set(node, flatNode);
@@ -176,6 +180,23 @@ export class ObjectTreeComponent {
       }
     }
     return null;
+  }
+
+  fetchData(node: FieldFlatNode) {
+    if(this.dynamic) {
+      this.nodeExpandChange.emit(node);
+    }
+  }
+
+  fetchLeafData(node: FieldFlatNode) {
+   // console.log('leaf');
+    if(this.dynamic) {
+      this.nodeExpandChange.emit(node);
+    }
+  }
+
+  isLink(val: string) {
+    return val.split('http').length > 1
   }
 
 }

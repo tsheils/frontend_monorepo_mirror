@@ -127,30 +127,44 @@ export class DiseasesEffects {
       map((r: RouterNavigationAction) => r.payload.routerState.root.queryParams),
       mergeMap((params: any) => {
         let call;
-         call = `
-         match (d:Disease)-[:Properties]-(p:MainProperty)-[]-(pp:Property)
-         where d.gard_id = '${params['disease']}' OR d.name = '${params['disease']}'
-         optional match (pp)-[]->(ds1:DataSource) with pp, d, p, ds1
-         optional match (pp)-[]-(n:DataRef)-[]->(ds:DataSource) with n, pp, d, p, ds1, ds
-         with distinct pp{.*, sources: collect(properties(ds1)), references:collect(n{.*, reference: properties(ds)})} as datarefs, p, d, pp
-         with {field: p.field, values: collect(properties(datarefs))} as datas, d
+/*call = `
+MATCH (d:Disease)-[:Properties]->(p:MainProperty)-[:DisplayValue|:Value]->(pp:Property)
+         WHERE d.gard_id = '${params['disease']}' OR d.name = '${params['disease']}'
+              optional MATCH (pp)-[:DataSourceReference]->(ds1:DataSource) with pp, d, p, ds1
+         optional MATCH (pp)-[:ReferenceSource]-(n:DataRef)-[:DataSourceReference]->(ds:DataSource)
+         optional MATCH p3=(e:HierarchyRoot)-[:IsAParent*0..]->(pp)
+with collect(distinct p3) as paths, d.gard_id as id, e.id as nodeId, d, pp, ds, ds1, p, n
+CALL apoc.convert.toTree(paths) yield value
+with distinct pp{.*, sources: collect(properties(ds1)), references:collect(n{.*, reference: properties(ds)})} as datarefs, p, d, pp, value
+         with {field: p.field, values: collect(properties(datarefs)), tree: value} as datas, d
          with d{.*, properties: collect(datas)} as diseaseObj, d
          return diseaseObj as data;
-        `;
-     /*    if (params['edit']){
-           call = `
-           match (d:Disease)-[r:Properties]-(n)
-where d.gard_id = '${params['disease']}' OR d.name = '${params['disease']}' AND n.field = '${params['edit']}'
-match (n)-[:ReferenceSource]-(f:DataRef)
-with collect(properties(f)) as references, properties(d) as disease, n
-with {field: n.field, values: collect(distinct n{.*, references: references})} as changes, disease
-return disease{ .*, properties: collect(changes)} as data
-        `;
-         }*/
+`;*/
+//          WHERE d.gard_id = '${params['disease']}' OR d.name = '${params['disease']}'
+call = `
+         MATCH (d:Disease)-[:Properties]->(p:MainProperty)-[:DisplayValue|:Value]->(pp:Property)
+         WHERE d.gard_id = '${params['disease']}' OR d.name = '${params['disease']}'
+         OPTIONAL MATCH (pp)-[:DataSourceReference]->(ds1:DataSource) WITH pp, d, p, ds1
+         OPTIONAL MATCH (pp)-[:ReferenceSource]-(n:DataRef)-[:DataSourceReference]->(ds:DataSource) WITH pp, d, p, ds1, n, ds
+         OPTIONAL MATCH p3=(e:HierarchyRoot)-[:IsAParent*0..]->(pp) WITH pp, d, p, ds1, n, p3,e, ds
+         WITH collect(distinct p3) as paths, d.gard_id as id, e.id as nodeId, d, pp, ds,  ds1, p, n
+         CALL apoc.when(
+  size(paths) > 0,
+   'CALL apoc.convert.toTree(paths) yield value
+   return value as tree, collect(properties(ds1)) as sources, collect(n{.*, reference: properties(ds)}) as references',
+  'return properties(pp) as props, collect(properties(ds1)) as sources, collect(n{.*, reference: properties(ds)}) as references',
+  {paths:paths, ds1:ds1, ds:ds, p:p, d:d, pp:pp, n:n})
+YIELD value
+with {field: p.field, values: collect(properties(value))} as datas, d
+         with d{.*, properties: collect(datas)} as diseaseObj, d
+         return diseaseObj as data;
+`;
+
 
         return this.neo4jConnectionService.read('gard-data', call).pipe(
           map(response => {
             if(response.data) {
+            //  console.log(response.data);
               const resp = response.data;
               const disease = serializer.fromJson(resp);
              /* if (resp.data && resp.data.length > 0) {
