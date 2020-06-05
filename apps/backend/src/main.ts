@@ -4,14 +4,14 @@ const neo4j = require('neo4j-driver');
 const webSocketServer = require('websocket').server;
 const http = require('http');
 
-/*const neo4jUser= "neo4j";
+const neo4jUser= "neo4j";
 const neo4jPassword = "vei1jeiceiK3Ohyaelai";
 // const uri = "bolt://0.0.0.0:7687";
-const uri = "bolt://gard-dev.ncats.io:7687";*/
+const uri = "bolt://gard-dev.ncats.io:7687";
 
-const neo4jUser= "neo4j";
+/*const neo4jUser= "neo4j";
 const neo4jPassword = "tim";
-const uri = "bolt://localhost:7687";
+const uri = "bolt://localhost:7687";*/
 
 
 
@@ -48,8 +48,8 @@ let wsServer = new webSocketServer({
   // WebSocket server is tied to a HTTP server. WebSocket request is just
   // an enhanced HTTP request. For more info http://tools.ietf.org/html/rfc6455#page-6
   httpServer: server,
-    maxReceivedFrameSize: 131072,
-    maxReceivedMessageSize: 10 * 1024 * 1024
+    maxReceivedFrameSize: 1310720,
+    maxReceivedMessageSize: 10000 * 1024 * 1024
 });
 
 // This callback function is called every time someone
@@ -68,6 +68,7 @@ wsServer.on('request', function(request) {
    * this reads the message, and passes it to the neo4j connection, returning the results
    */
   connection.on('message', function(message) {
+    console.log(message);
     const session = driver.rxSession();
     const mes = JSON.parse(message.utf8Data);
     if (mes.txcType) {
@@ -85,10 +86,11 @@ wsServer.on('request', function(request) {
       }
       subscription.subscribe({
         next: res => {
-
+          console.log(res);
           connection.send(JSON.stringify(res.toObject()));
         },
-        complete: () => {
+        complete: (res) => {
+          console.log(res);
          // connection.close();
           session.close();
         },

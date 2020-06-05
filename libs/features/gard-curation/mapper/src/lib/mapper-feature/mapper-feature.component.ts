@@ -2,6 +2,7 @@ import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
 import RxSession from "neo4j-driver/types/session-rx";
 import {map} from "rxjs/operators";
 import {Driver} from "neo4j-driver";
+import * as neo4j from "neo4j-driver";
 import {Neo4jConnectService} from "@ncats-frontend-library/shared/data-access/neo4j-connector";
 import {PanelConfig, Position} from "@ncats-frontend-library/shared/ui/dynamic-app-layout";
 import {
@@ -21,7 +22,7 @@ export class MapperFeatureComponent implements OnDestroy {
   title = 'mapper';
   searchTerm: string;
   session: RxSession;
-  writesession: RxSession;
+ // writesession: RxSession;
   objectFields: any;
   pairs: any[] = []
 
@@ -33,8 +34,10 @@ export class MapperFeatureComponent implements OnDestroy {
   allSources: any[] = ["S_GARD", "S_GHR", "S_OMIM", "S_ORDO_ORPHANET", "S_HP"]; //, "S_HP", "S_MEDLINEPLUS", "S_MESH", "S_OMIM", "S_ICD10CM", "S_ORDO_ORPHANET", "S_THESAURUS", "S_MONDO", "S_VANDF", "S_BTO", "S_CLO", "S_CL", "S_DDIEM", "S_UBERON", "S_GO", "S_GENO", "S_OGG", "S_PW", "S_MP", "S_OAE", "S_RXNO", "S_OGMS", "S_PATO", "S_FMA", "S_EFO", "S_CHEBI", "`S_RANCHO-DISEASE-DRUG_2018-12-18_13-30`", "S_FDAORPHANGARD_20190216", "S_HPO_ANNOTATION_100918", "S_MEDGEN"]; //['OMIM', 'ORPHANET'];
   // allSources: any[] = ["S_GARD", "S_GHR", "S_NORD", "S_DOID"] //, "S_HP", "S_MEDLINEPLUS", "S_MESH", "S_OMIM", "S_ICD10CM", "S_ORDO_ORPHANET", "S_THESAURUS", "S_MONDO", "S_VANDF", "S_BTO", "S_CLO", "S_CL", "S_DDIEM", "S_UBERON", "S_GO", "S_GENO", "S_OGG", "S_PW", "S_MP", "S_OAE", "S_RXNO", "S_OGMS", "S_PATO", "S_FMA", "S_EFO", "S_CHEBI", "`S_RANCHO-DISEASE-DRUG_2018-12-18_13-30`", "S_FDAORPHANGARD_20190216", "S_HPO_ANNOTATION_100918", "S_MEDGEN"]; //['OMIM', 'ORPHANET'];
   allSourcesLoading = false;
-  writedriver: Driver;
+ // writedriver: Driver;
   driver: Driver;
+  clones: any[] = [];
+  dataz: any[] = [];
 
   dictionary: Map<string, string[]> = new Map<string, string[]>();
   gardPropertySerializer: GardDataPropertySerializer = new GardDataPropertySerializer();
@@ -44,6 +47,7 @@ export class MapperFeatureComponent implements OnDestroy {
     private changeRef: ChangeDetectorRef,
     private connectionService: Neo4jConnectService
   ) {
+    console.log(this);
     // this.fetchKeys();
   }
 
@@ -68,20 +72,6 @@ export class MapperFeatureComponent implements OnDestroy {
   setFields(event: any) {
     this.selectedFields = [...event.entries()].map(entry => entry = {source: entry[0], fields: entry[1]});
     // event.keys().forEach(key => this.selectedFields.push({key: event.get(key)}))
-  }
-
-  search(event: any) {
-    this.connectionService.read('raw-data', `match p=(n:S_ORDO_ORPHANET{_N_Name: '${event.toUpperCase()}'})-[:R_subClassOf{property:'http://www.orpha.net/ORDO/Orphanet_C016'}]-(i)-[]-(h:S_HP)-[]-(d:DATA) return n._N_Name as disease, i._N_Name as ORPHANET_inheritance,  d.label as HPO_inheritance`)
-      .subscribe(res => this.diseaseResult = res);
-  }
-
-  typeahead(event: any) {
-
-  }
-
-  filter(term: string) {
-    this.searchTerm = term;
-    this.filteredSources = this.sources.filter(option => JSON.stringify(option).toLowerCase().includes(term.toLowerCase()));
   }
 
   runQuery() {
@@ -418,94 +408,153 @@ RETURN collect(diseases) as data LIMIT 10
   }
 
   getHierarchy() {
+    const driver = neo4j.driver('bolt://gard-dev-neo4j.ncats.io:7687', neo4j.auth.basic('neo4j', 'eic1akeghaTha4OhKahr'));
+    const session = driver.rxSession();
+
     console.log("get hierarchy");
-    const call = `
-match(n)--(d:DATA) where d.id='MONDO:0009061' with n,d match p=(n:S_MONDO)-[e:R_subClassOf*0..]->(m:S_MONDO)-[:PAYLOAD]-(l:DATA) where all(x in e where n.source=x.source or n.source in x.source) and not 'TRANSIENT' in labels(m) with distinct l, p,n, d ,m
-with collect(p) as paths
+    const mondocall = `
+match (disease:DATA)-[:PAYLOAD]->(m:S_GARD)-[:R_exactMatch|:R_equivalentClass]-(n:S_MONDO)<-[:PAYLOAD]-(d:DATA)  with n, disease.gard_id as id, d.id as mondoId
+match p=(n)-[e:R_subClassOf*0..]->(m:S_MONDO)<-[:PAYLOAD]-(l:DATA) where all(x in e where n.source=x.source or n.source in x.source) and not 'TRANSIENT' in labels(m)
+with collect(p) as paths, id, mondoId
 CALL apoc.convert.toTree(paths) yield value
-return value
+with value, id, mondoId
+return {disease: id, nodeId: mondoId,tree: value} as data
     `;
 
-    this.connectionService.read('raw-data', call).pipe(
-      map(res => {
-          const map = this.mapEntry(res.value);
-          console.log(map);
-          this.flattenTree(map);
-          console.log(this.pairs);
-          this.writeTree(this.pairs);
+    const orphacall = `
+match p2=(g:DATA)-[:PAYLOAD]->(n:S_GARD)-[e:I_CODE|:N_Name]-(m:S_ORDO_ORPHANET)<-[:PAYLOAD]-(d:DATA) 
+where not exists(d.reason_for_obsolescence) with count(e) as s, m, d, g
+where s > 2 match p=(m)-[e:R_subClassOf*0..]->(o:S_ORDO_ORPHANET)<-[:PAYLOAD]-(l:DATA) 
+where not 'TRANSIENT' in labels(o) and all(x in e where m.source=x.source or m.source in x.source)
+with collect(distinct p) as paths, g.gard_id as id, d.id as nodeId
+CALL apoc.convert.toTree(paths) yield value 
+with value, id, nodeId
+return {disease: id, nodeId: nodeId,tree: value} as data
+    `;
 
+    session.readTransaction(txc => txc.run(orphacall).records()).pipe(
+   // this.connectionService.read('raw-data', orphacall).pipe(
+      map(response => {
+        const res: any = response.toObject();
+      //  console.log(res);
+/*          const map = res.data.map(data => {
+            return {disease: data.disease, nodeId: data.nodeId, tree:this.mapEntry(data.tree)}
+          }); */
+          const map = [{disease: res.data.disease, nodeId: res.data.nodeId, tree:this.mapEntry(res.data.tree)}];
+          const write: any[] = [];
+          map.forEach(entry => {
+            this.pairs = [];
+            this.clones = [];
+            let current: any[] = [] ;
+            this.flattenTree(entry.tree, 0);
+            this.pairs.forEach(pair => {
+              if(pair.parent) {
+                if (current.length) {
+                  const last = current[current.length - 1];
+                  if (last.level < pair.level) {
+                    current.push(pair);
+                  } else {
+                    this.clones.push(current);
+                    current = current.slice(0, pair.level);
+                    current.push(pair);
+                  }
+                } else {
+                  current.push(pair);
+                }
+              }
+            });
+        //    console.log(this.clones);
+            if(this.clones.length > 0) {
+              this.dataz.push({disease: entry.disease, nodeId: this._makeCode(entry.nodeId), paths: this.clones});
+            }
+          });
+          console.log(this.dataz.length);
+         //this.writeTree(write)
+      //  this.dataz.push(write);
       })).subscribe()
   }
 
   mapEntry(entry) {
-    if (entry.payload) {
-      entry.payload = entry.payload.map(payload => payload = {mid: payload.id, label: payload.label})
-    }
-    if(entry.r_subclassof) {
-      entry.r_subclassof = entry.r_subclassof.map(subentry => this.mapEntry(subentry))
-    }
-  //  console.log(entry);
-    return {node: entry.payload[0], parents: entry.r_subclassof}
-    ;
+    return {
+      node: entry.payload ? entry.payload.map(payload => payload = this.gardPropertySerializer.fromJson({value: payload.id, label: payload.label}))[0] : undefined,
+      parents: entry.r_subclassof ? entry.r_subclassof.map(subentry => this.mapEntry(subentry)) : undefined};
 
   }
 
-   flattenTree(tree, parent?) {
-      if(parent) {
-        this.pairs.push({parent: tree.node, child: parent});
+   flattenTree(tree, level, parent?) {
+      if(parent && tree) {
+        this.pairs.push({parent: tree.node, child: parent, level: level - 1});
       }
       if(tree.parents) {
-        tree.parents.forEach(parent => this.flattenTree(parent, tree.node));
-      }/* else {
-        if(parent) {
-          this.pairs.push({parent: tree.node, child: parent});
-        }
-      }*/
+        tree.parents.forEach(parent => this.flattenTree(parent, level + 1,  tree.node));
+      }
    }
 
-
    writeTree(payload) {
-    const nodeMap: Map<string, any> = new Map<any, any>();
-    payload.forEach(pair => {
-      if(nodeMap.has(pair.parent.mid)) {
-        const nodes = nodeMap.get(pair.parent.mid);
-        nodes.children.set(pair.child.mid, pair.child);
-        nodeMap.set(pair.parent.mid, nodes);
-      } else {
-        const children: Map<string, any> = new Map<string, any>();
-        children.set(pair.child.mid, pair.child);
-        nodeMap.set(pair.parent.mid, {node: pair.parent, children: children});
-      }
-    });
-    console.log(nodeMap);
-  const values: any[] = Array.from(nodeMap.values()).map(parent => {
-    console.log(parent);
-    return {parent: parent.node, children: Array.from(parent.children.values())};
-    });
-    console.log(values);
-
-    //parent = {parent: parent.parent, children: Array.from(parent.entries()})
-
-
-
     console.log('writing tree');
+    console.log(payload);
     const call = `
           UNWIND {payload} as row // all hierarchy pairs
-        MERGE (p:HierarchyNode {mid: row.parent.mid})
-         SET p = row.parent
-        SET p.dateCreated = '${Date.now().toString()}' 
-        FOREACH (child in row.children | //disease inheritance data
-        MERGE (c:HierarchyNode {mid: child.mid})
-          SET c = child
-          SET c.dateCreated = '${Date.now().toString()}' 
-        CREATE (c)-[:IsAChild {dateCreated: '${Date.now().toString()}'}]->(p)
-      ) with row, p
-        RETURN count(p);
+          MATCH (d:Disease {gard_id: row.disease})-[:Properties]->(c:Codes)
+          MATCH (d:Disease {gard_id: row.disease})-[:Properties]->(ss:Sources)
+          MERGE (p5:MainProperty:Hierarchies {value: row.disease})
+          SET p5.field = 'hierarchies'
+          MERGE (d)-[:Properties { dateCreated: ${Date.now().toString()} }]->(p5)
+          MERGE (p3:HierarchySource:Property {value: row.nodeId.displayValue})
+          CREATE (s1:Property:DataSource {source: 'ORPHA'})
+          merge (ss)-[:DisplayValue]->(s1)
+          MERGE (p3)-[:DataSourceReference { dateCreated: '${Date.now().toString()}' }]->(s1)
+      SET p3.dateCreated = ${Date.now().toString()} 
+          MERGE (p5)-[:DisplayValue]->(p3)          
+           Merge (cd:Property:Code {value: row.nodeId.displayValue}) 
+              SET cd = row.nodeId 
+              SET cd.sourceCount = 1 
+              SET cd.dateCreated = ${Date.now().toString()} 
+              MERGE (c)-[:DisplayValue { dateCreated: '${Date.now().toString()}' }]->(cd) 
+              with d, c, row, p3
+            
+            FOREACH (path in row.paths | 
+           MERGE (p4:HierarchyNode:Property {value: path[0].child.value})
+                     SET p4 = path[0].child
+                     MERGE (p4)<-[:IsAChild]-(p3)
+                    MERGE (p4)-[:IsAParent]->(p3)
+            FOREACH (node in path | 
+        MERGE (p:HierarchyNode:Property {value: node.parent.value})
+        MERGE (p2:HierarchyNode:Property {value: node.child.value})
+          SET p = node.parent
+          SET p2 = node.child
+          SET p.dateCreated = '${Date.now().toString()}' 
+          MERGE (p2)-[:IsAChild]->(p)
+          MERGE (p2)<-[:IsAParent]-(p)
+        )) with row, p3
+        
+        RETURN row.disease;
     `;
-     this.connectionService.write('gard-data', call, {payload: values}).subscribe(res => {
+
+
+   //  this.writesession.writeTransaction(txc => txc.run(call,{payload: payload}).records()).subscribe(res =>{
+       this.connectionService.write('gard-data', call, {payload: payload}).subscribe(res => {
        console.log(res);
      })
    }
+
+   _makeCode(codeString: string){
+    console.log(codeString);
+     const splitCode = codeString.split(':');
+     const reference: GardReference = new GardReference({source: splitCode[0]});
+     if (reference.url) {
+       reference.url = reference.url.concat(splitCode[1]);
+     }
+     const codeObj: GardDataProperty = this.gardPropertySerializer.fromJson({
+       // references: [reference],
+       source: splitCode[0],
+       value: splitCode[1],
+       displayValue: codeString,
+     });
+     return codeObj;
+   }
+
+
 
   ngOnDestroy() {
 

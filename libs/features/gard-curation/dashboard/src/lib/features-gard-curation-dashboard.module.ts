@@ -12,6 +12,7 @@ import {
 } from "../../../curation/src/lib/curation-feature/curation-feature.component";
 import {GardFooterComponent} from "@ncats-frontend-library/ui/gard/gard-footer";
 import {SharedUiDynamicAppLayoutModule} from "@ncats-frontend-library/shared/ui/dynamic-app-layout";
+import {UiGardNavigationTreeModule} from "@ncats-frontend-library/ui/gard/navigation-tree";
 
 const ROUTES: Routes = [
   {
@@ -27,7 +28,8 @@ const ROUTES: Routes = [
     CustomMaterialModule,
     UiGardGardDiseaseListModule,
     UiGardSearchBarModule,
-    SharedUiDynamicAppLayoutModule
+    SharedUiDynamicAppLayoutModule,
+    UiGardNavigationTreeModule
   ],
   declarations: [GardDashboardComponent],
   providers: [

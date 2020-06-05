@@ -20,6 +20,7 @@ import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
 import {GardDiseaseHeaderComponent} from "@ncats-frontend-library/ui/gard/gard-disease-header";
 import {CustomMaterialModule} from "@ncats-frontend-library/shared/custom-material";
 import {DataPanelListComponent, UiGardGardDataViewerModule} from "@ncats-frontend-library/ui/gard/gard-data-viewer";
+import {SharedUiObjectTreeModule} from "@ncats-frontend-library/shared/ui/object-tree";
 
 const ROUTES: Routes = [
   {
@@ -38,7 +39,8 @@ const ROUTES: Routes = [
     CustomMaterialModule,
     SharedUiDynamicAppLayoutModule,
     UiGardSearchBarModule,
-    UiGardGardDataViewerModule
+    UiGardGardDataViewerModule,
+    SharedUiObjectTreeModule
   ],
   declarations: [CurationFeatureComponent],
   providers: [

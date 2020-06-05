@@ -1,6 +1,13 @@
 <div *ngIf = "fields" class = "grid-list">
   <div *ngFor="let field of fields">
+    <ng-container [ngSwitch]="getDataType(object[field.section])">
+      <div *ngSwitchCase="'list'">
     <ncats-frontend-library-data-panel [field]="field" [data]="object[field.section]"></ncats-frontend-library-data-panel>
+      </div>
+      <div *ngSwitchCase="'tree'">
+        <ncats-frontend-library-data-tree-panel [field]="field" [data]="object[field.section]"></ncats-frontend-library-data-tree-panel>
+      </div>
+    </ng-container>
   </div>
 </div>
 
