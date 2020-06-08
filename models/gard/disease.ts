@@ -253,6 +253,7 @@ export class DiseaseSerializer implements Serializer {
     return {
         value: entry.value,
         label: entry.label,
+         url: entry.url,
       children: entry.isaparent ? entry.isaparent.map(subentry => this._mapEntry(subentry)) : undefined
     };
   }

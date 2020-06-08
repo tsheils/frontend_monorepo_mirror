@@ -31,6 +31,9 @@ export class GardReference {
       case 'ORPHA': {
         return 'https://www.orpha.net/consor/cgi-bin/OC_Exp.php?Expert=';
       }
+      case 'MONDO': {
+        return 'http://purl.obolibrary.org/obo/';
+      }
       default: {
         return null;
       }

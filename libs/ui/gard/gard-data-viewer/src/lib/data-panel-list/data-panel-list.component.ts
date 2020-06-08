@@ -48,6 +48,7 @@ export class DataPanelListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log(this);
     this._data.pipe(
       map(res=> {
         if (res) {
