@@ -11,6 +11,7 @@ import {SelectionModel} from "@angular/cdk/collections";
 interface FieldNode {
   label: string;
   value?: string;
+  url?: string;
   count?: number;
   children?: FieldNode[];
 }
@@ -20,6 +21,7 @@ export class FieldFlatNode {
   label: string;
   level: number;
   value?: string;
+  url?: string;
   count?: number;
   expandable: boolean;
 }
@@ -92,6 +94,7 @@ export class ObjectTreeComponent {
       ? existingNode
       : new FieldFlatNode();
     flatNode.label = node.label;
+    flatNode.url = node.url;
     flatNode.level = level;
     flatNode.value = node.value;
     flatNode.count = node.count;

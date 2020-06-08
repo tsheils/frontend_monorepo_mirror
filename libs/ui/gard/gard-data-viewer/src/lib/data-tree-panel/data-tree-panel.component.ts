@@ -37,6 +37,7 @@ export class DataTreePanelComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log(this);
   }
 
 }

@@ -1,7 +1,7 @@
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
   <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding (click) = "fetchLeafData(node)">
     <button mat-icon-button disabled></button>
-    {{node.label}}<span *ngIf="node.count">&nbsp;({{node.count}})</span>&nbsp;<a *ngIf= isLink(node.value) href = {{node.value}} target="_blank">link</a>
+    {{node.label}}<span *ngIf="node.count">&nbsp;({{node.count}})</span>&nbsp;<a *ngIf= node.url href = {{node.url}} target="_blank">{{node.value}}</a>
     <mat-checkbox
       *ngIf="selectable"
       class="checklist-leaf-node"
@@ -21,6 +21,6 @@
       [checked]="descendantsAllSelected(node)"
                   [indeterminate]="descendantsPartiallySelected(node)"
                   (change)="selectParentNode(node)">{{node.label}}</mat-checkbox>
-    {{node.label}} <span *ngIf="node.count">&nbsp;({{node.count}})</span> &nbsp; <a *ngIf= isLink(node.value) href= {{node.value}} target="_blank">link</a>
+    {{node.label}} <span *ngIf="node.count">&nbsp;({{node.count}})</span> &nbsp;<a *ngIf= node.url href = {{node.url}} target="_blank">{{node.value}}</a>
   </mat-tree-node>
 </mat-tree>
