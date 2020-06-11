@@ -1,22 +1,30 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewEncapsulation
+} from '@angular/core';
 import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeNestedDataSource} from "@angular/material/tree";
 import {FlatTreeControl, NestedTreeControl} from "@angular/cdk/tree";
-import {MatCheckboxChange} from "@angular/material/checkbox";
 import {SelectionModel} from "@angular/cdk/collections";
+import {BehaviorSubject} from "rxjs";
 
 /**
  * Food data with nested structure.
  * Each node has a name and an optional list of children.
  */
-interface FieldNode {
+interface NestedNode {
   label: string;
   value?: string;
   url?: string;
   count?: number;
-  children?: FieldNode[];
+  children?: NestedNode[];
 }
 
-/** Flat to-do item node with expandable and level information */
+/** Flat to-do item node with expandable and level information
 export class FieldFlatNode {
   label: string;
   level: number;
@@ -24,12 +32,14 @@ export class FieldFlatNode {
   url?: string;
   count?: number;
   expandable: boolean;
-}
+}*/
 
 @Component({
   selector: 'ncats-frontend-library-object-tree',
   templateUrl: './object-tree.component.html',
-  styleUrls: ['./object-tree.component.scss']
+  styleUrls: ['./object-tree.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None
 })
 export class ObjectTreeComponent {
   @Output() fieldSelectChange: EventEmitter<any> = new EventEmitter<any>();
@@ -39,55 +49,80 @@ export class ObjectTreeComponent {
   @Input() selectable = false;
   @Input() dynamic = false;
 
-  @Input()data: FieldNode;
-  /** Map from flat node to nested node. This helps us finding the nested node to be modified */
-  flatNodeMap = new Map<FieldFlatNode, FieldNode>();
+  @Input() loading = false;
 
-  /** Map from nested node to flattened node. This helps us to keep the same object for selection */
-  nestedNodeMap = new Map<FieldNode, FieldFlatNode>();
+  // @Input() data: FieldNode;
 
-  /** A selected parent node to be inserted */
-  selectedParent: FieldFlatNode | null = null;
+  /**
+  * initialize a private variable _data, it's a BehaviorSubject
+* @type {BehaviorSubject<any>}
+* @private
+*/
+protected _data = new BehaviorSubject<any>({});
 
-  /** The new item's name */
-  newItemName = '';
+/**
+ * pushes changed data to {BehaviorSubject}
+ * @param value
+ */
+@Input()
+set data(value: any) {
+  console.log(value);
+  this._data.next(value);
+}
 
-  treeControl: FlatTreeControl<FieldFlatNode>;
+/**
+ * returns value of {BehaviorSubject}
+ * @returns {any}
+ */
+get data() {
+  return this._data.getValue();
+}
 
-  treeFlattener: MatTreeFlattener<FieldNode, FieldFlatNode>;
+  treeControl = new NestedTreeControl<NestedNode>(node => node.children);
+  dataSource = new MatTreeNestedDataSource<NestedNode>();
 
 
-  dataSource = new MatTreeNestedDataSource<FieldNode>();
-  fieldSelection = new SelectionModel<FieldNode>(false /* multiple */);
 
-  constructor() {
-    this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
-      this.isExpandable, this.getChildren);
-    this.treeControl = new FlatTreeControl<FieldFlatNode>(this.getLevel, this.isExpandable);
-    this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+ // dataSource = new MatTreeNestedDataSource<FieldNode>();
+  fieldSelection = new SelectionModel<NestedNode>(false /* multiple */);
+
+  constructor(
+    private changeRef: ChangeDetectorRef
+  ) {
+ //   this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
+  //    this.isExpandable, this.getChildren);
+  //  this.treeControl = new FlatTreeControl<NestedNode>(this.getLevel, this.isExpandable);
+ //   this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+ //   this.dataSource.data = TREE_DATA;
   }
 
   ngOnInit() {
-    this.dataSource.data = [this.data];
-    this.treeControl.expand(this.treeControl.dataNodes[0]);
+    console.log(this);
+    this._data.subscribe( res => {
+       this.dataSource.data = [];
+       this.dataSource.data = this.data;
+      this.changeRef.markForCheck();
+    })
+    this.treeControl.expand(this.dataSource.data[0]);
   }
 
-  getLevel = (node: FieldFlatNode) => node.level;
+  /*getLevel = (node: FieldFlatNode) => node.level;
 
   isExpandable = (node: FieldFlatNode) => node.expandable;
 
   getChildren = (node: FieldNode): FieldNode[] => {
   //  console.log(node);
     return node.children;
-  }
+  }*/
 
-  hasChild = (_: number, _nodeData: FieldFlatNode) => _nodeData.expandable;
+  hasChild = (_: number, _nodeData: NestedNode) => _nodeData.count || (_nodeData.children && _nodeData.children.length > 1);
 
-  hasNoContent = (_: number, _nodeData: FieldFlatNode) => _nodeData.label === '';
+ // hasNoContent = (_: number, _nodeData: FieldFlatNode) => _nodeData.label === '';
 
   /**
    * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
    */
+/*
   transformer = (node: FieldNode, level: number) => {
     const existingNode = this.nestedNodeMap.get(node);
     const flatNode = existingNode && existingNode.label === node.label
@@ -98,14 +133,15 @@ export class ObjectTreeComponent {
     flatNode.level = level;
     flatNode.value = node.value;
     flatNode.count = node.count;
-    flatNode.expandable = !!node.children;
+    flatNode.expandable = !!node.children || node.count > 0;
     this.flatNodeMap.set(flatNode, node);
     this.nestedNodeMap.set(node, flatNode);
     return flatNode;
   }
+*/
 
   /** Whether all the descendants of the node are selected. */
-  descendantsAllSelected(node: FieldFlatNode): boolean {
+  descendantsAllSelected(node: NestedNode): boolean {
     const descendants = this.treeControl.getDescendants(node);
     const descAllSelected = descendants.every(child =>
       this.fieldSelection.isSelected(child)
@@ -114,14 +150,14 @@ export class ObjectTreeComponent {
   }
 
   /** Whether part of the descendants are selected */
-  descendantsPartiallySelected(node: FieldFlatNode): boolean {
+  descendantsPartiallySelected(node: NestedNode): boolean {
     const descendants = this.treeControl.getDescendants(node);
     const result = descendants.some(child => this.fieldSelection.isSelected(child));
     return result && !this.descendantsAllSelected(node);
   }
 
   /** Toggle the to-do item selection. Select/deselect all the descendants node */
-  selectParentNode(node: FieldFlatNode): void {
+  selectParentNode(node: NestedNode): void {
    // this.fieldSelection.toggle(node);
 /*    const descendants = this.treeControl.getDescendants(node);
     this.fieldSelection.isSelected(node)
@@ -136,22 +172,22 @@ export class ObjectTreeComponent {
   }
 
   /** Toggle a leaf to-do item selection. Check all the parents to see if they changed */
-  selectLeafNode(node: FieldFlatNode): void {
+  selectLeafNode(node: NestedNode): void {
     this.fieldSelection.toggle(node);
-    this.checkAllParentsSelection(node);
+ //   this.checkAllParentsSelection(node);
   }
-
-  /* Checks all the parents when a leaf node is selected/unselected */
-  checkAllParentsSelection(node: FieldFlatNode): void {
-    let parent: FieldFlatNode | null = this.getParentNode(node);
+/*
+  /!* Checks all the parents when a leaf node is selected/unselected *!/
+  checkAllParentsSelection(node: NestedNode): void {
+    let parent: NestedNode | null = this.getParentNode(node);
     while (parent) {
       this.checkRootNodeSelection(parent);
       parent = this.getParentNode(parent);
     }
-  }
+  }*/
 
   /** Check root node checked state and change it accordingly */
-  checkRootNodeSelection(node: FieldFlatNode): void {
+  checkRootNodeSelection(node: NestedNode): void {
     const nodeSelected = this.fieldSelection.isSelected(node);
     const descendants = this.treeControl.getDescendants(node);
     const descAllSelected = descendants.every(child =>
@@ -165,8 +201,8 @@ export class ObjectTreeComponent {
     this.fieldSelectChange.emit(this.fieldSelection.selected);
   }
 
-  /* Get the parent node of a node */
-  getParentNode(node: FieldFlatNode): FieldFlatNode | null {
+/*  /!* Get the parent node of a node *!/
+  getParentNode(node: NestedNode): NestedNode | null {
     const currentLevel = this.getLevel(node);
 
     if (currentLevel < 1) {
@@ -183,23 +219,19 @@ export class ObjectTreeComponent {
       }
     }
     return null;
-  }
+  }*/
 
-  fetchData(node: FieldFlatNode) {
+  fetchData(node: NestedNode) {
+    console.log("fetch")
     if(this.dynamic) {
       this.nodeExpandChange.emit(node);
     }
   }
 
-  fetchLeafData(node: FieldFlatNode) {
-   // console.log('leaf');
+  fetchLeafData(node: NestedNode) {
+    console.log("fetch")
     if(this.dynamic) {
       this.nodeExpandChange.emit(node);
     }
   }
-
-  isLink(val: string) {
-    return val.split('http').length > 1
-  }
-
 }

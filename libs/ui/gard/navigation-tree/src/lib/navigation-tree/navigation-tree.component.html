@@ -1,9 +1,8 @@
-<!--<div *ngFor = "let node of data">
-  <div (click)="fetchLevel(node.node.value)">{{node.node.label}} </div>
-</div>-->
-<div *ngIf="data">
+
+<div *ngIf= "data">
   <ncats-frontend-library-object-tree
-    [data]="data"
+    [data]= "data"
+    [loading] = loading
     [dynamic]=true
     (nodeExpandChange)="fetchLevel($event)"
   ></ncats-frontend-library-object-tree>

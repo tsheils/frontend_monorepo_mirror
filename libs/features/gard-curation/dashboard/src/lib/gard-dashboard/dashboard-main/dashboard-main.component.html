@@ -1,0 +1,23 @@
+<!--<div fxLayout="row" fxLayoutAlign="space-around center">
+  <div fxFlex="75">
+    <div fxLayout="row" fxLayoutAlign="space-around center">
+      <div fxFlex="95">
+        <ncats-frontend-library-gard-search (query)="diseaseSearch($event)"></ncats-frontend-library-gard-search>
+      </div>
+    </div>
+  </div>
+</div>-->
+
+    <div fxLayout="row" fxLayoutAlign="end start">
+      <div fxLayout="25">
+        <mat-paginator
+          [pageSize]="page?.pageSize"
+          [pageIndex]="page?.pageIndex"
+          [pageSizeOptions]="[10, 25, 50]"
+          (page)="paginationChanges($event)"
+          [length] = "page?.total"
+        ></mat-paginator>
+      </div>
+    </div>
+    <ncats-frontend-library-disease-list [diseaseList]="dataSource" [loaded] = loaded></ncats-frontend-library-disease-list>
+
