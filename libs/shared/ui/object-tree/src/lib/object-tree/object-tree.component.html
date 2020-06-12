@@ -34,20 +34,23 @@
   <!-- This is the tree node template for leaf nodes -->
   <mat-tree-node *matTreeNodeDef="let node"
                  (click) = "fetchLeafData(node)"
-                 matTreeNodeToggle>
-    <li class="mat-tree-node">
+                  matTreeNodePadding [matTreeNodePaddingIndent]="10">
+    <li>
       <!-- use a disabled button to provide padding for tree leaf -->
       <button mat-icon-button disabled></button>
-      {{node.label}}&nbsp<a *ngIf= node.url href = {{node.url}} target="_blank">{{node.value}}</a>
       <mat-checkbox
         *ngIf="selectable"
         class="checklist-leaf-node"
         [checked]="fieldSelection.isSelected(node)"
-        (change)="selectLeafNode(node)">{{node.label}}</mat-checkbox>
+        (change)="selectLeafNode(node)"></mat-checkbox>&nbsp;
+      {{node.label}}&nbsp<a *ngIf= "node.url && showLinks" href = {{node.url}} target="_blank">{{node.value}}</a>
     </li>
   </mat-tree-node>
   <!-- This is the tree node template for expandable nodes -->
-  <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+  <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild"
+                        matTreeNodePadding
+                        [matTreeNodePaddingIndent]="10">
+
     <li>
       <div class="mat-tree-node">
         <button mat-icon-button matTreeNodeToggle
@@ -61,8 +64,8 @@
           *ngIf="selectable"
           [checked]="descendantsAllSelected(node)"
           [indeterminate]="descendantsPartiallySelected(node)"
-          (change)="selectParentNode(node)">{{node.label}}</mat-checkbox>
-        {{node.label}} &nbsp;<a *ngIf= node.url href = {{node.url}} target="_blank">{{node.value}}</a>
+          (change)="selectParentNode(node)"></mat-checkbox>&nbsp;
+        {{node.label}} &nbsp;<a *ngIf= "node.url && showLinks"  href = {{node.url}} target="_blank">{{node.value}}</a>
       </div>
       <ul [class.invisible]="!treeControl.isExpanded(node)">
         <ng-container matTreeNodeOutlet></ng-container>

@@ -47,6 +47,14 @@ export const getSelectedId = createSelector(
   (state: State) => state.selectedId
 );
 
+export const getHierarchy = createSelector(
+  getDiseasesState,
+  (state: State) => {
+    console.log(state);
+    return state.hierarchy
+  }
+);
+
 // returns selected disease
 export const getSelectedDisease = createSelector(
   getDiseasesState,

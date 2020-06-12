@@ -18,7 +18,12 @@ const navigationExtras: NavigationExtras = {
   styleUrls: ['./dashboard-main.component.scss']
 })
 export class DashboardMainComponent implements OnInit {
-
+  stats = {
+    diseaseCount: 0,
+    inheritanceCount: 0,
+    matchCount: 0,
+    misMatchCount: 0
+  };
 
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
@@ -69,6 +74,13 @@ export class DashboardMainComponent implements OnInit {
     this.diseasesFacade.loaded$.subscribe(res => {
       this.loaded = res;
     });
+
+    this.diseasesFacade.stats$.subscribe(res => {
+      if(res && res.diseaseCount) {
+        this.stats = res;
+      }
+    });
+
 
 
     this.dataSource.paginator = this.paginator;

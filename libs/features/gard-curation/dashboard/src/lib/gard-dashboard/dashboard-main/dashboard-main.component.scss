@@ -1,0 +1,45 @@
+.tile-grid {
+  display: grid;
+  grid-auto-rows: max-content;
+  grid-template-columns: repeat(auto-fill, minmax(15%, 1fr));
+  grid-gap: 5em;
+  justify-items: center;
+  margin-bottom:5vh;
+}
+
+.tile-grid > mat-card {
+  margin-bottom: 2em;
+  margin-top: 2em;
+  min-height: 100%;
+}
+
+.dashboard-tile {
+  width:100%;
+  height:10vh;
+}
+
+.colored {
+  cursor: pointer;
+  color: white;
+  background-color: #0d7b6c;
+}
+
+.data-table {
+  width: 100%;
+}
+
+td.mat-cell {
+  padding-right: 2vw;
+  padding-bottom: 1vh;
+  padding-top: 1vh;
+}
+
+.disease-name {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-bottom: -3vh;
+}
+
+.full-width-form{
+  width:100%;
+}

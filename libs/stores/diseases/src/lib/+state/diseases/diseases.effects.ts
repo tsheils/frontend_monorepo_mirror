@@ -30,32 +30,36 @@ export class DiseasesEffects {
        const pageSize = params.pageSize ? params.pageSize : 10;
        const pageIndex = params.pageIndex ? params.pageIndex : 0;
         let call;
-        call = `
-        MATCH (n:Disease) WITH count(n) AS count
-         match (d:Disease)-[:Properties]-(p:MainProperty)-[]-(pp:Property)
-         optional match (pp)-[]->(ds1:DataSource) with pp, d, p, ds1, count
+        const diseaseToProperty = `MATCH (d:Disease)-[:Properties]-(p:MainProperty)-[]-(pp:Property)`;
+        const collectObj = `WITH d{.*, properties: COLLECT(datas)} AS diseaseObj, d, count`;
+        const mapDataSources = `optional match (pp)-[]->(ds1:DataSource) with pp, d, p, ds1, count
          optional match (pp)-[]-(n:DataRef)-[]->(ds:DataSource) with n, pp, d, p, ds1, ds, count
          with distinct pp{.*, sources: collect(properties(ds1)), references:collect(n{.*, reference: properties(ds)})} as datarefs, p, d, pp, count
-         with {field: p.field, values: collect(properties(datarefs))} as datas, d, count
-         with d{.*, properties: collect(datas)} as diseaseObj, d, count
-          ORDER BY d.name 
-          SKIP ${pageIndex * pageSize}
-          LIMIT ${pageSize}
-          return collect(diseaseObj) as data, count as total
+         with {field: p.field, values: collect(properties(datarefs))} as datas, d, count`;
+        const orderSkipLimit = `ORDER BY d.name SKIP ${pageIndex * pageSize} LIMIT ${pageSize}`;
+        const returnObj = `RETURN COLLECT(diseaseObj) AS data, count AS total`;
+        /*        call = `
+                MATCH (n:Disease) WITH count(n) AS count
+                 match (d:Disease)-[:Properties]-(p:MainProperty)-[]-(pp:Property)
+                 optional match (pp)-[]->(ds1:DataSource) with pp, d, p, ds1, count
+                 optional match (pp)-[]-(n:DataRef)-[]->(ds:DataSource) with n, pp, d, p, ds1, ds, count
+                 with distinct pp{.*, sources: collect(properties(ds1)), references:collect(n{.*, reference: properties(ds)})} as datarefs, p, d, pp, count
+                 with {field: p.field, values: collect(properties(datarefs))} as datas, d, count
+                 with d{.*, properties: collect(datas)} as diseaseObj, d, count
+                  ORDER BY d.name
+                  SKIP ${pageIndex * pageSize}
+                  LIMIT ${pageSize}
+                  return collect(diseaseObj) as data, count as total
+                  `;*/
+
+        call = `
+        MATCH (n:Disease) WITH count(n) AS count 
+        ${diseaseToProperty} ${mapDataSources} ${collectObj} ${orderSkipLimit} ${returnObj}
           `;
         if(params['category'] && params['category'] === 'inherited') {
           call = `
      match (n:Disease)-[:Properties]-(:Inheritances)-[]-(:Property) with count(distinct n) as count
-          match (d:Disease)-[:Properties]-(p:MainProperty)-[]-(pp:Property)
-         optional match (pp)-[]->(ds1:DataSource) with pp, d, p, ds1, count
-         optional match (pp)-[]-(n:DataRef)-[]->(ds:DataSource) with n, pp, d, p, ds1, ds, count
-         with distinct pp{.*, sources: collect(properties(ds1)), references:collect(n{.*, reference: properties(ds)})} as datarefs, p, d, pp, count
-         with {field: p.field, values: collect(properties(datarefs))} as datas, d, count
-         with d{.*, properties: collect(datas)} as diseaseObj, d, count
-          ORDER BY d.name 
-          SKIP ${pageIndex * pageSize}
-          LIMIT ${pageSize}
-          return collect(diseaseObj) as data, count as total
+        ${diseaseToProperty} ${mapDataSources} ${collectObj} ${orderSkipLimit} ${returnObj}
           `
         }
         if((params['category'] && params['category'] === 'inherited') && (params['source'] && params['source'] === "true")) {
@@ -64,16 +68,7 @@ export class DiseasesEffects {
             where (f2.sourceCount %2) = 0 
             with distinct d
             with count(d) as count
-             match (d)-[:Properties]-(p:MainProperty)-[]-(pp:Property)
-         optional match (pp)-[]->(ds1:DataSource) with pp, d, p, ds1, count
-         optional match (pp)-[]-(n:DataRef)-[]->(ds:DataSource) with n, pp, d, p, ds1, ds, count
-         with distinct pp{.*, sources: collect(properties(ds1)), references:collect(n{.*, reference: properties(ds)})} as datarefs, p, d, pp, count
-         with {field: p.field, values: collect(properties(datarefs))} as datas, d, count
-         with d{.*, properties: collect(datas)} as diseaseObj, d, count
-          ORDER BY d.name 
-            SKIP ${pageIndex * pageSize}
-            LIMIT ${pageSize}
-            return collect(diseaseObj) as data, count as total
+           ${diseaseToProperty} ${mapDataSources} ${collectObj} ${orderSkipLimit} ${returnObj}
           `
         }
         if((params['category'] && params['category'] === 'inherited') && (params['source'] && params['source'] === "false")) {
@@ -82,35 +77,48 @@ export class DiseasesEffects {
             where (f2.sourceCount %2) > 0 
             with distinct d
             with count(d) as count
-             match (d)-[:Properties]-(p:MainProperty)-[]-(pp:Property)
-         optional match (pp)-[]->(ds1:DataSource) with pp, d, p, ds1, count
-         optional match (pp)-[]-(n:DataRef)-[]->(ds:DataSource) with n, pp, d, p, ds1, ds, count
-         with distinct pp{.*, sources: collect(properties(ds1)), references:collect(n{.*, reference: properties(ds)})} as datarefs, p, d, pp, count
-         with {field: p.field, values: collect(properties(datarefs))} as datas, d, count
-         with d{.*, properties: collect(datas)} as diseaseObj, d, count
-          ORDER BY d.name 
-            SKIP ${pageIndex * pageSize}
-            LIMIT ${pageSize}
-            return collect(diseaseObj) as data, count as total
+        ${diseaseToProperty} ${mapDataSources} ${collectObj} ${orderSkipLimit} ${returnObj}
+          `;
+        }
+
+          if(params['parent']) {
+          call = `
+          match p=(e:HierarchyNode)-[:IsAParent*0..]->(h:HierarchySource) 
+          where e.value = '${params['parent']}' with distinct h
+          match (h)<-[:DisplayValue]-(:Hierarchies)<-[:Properties]-(d:Disease)
+            with distinct d
+            with count(d) as count
+        ${diseaseToProperty} ${mapDataSources} ${collectObj} ${orderSkipLimit} ${returnObj}
           `
         }
+          console.log(params);
+          console.log(call);
         return this.neo4jConnectionService
           .read('gard-data', call)
           .pipe(
+            filter((r) => {
+              console.log(r);
+              return r.data
+            }),
             map((response) => {
-              const page: Page = {
-                pageSize: pageSize,
-                pageIndex: pageIndex,
-              total: response.total ? response.total.low : 0
-              };
-              const results: DiseasesEntity[] = response.data.map(disease => {
-                return {
-                  id: disease.gard_id,
-                  name: disease.name,
-                  disease: serializer.fromJson(disease)
+              console.log(response);
+                if(response.data) {
+                  const page: Page = {
+                    pageSize: pageSize,
+                    pageIndex: pageIndex,
+                    total: response.total ? response.total.low : 0
+                  };
+                  const results: DiseasesEntity[] = response.data.map(disease => {
+                    return {
+                      id: disease.gard_id,
+                      name: disease.name,
+                      disease: serializer.fromJson(disease)
+                    }
+                  })
+                  return DiseasesActions.loadDiseasesSuccess({diseases: results, page: page})
+                } else {
+
                 }
-              });
-              return DiseasesActions.loadDiseasesSuccess({diseases: results, page: page})
             }),
             catchError(error => of(DiseasesActions.loadDiseasesFailure({error})))
           )
@@ -127,20 +135,6 @@ export class DiseasesEffects {
       map((r: RouterNavigationAction) => r.payload.routerState.root.queryParams),
       mergeMap((params: any) => {
         let call;
-/*call = `
-MATCH (d:Disease)-[:Properties]->(p:MainProperty)-[:DisplayValue|:Value]->(pp:Property)
-         WHERE d.gard_id = '${params['disease']}' OR d.name = '${params['disease']}'
-              optional MATCH (pp)-[:DataSourceReference]->(ds1:DataSource) with pp, d, p, ds1
-         optional MATCH (pp)-[:ReferenceSource]-(n:DataRef)-[:DataSourceReference]->(ds:DataSource)
-         optional MATCH p3=(e:HierarchyRoot)-[:IsAParent*0..]->(pp)
-with collect(distinct p3) as paths, d.gard_id as id, e.id as nodeId, d, pp, ds, ds1, p, n
-CALL apoc.convert.toTree(paths) yield value
-with distinct pp{.*, sources: collect(properties(ds1)), references:collect(n{.*, reference: properties(ds)})} as datarefs, p, d, pp, value
-         with {field: p.field, values: collect(properties(datarefs)), tree: value} as datas, d
-         with d{.*, properties: collect(datas)} as diseaseObj, d
-         return diseaseObj as data;
-`;*/
-//          WHERE d.gard_id = '${params['disease']}' OR d.name = '${params['disease']}'
 call = `
          MATCH (d:Disease)-[:Properties]->(p:MainProperty)-[:DisplayValue|:Value]->(pp:Property)
          WHERE d.gard_id = '${params['disease']}' OR d.name = '${params['disease']}'
@@ -201,6 +195,39 @@ with {field: p.field, values: collect(properties(value))} as datas, d
             return DiseasesActions.searchDiseasesSuccess({diseases: response})
           }),
           catchError(error => of(DiseasesActions.searchDiseasesFailure(error))),
+        )
+      }),
+    )
+  });
+
+  setHierarchy$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(DiseasesActions.fetchHierarchy),
+      concatMap(action => {
+        console.log(action);
+        const call = `
+           match p=(e:HierarchyNode)-[:IsAParent]->(h:HierarchyNode)
+where e.value = {payload} with distinct h, e, p
+match p2=(h)-[:IsAParent]->(r) with count(p2) as count, properties(h) as props, e, p
+order by count DESC
+with e{.*, count: count(p), children: collect(props{.*, count: count})} as hierarchy
+return hierarchy
+        `;
+        console.log(call);
+        return this.neo4jConnectionService.read('gard-data', call, {payload: action.node.value}).pipe(
+          map(response => {
+            console.log(response);
+            if(response.hierarchy) {
+              response.hierarchy.count = response.hierarchy.count.low;
+              response.hierarchy.children = response.hierarchy.hierarchy.children.map(child => {
+                child.count = child.count.low;
+                return child;
+              });
+              console.log('success');
+              return DiseasesActions.fetchHierarchySuccess({hierarchy: response})
+            }
+          }),
+          catchError(error => of(DiseasesActions.fetchHierarchyFailure(error))),
         )
       }),
     )

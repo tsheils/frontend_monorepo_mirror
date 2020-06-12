@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {
   DASHBOARD_MAIN_COMPONENT,
-  GARD_DASHBOARD_SIDENAV_COMPONENT, GARD_DISEASE_SEARCH_COMPONENT, GARD_FOOTER_COMPONENT, GARD_HEADER_COMPONENT,
+  GARD_DASHBOARD_SIDENAV_COMPONENT, GARD_DISEASE_SEARCH_COMPONENT, GARD_FOOTER_COMPONENT,
   GardDashboardComponent
 } from './gard-dashboard/gard-dashboard.component';
 import {RouterModule, Routes} from "@angular/router";

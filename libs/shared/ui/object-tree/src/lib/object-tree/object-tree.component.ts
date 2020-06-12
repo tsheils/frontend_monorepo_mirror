@@ -47,6 +47,7 @@ export class ObjectTreeComponent {
 
 
   @Input() selectable = false;
+  @Input() showLinks = false;
   @Input() dynamic = false;
 
   @Input() loading = false;
@@ -66,7 +67,6 @@ protected _data = new BehaviorSubject<any>({});
  */
 @Input()
 set data(value: any) {
-  console.log(value);
   this._data.next(value);
 }
 
@@ -97,7 +97,6 @@ get data() {
   }
 
   ngOnInit() {
-    console.log(this);
     this._data.subscribe( res => {
        this.dataSource.data = [];
        this.dataSource.data = this.data;
@@ -143,10 +142,9 @@ get data() {
   /** Whether all the descendants of the node are selected. */
   descendantsAllSelected(node: NestedNode): boolean {
     const descendants = this.treeControl.getDescendants(node);
-    const descAllSelected = descendants.every(child =>
-      this.fieldSelection.isSelected(child)
+    const descAllSelected = descendants.every(child =>  this.fieldSelection.isSelected(child)
     );
-    return descAllSelected;
+    return false // descAllSelected;
   }
 
   /** Whether part of the descendants are selected */
@@ -173,7 +171,7 @@ get data() {
 
   /** Toggle a leaf to-do item selection. Check all the parents to see if they changed */
   selectLeafNode(node: NestedNode): void {
-    this.fieldSelection.toggle(node);
+ //   this.fieldSelection.toggle(node);
  //   this.checkAllParentsSelection(node);
   }
 /*
@@ -191,7 +189,7 @@ get data() {
     const nodeSelected = this.fieldSelection.isSelected(node);
     const descendants = this.treeControl.getDescendants(node);
     const descAllSelected = descendants.every(child =>
-      this.fieldSelection.isSelected(child)
+       this.fieldSelection.isSelected(child)
     );
     if (nodeSelected && !descAllSelected) {
       this.fieldSelection.deselect(node);
@@ -222,14 +220,12 @@ get data() {
   }*/
 
   fetchData(node: NestedNode) {
-    console.log("fetch")
     if(this.dynamic) {
       this.nodeExpandChange.emit(node);
     }
   }
 
   fetchLeafData(node: NestedNode) {
-    console.log("fetch")
     if(this.dynamic) {
       this.nodeExpandChange.emit(node);
     }

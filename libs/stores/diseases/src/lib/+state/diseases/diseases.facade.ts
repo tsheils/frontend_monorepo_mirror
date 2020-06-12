@@ -21,6 +21,8 @@ export class DiseasesFacade {
 
   searchDiseases$ = this.store.pipe(select(DiseasesSelectors.searchDiseasesEntities));
 
+  fetchHierarchy$ = this.store.pipe(select(DiseasesSelectors.getHierarchy));
+
   page$ = this.store.pipe(select(DiseasesSelectors.getPage));
 
   constructor(private store: Store<fromDiseases.DiseasesPartialState>) {

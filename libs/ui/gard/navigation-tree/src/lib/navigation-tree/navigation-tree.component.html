@@ -4,6 +4,7 @@
     [data]= "data"
     [loading] = loading
     [dynamic]=true
-    (nodeExpandChange)="fetchLevel($event)"
+    [selectable]=true
+    (nodeExpandChange)="nodeClicked($event)"
   ></ncats-frontend-library-object-tree>
 </div>

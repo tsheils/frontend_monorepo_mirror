@@ -10,6 +10,15 @@ import {
 import {Neo4jConnectService} from "@ncats-frontend-library/shared/data-access/neo4j-connector";
 import {QueueAction} from "rxjs/internal/scheduler/QueueAction";
 import {BehaviorSubject} from "rxjs";
+import {NavigationExtras, Router} from "@angular/router";
+import {DiseasesFacade, fetchHierarchy} from "@ncats-frontend-library/stores/diseases";
+
+/**
+ * navigation options to merge query parameters that are added on in navigation/query/facets/pagination
+ */
+const navigationExtras: NavigationExtras = {
+  queryParamsHandling: 'merge'
+};
 
 @Component({
   selector: 'ncats-frontend-library-navigation-tree',
@@ -25,12 +34,30 @@ export class NavigationTreeComponent implements OnInit {
   callsMap: Map<string, any> = new Map<string, any>();
 
   constructor(
+    private router: Router,
     private changeRef: ChangeDetectorRef,
-    private connectionService: Neo4jConnectService
+    private connectionService: Neo4jConnectService,
+    private diseasesFacade: DiseasesFacade
   ) { }
 
   ngOnInit(): void {
-    this.fetchLevel({value: 'MONDO:0000001'})
+    this.diseasesFacade.dispatch(fetchHierarchy({node: {value: 'MONDO:0000001'}}))
+    this.diseasesFacade.fetchHierarchy$.subscribe(res=> {
+      console.log(res);
+      if(res && res.hierarchy) {
+        this.mapData(res);
+      }
+
+    })
+  //  this.fetchLevel()
+  }
+
+  nodeClicked(node) {
+  //  this.fetchLevel(node);
+    navigationExtras.queryParams = {
+      parent: node.value
+    };
+    this._navigate(navigationExtras)
   }
 
 fetchLevel(node) {
@@ -40,15 +67,15 @@ match p=(e:HierarchyNode)-[:IsAParent]->(h:HierarchyNode)
 where e.value = {payload} with distinct h, e, p
 match p2=(h)-[:IsAParent]->(r) with count(p2) as count, properties(h) as props, e, p
 order by count DESC
-with e{.*, count: count(p), children: collect(props{.*, count: count})} as data
-return data
+with e{.*, count: count(p), children: collect(props{.*, count: count})} as hierarchy
+return hierarchy
     `;
     this.connectionService.read('gard-data', call, {payload: node.value}).subscribe(res => {
-      if (res.data) {
+      if (res.hierarchy) {
         let tempArr: any;
-        node = res.data;
+        node = res.hierarchy;
         node.count = node.count.low;
-        node.children = res.data.children.map(child => {
+        node.children = res.hierarchy.children.map(child => {
           child.count = child.count.low;
           return child;
         });
@@ -57,13 +84,27 @@ return data
           tempArr = Object.assign(this.data[0], {});
         }
           this.data = [this.setTreeData(tempArr, node)];
-        console.log(this.data);
         this.changeRef.markForCheck();
         this.loading = false;
         this.callsMap.set(node.value, true);
         this.changeRef.markForCheck();
       }
     })
+  }
+}
+
+mapData(data: any) {
+  if (data.hierarchy) {
+    let tempArr: any = data.hierarchy;
+    let node: any = data.hierarchy;
+    if (this.data && this.data.length > 0) {
+      tempArr = Object.assign(this.data[0], {});
+    }
+    this.data = [this.setTreeData(tempArr, node)];
+    this.changeRef.markForCheck();
+    this.loading = false;
+    this.callsMap.set(node.value, true);
+    this.changeRef.markForCheck();
   }
 }
 
@@ -87,4 +128,14 @@ setTreeData(parent, data) {
     }
     return parent;
   }
- }
+
+  /**
+   * navigate on changes, mainly just changes url, shouldn't reload entire page, just data
+   * @param {NavigationExtras} navExtras
+   * @private
+   */
+  private _navigate(navExtras: NavigationExtras): void {
+    this.router.navigate([], navExtras);
+  }
+
+}

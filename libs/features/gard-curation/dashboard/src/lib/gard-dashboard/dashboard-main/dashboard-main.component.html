@@ -8,6 +8,29 @@
   </div>
 </div>-->
 
+<!--<div fxLayout="row" fxLayoutAlign="space-around center" class="cards-row">
+  <div fxFlex="75">
+    <div class="tile-grid">
+      <mat-card class="dashboard-tile"  [routerLink]="'/diseases'">
+        <h1>{{stats?.diseaseCount}}</h1>
+        <h2>Diseases</h2>
+      </mat-card>
+      <mat-card class="dashboard-tile" [routerLink]="'/diseases'" [queryParams]="{category: 'inherited'}">
+        <h1>{{stats?.inheritanceCount}}</h1>
+        <h2>Inherited or Genetic Diseases</h2>
+      </mat-card>
+      <mat-card class="dashboard-tile" [routerLink]="'/diseases'" [queryParams]="{category: 'inherited', source: true}" queryParamsHandling="merge">
+        <h1>{{stats?.matchCount}}</h1>
+        <h2>Inherited Diseases with source agreement</h2>
+      </mat-card>
+      <mat-card class="dashboard-tile" [routerLink]="'/diseases'" [queryParams]="{category: 'inherited', source: false}" queryParamsHandling="merge">
+        <h1>{{stats?.misMatchCount}}</h1>
+        <h2>Inherited Diseases with source disagreement</h2>
+      </mat-card>
+    </div>
+  </div>
+</div>-->
+
     <div fxLayout="row" fxLayoutAlign="end start">
       <div fxLayout="25">
         <mat-paginator

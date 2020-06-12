@@ -3,6 +3,7 @@ import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 
 import * as DiseasesActions from './diseases.actions';
 import {DiseasesEntity, Page} from './diseases.models';
+import {Disease} from "../../../../../../../models/gard/disease";
 
 export const DISEASES_FEATURE_KEY = 'diseases';
 
@@ -12,6 +13,7 @@ export interface State extends EntityState<DiseasesEntity> {
   error?: string | null; // last none error (if any)
   selectedDisease?: any;
   stats? : any;
+  hierarchy?: any;
   page?: Page;
 }
 
@@ -54,12 +56,17 @@ const diseasesReducer = createReducer(
     DiseasesActions.setDiseaseFailure,
     DiseasesActions.setDiseaseStatsFailure,
     DiseasesActions.searchDiseasesFailure,
+    DiseasesActions.fetchHierarchyFailure,
     DiseasesActions.loadDiseasesFailure, (state, { error }) => ({
     ...state,
     error,
   })),
   on(
     DiseasesActions.setDiseaseSuccess, (state, {disease}) => diseasesAdapter.setOne(disease, { ...state, selectedId: disease.id, loaded: true })
+  ),
+
+  on(
+    DiseasesActions.fetchHierarchySuccess, (state, {hierarchy}) =>({...state, hierarchy: hierarchy, loaded: true})
   )
 );
 

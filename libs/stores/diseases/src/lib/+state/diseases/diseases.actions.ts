@@ -19,6 +19,10 @@ export enum DiseasesActionsTypes {
   setDiseaseStats = '[Diseases] Set Disease Stats',
   setDiseaseStatsSuccess = '[Diseases] Set Disease Stats Success',
   setDiseaseStatsFailure = '[Diseases] Set Disease Stats Failure',
+
+  fetchHierarchy = '[Diseases] Fetch Hierarchy',
+  fetchHierarchySuccess = '[Diseases] Fetch Hierarchy Success',
+  fetchHierarchyFailure = '[Diseases] Fetch Hierarchy Failure',
 }
 
 export const loadDiseases = createAction(
@@ -81,5 +85,21 @@ export const setDiseaseStatsSuccess = createAction(
 //errors
 export const setDiseaseStatsFailure = createAction(
   DiseasesActionsTypes.setDiseaseStatsFailure,
+  props<{ error: any }>()
+);
+
+//input
+export const fetchHierarchy = createAction(
+  DiseasesActionsTypes.fetchHierarchy,
+  props<{node: any }>()
+);
+//output
+export const fetchHierarchySuccess = createAction(
+  DiseasesActionsTypes.fetchHierarchySuccess,
+  props<{ hierarchy: any }>()
+);
+//errors
+export const fetchHierarchyFailure = createAction(
+  DiseasesActionsTypes.fetchHierarchyFailure,
   props<{ error: any }>()
 );
