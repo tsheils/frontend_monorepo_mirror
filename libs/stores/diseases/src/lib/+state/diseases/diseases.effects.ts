@@ -1,22 +1,34 @@
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import * as DiseasesActions from './diseases.actions';
-import {catchError, concatMap, filter, map, mergeMap} from "rxjs/operators";
+import {catchError, concatMap, filter, map, mergeMap, take, withLatestFrom} from "rxjs/operators";
 import {of} from "rxjs";
 import {ROUTER_NAVIGATION, RouterNavigationAction} from "@ngrx/router-store";
 import {DiseaseService} from "../../disease.service";
-import {Disease, DiseaseSerializer} from "../../../../../../../models/gard/disease";
-import {DiseasesEntity, Page} from "@ncats-frontend-library/stores/diseases";
+import {DiseasesEntity, Page, State} from "@ncats-frontend-library/stores/diseases";
 import {Neo4jConnectService} from "@ncats-frontend-library/shared/data-access/neo4j-connector";
+import {
+  DiseaseSerializer,
+  GardHierarchy,
+  GardHierarchySerilaizer
+} from "@ncats-frontend-library/models/gard/gard-models";
+import {select, Store} from "@ngrx/store";
+import {fetchHierarchy} from "./diseases.actions";
+
+
+
 
 const serializer: DiseaseSerializer = new DiseaseSerializer();
+const gardHierarchySerializer: GardHierarchySerilaizer = new GardHierarchySerilaizer();
 
 @Injectable()
 export class DiseasesEffects {
   constructor(
     private diseaseService: DiseaseService,
     private neo4jConnectionService: Neo4jConnectService,
-    private actions$: Actions) {
+    private actions$: Actions,
+    private store$: Store<State>
+    ) {
   }
 
   loadDiseases$ = createEffect(() => {
@@ -87,21 +99,22 @@ export class DiseasesEffects {
           where e.value = '${params['parent']}' with distinct h
           match (h)<-[:DisplayValue]-(:Hierarchies)<-[:Properties]-(d:Disease)
             with distinct d
-            with count(d) as count
+            with count(d) as count, collect(d) as diseases
+            unwind diseases as d
         ${diseaseToProperty} ${mapDataSources} ${collectObj} ${orderSkipLimit} ${returnObj}
           `
         }
-          console.log(params);
+        //  console.log(params);
           console.log(call);
         return this.neo4jConnectionService
           .read('gard-data', call)
           .pipe(
             filter((r) => {
-              console.log(r);
+            //  console.log(r);
               return r.data
             }),
             map((response) => {
-              console.log(response);
+             // console.log(response);
                 if(response.data) {
                   const page: Page = {
                     pageSize: pageSize,
@@ -203,8 +216,8 @@ with {field: p.field, values: collect(properties(value))} as datas, d
   setHierarchy$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(DiseasesActions.fetchHierarchy),
-      concatMap(action => {
-        console.log(action);
+        withLatestFrom(this.store$.select(state => state['diseases'].hierarchy)),
+    concatMap(([action, storeState]) => {
         const call = `
            match p=(e:HierarchyNode)-[:IsAParent]->(h:HierarchyNode)
 where e.value = {payload} with distinct h, e, p
@@ -213,21 +226,23 @@ order by count DESC
 with e{.*, count: count(p), children: collect(props{.*, count: count})} as hierarchy
 return hierarchy
         `;
-        console.log(call);
         return this.neo4jConnectionService.read('gard-data', call, {payload: action.node.value}).pipe(
           map(response => {
-            console.log(response);
             if(response.hierarchy) {
-              response.hierarchy.count = response.hierarchy.count.low;
-              response.hierarchy.children = response.hierarchy.hierarchy.children.map(child => {
-                child.count = child.count.low;
-                return child;
-              });
-              console.log('success');
-              return DiseasesActions.fetchHierarchySuccess({hierarchy: response})
+             let hierarchy: GardHierarchy =  gardHierarchySerializer.fromJson(response.hierarchy);
+             if (storeState) {
+               console.log(storeState);
+               const merge = gardHierarchySerializer.fromJson(storeState);
+                 hierarchy = gardHierarchySerializer.mergeChildren(merge, hierarchy);
+             }
+             console.log(hierarchy);
+              return DiseasesActions.fetchHierarchySuccess({hierarchy: hierarchy})
             }
           }),
-          catchError(error => of(DiseasesActions.fetchHierarchyFailure(error))),
+          catchError(error => {
+            console.log(error);
+            return of(DiseasesActions.fetchHierarchyFailure(error))
+          }),
         )
       }),
     )

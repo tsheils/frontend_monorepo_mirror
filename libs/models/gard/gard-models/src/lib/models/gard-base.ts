@@ -1,7 +1,6 @@
-import {Audit} from "../audit";
 import {GardReference} from "./gard-reference";
-import {Serializer} from "../serializer";
-import {Disease} from "./disease";
+import {Serializer} from "@ncats-frontend-library/models/interfaces/core-interfaces";
+import {Audit} from "@ncats-frontend-library/models/gard/gard-models";
 
 export class GardBase {
   audit?: Audit;

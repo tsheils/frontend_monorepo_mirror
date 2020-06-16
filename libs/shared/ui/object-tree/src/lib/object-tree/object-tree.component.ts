@@ -7,8 +7,8 @@ import {
   Output,
   ViewEncapsulation
 } from '@angular/core';
-import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeNestedDataSource} from "@angular/material/tree";
-import {FlatTreeControl, NestedTreeControl} from "@angular/cdk/tree";
+import {MatTreeNestedDataSource} from "@angular/material/tree";
+import {NestedTreeControl} from "@angular/cdk/tree";
 import {SelectionModel} from "@angular/cdk/collections";
 import {BehaviorSubject} from "rxjs";
 
@@ -23,16 +23,6 @@ interface NestedNode {
   count?: number;
   children?: NestedNode[];
 }
-
-/** Flat to-do item node with expandable and level information
-export class FieldFlatNode {
-  label: string;
-  level: number;
-  value?: string;
-  url?: string;
-  count?: number;
-  expandable: boolean;
-}*/
 
 @Component({
   selector: 'ncats-frontend-library-object-tree',
@@ -52,8 +42,6 @@ export class ObjectTreeComponent {
 
   @Input() loading = false;
 
-  // @Input() data: FieldNode;
-
   /**
   * initialize a private variable _data, it's a BehaviorSubject
 * @type {BehaviorSubject<any>}
@@ -67,6 +55,7 @@ protected _data = new BehaviorSubject<any>({});
  */
 @Input()
 set data(value: any) {
+  console.log(value);
   this._data.next(value);
 }
 
@@ -80,64 +69,25 @@ get data() {
 
   treeControl = new NestedTreeControl<NestedNode>(node => node.children);
   dataSource = new MatTreeNestedDataSource<NestedNode>();
-
-
-
- // dataSource = new MatTreeNestedDataSource<FieldNode>();
-  fieldSelection = new SelectionModel<NestedNode>(false /* multiple */);
+  fieldSelection = new SelectionModel<NestedNode>(true /* multiple */);
 
   constructor(
     private changeRef: ChangeDetectorRef
   ) {
- //   this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
-  //    this.isExpandable, this.getChildren);
-  //  this.treeControl = new FlatTreeControl<NestedNode>(this.getLevel, this.isExpandable);
- //   this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
- //   this.dataSource.data = TREE_DATA;
   }
 
   ngOnInit() {
     this._data.subscribe( res => {
-       this.dataSource.data = [];
+      // this.dataSource.data = [];
+      console.log(res);
        this.dataSource.data = this.data;
+      this.treeControl.expansionModel.selected.reverse().forEach(node => this.treeControl.expandDescendants(node));
       this.changeRef.markForCheck();
     })
     this.treeControl.expand(this.dataSource.data[0]);
   }
 
-  /*getLevel = (node: FieldFlatNode) => node.level;
-
-  isExpandable = (node: FieldFlatNode) => node.expandable;
-
-  getChildren = (node: FieldNode): FieldNode[] => {
-  //  console.log(node);
-    return node.children;
-  }*/
-
   hasChild = (_: number, _nodeData: NestedNode) => _nodeData.count || (_nodeData.children && _nodeData.children.length > 1);
-
- // hasNoContent = (_: number, _nodeData: FieldFlatNode) => _nodeData.label === '';
-
-  /**
-   * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
-   */
-/*
-  transformer = (node: FieldNode, level: number) => {
-    const existingNode = this.nestedNodeMap.get(node);
-    const flatNode = existingNode && existingNode.label === node.label
-      ? existingNode
-      : new FieldFlatNode();
-    flatNode.label = node.label;
-    flatNode.url = node.url;
-    flatNode.level = level;
-    flatNode.value = node.value;
-    flatNode.count = node.count;
-    flatNode.expandable = !!node.children || node.count > 0;
-    this.flatNodeMap.set(flatNode, node);
-    this.nestedNodeMap.set(node, flatNode);
-    return flatNode;
-  }
-*/
 
   /** Whether all the descendants of the node are selected. */
   descendantsAllSelected(node: NestedNode): boolean {
@@ -156,8 +106,8 @@ get data() {
 
   /** Toggle the to-do item selection. Select/deselect all the descendants node */
   selectParentNode(node: NestedNode): void {
-   // this.fieldSelection.toggle(node);
-/*    const descendants = this.treeControl.getDescendants(node);
+    this.fieldSelection.toggle(node);
+    const descendants = this.treeControl.getDescendants(node);
     this.fieldSelection.isSelected(node)
       ? this.fieldSelection.select(...descendants)
       : this.fieldSelection.deselect(...descendants);
@@ -166,23 +116,24 @@ get data() {
     descendants.every(child =>
       this.fieldSelection.isSelected(child)
     );
-    this.checkAllParentsSelection(node);*/
+    this.checkAllParentsSelection(node);
   }
 
   /** Toggle a leaf to-do item selection. Check all the parents to see if they changed */
   selectLeafNode(node: NestedNode): void {
- //   this.fieldSelection.toggle(node);
- //   this.checkAllParentsSelection(node);
+   this.fieldSelection.toggle(node);
+    this.checkAllParentsSelection(node);
   }
-/*
-  /!* Checks all the parents when a leaf node is selected/unselected *!/
+
+
+  /* Checks all the parents when a leaf node is selected/unselected */
   checkAllParentsSelection(node: NestedNode): void {
     let parent: NestedNode | null = this.getParentNode(node);
     while (parent) {
       this.checkRootNodeSelection(parent);
       parent = this.getParentNode(parent);
     }
-  }*/
+  }
 
   /** Check root node checked state and change it accordingly */
   checkRootNodeSelection(node: NestedNode): void {
@@ -199,7 +150,7 @@ get data() {
     this.fieldSelectChange.emit(this.fieldSelection.selected);
   }
 
-/*  /!* Get the parent node of a node *!/
+  /* Get the parent node of a node */
   getParentNode(node: NestedNode): NestedNode | null {
     const currentLevel = this.getLevel(node);
 
@@ -217,7 +168,7 @@ get data() {
       }
     }
     return null;
-  }*/
+  }
 
   fetchData(node: NestedNode) {
     if(this.dynamic) {

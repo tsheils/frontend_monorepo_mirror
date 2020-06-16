@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Disease} from "../../../../../../../models/gard/disease";
 import {NavigationExtras, Router} from "@angular/router";
+import {Disease} from "@ncats-frontend-library/models/gard/gard-models";
 
 @Component({
   selector: 'ncats-frontend-library-disease-list-card',

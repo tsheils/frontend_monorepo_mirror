@@ -1,9 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
-import {GardReference} from "../../../../../../../models/gard/gard-reference";
-import {Disease} from "../../../../../../../models/gard/disease";
 import {OmimApiService, OmimParams} from "../../../../../../shared/services/src/lib/omim-api/omim-api.service";
 import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
-import {GardDataProperty} from "../../../../../../../models/gard/gard-base";
+import {Disease, GardDataProperty} from "@ncats-frontend-library/models/gard/gard-models";
 
 @Component({
   selector: 'ncats-frontend-library-data-property-display',

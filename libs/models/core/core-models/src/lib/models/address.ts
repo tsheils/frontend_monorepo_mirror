@@ -1,6 +1,5 @@
-import {GardBase} from "./gard/gard-base";
 
-export class Address extends GardBase {
+export class Address {
   name: string;
   address: string;
   city: string;

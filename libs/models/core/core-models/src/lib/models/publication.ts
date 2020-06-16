@@ -1,4 +1,3 @@
-import {GardBase} from "./gard/gard-base";
 import {Author} from "./author";
 
 enum ENUM_PUBLICATION_TYPE {
@@ -8,7 +7,7 @@ enum ENUM_PUBLICATION_TYPE {
   "Book" = "Book"
 }
 
-export class Publication extends GardBase {
+export class Publication {
   authors: Author[];
   title: string;
   published: Date;

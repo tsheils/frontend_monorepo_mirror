@@ -100,6 +100,15 @@
       ],
       "@ncats-frontend-library/ui/gard/navigation-tree": [
         "libs/ui/gard/navigation-tree/src/index.ts"
+      ],
+      "@ncats-frontend-library/models/gard/gard-models": [
+        "libs/models/gard/gard-models/src/index.ts"
+      ],
+      "@ncats-frontend-library/models/core/core-models": [
+        "libs/models/core/core-models/src/index.ts"
+      ],
+      "@ncats-frontend-library/models/interfaces/core-interfaces": [
+        "libs/models/interfaces/core-interfaces/src/index.ts"
       ]
     }
   },

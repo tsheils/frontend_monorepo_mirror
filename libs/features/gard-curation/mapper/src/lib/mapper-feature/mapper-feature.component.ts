@@ -10,8 +10,11 @@ import {
   CURATION_SIDEPANEL_COMPONENT,
   GARD_DISEASE_HEADER_COMPONENT, GARD_DISEASE_SEARCH_COMPONENT, GARD_FOOTER_COMPONENT
 } from "../../../../curation/src/lib/curation-feature/curation-feature.component";
-import {GardReference} from "../../../../../../../models/gard/gard-reference";
-import {GardDataProperty, GardDataPropertySerializer} from "../../../../../../../models/gard/gard-base";
+import {GardReference} from "@ncats-frontend-library/models/gard/gard-models";
+import {
+  GardDataProperty,
+  GardDataPropertySerializer
+} from "../../../../../../models/gard/gard-models/src/lib/models/gard-base";
 
 @Component({
   selector: 'ncats-frontend-library-mapper-feature',

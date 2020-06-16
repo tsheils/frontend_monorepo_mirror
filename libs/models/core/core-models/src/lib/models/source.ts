@@ -1,4 +1,3 @@
-import {GardBase} from "./gard/gard-base";
 import {Publication} from "./publication";
 
 enum ENUM_SOURCE_TYPE {
@@ -7,7 +6,7 @@ enum ENUM_SOURCE_TYPE {
   "Other"
 }
 
-export class Source extends GardBase {
+export class Source {
   name: string;
   type: ENUM_SOURCE_TYPE;
   url: string;

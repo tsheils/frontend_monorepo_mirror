@@ -1,10 +1,10 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, InjectionToken, OnInit} from '@angular/core';
 import RxSession from "neo4j-driver/types/session-rx";
 import {BehaviorSubject, Observable} from "rxjs";
-import {Disease, DiseaseSerializer} from "../../../../../../../models/gard/disease";
 import {PanelConfig, Position} from "@ncats-frontend-library/shared/ui/dynamic-app-layout";
 import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
 import {Neo4jConnectService} from "@ncats-frontend-library/shared/data-access/neo4j-connector";
+import {Disease, DiseaseSerializer} from "@ncats-frontend-library/models/gard/gard-models";
 
 
 export const GARD_HEADER_COMPONENT = new InjectionToken<string>('GardHeaderComponent');

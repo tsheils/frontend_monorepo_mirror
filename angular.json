@@ -1221,6 +1221,111 @@
           "style": "scss"
         }
       }
+    },
+    "models-gard-gard-models": {
+      "projectType": "library",
+      "root": "libs/models/gard/gard-models",
+      "sourceRoot": "libs/models/gard/gard-models/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/models/gard/gard-models/tsconfig.lib.json",
+              "libs/models/gard/gard-models/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/models/gard/gard-models/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/models/gard/gard-models/jest.config.js",
+            "tsConfig": "libs/models/gard/gard-models/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/models/gard/gard-models/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      }
+    },
+    "models-core-core-models": {
+      "projectType": "library",
+      "root": "libs/models/core/core-models",
+      "sourceRoot": "libs/models/core/core-models/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/models/core/core-models/tsconfig.lib.json",
+              "libs/models/core/core-models/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/models/core/core-models/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/models/core/core-models/jest.config.js",
+            "tsConfig": "libs/models/core/core-models/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/models/core/core-models/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      }
+    },
+    "models-core-interfaces": {
+      "projectType": "library",
+      "root": "libs/models/interfaces/core-interfaces",
+      "sourceRoot": "libs/models/interfaces/core-interfaces/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/models/interfaces/core-interfaces/tsconfig.lib.json",
+              "libs/models/interfaces/core-interfaces/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/models/interfaces/core-interfaces/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/models/interfaces/core-interfaces/jest.config.js",
+            "tsConfig": "libs/models/interfaces/core-interfaces/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/models/interfaces/core-interfaces/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      }
     }
   },
   "cli": {

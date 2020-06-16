@@ -1,7 +1,6 @@
 import {Address} from "./address";
-import {GardBase} from "./gard/gard-base";
 
-export class Organization extends GardBase {
+export class Organization {
   name: string;
   URL: string;
   email: string;

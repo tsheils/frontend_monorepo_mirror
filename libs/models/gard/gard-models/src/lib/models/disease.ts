@@ -1,9 +1,8 @@
-import {Serializer} from "../serializer";
 import {GardBase, GardDataProperty, GardDataPropertySerializer} from "./gard-base";
 import {DomSanitizer} from "@angular/platform-browser";
 import {Inject, Optional, SecurityContext} from "@angular/core";
-import {Publication} from "../publication";
 import {GardReference} from "./gard-reference";
+import {Serializer} from "@ncats-frontend-library/models/interfaces/core-interfaces";
 
 enum AGE_OF_ONSET {
   none = 'no_age_of_onset_information',
@@ -87,7 +86,7 @@ export class Disease extends GardBase {
   // in progress
   inheritance?: GardDataProperty[];
   synonyms?: GardDataProperty[];
-  references?: Publication[];
+  references?:  any [];//Publication[];
   sources?: GardReference[];
   hierarchies: any;
 
@@ -152,15 +151,15 @@ export class DiseaseSerializer implements Serializer {
       }*/
       json.properties.forEach(prop => {
         //   if(prop.field !== 'sources') {
-        obj[prop.field] =  prop.values.map(val => {
-          if(val.tree) {
+        obj[prop.field] = prop.values.map(val => {
+          if (val.tree) {
             val.tree = this._mapEntry(val.tree)
           } else {
             val = this.gardPropertySerializer.fromJson(val);
           }
           return val;
         })
-      //  });
+        //  });
         /*   }
            if(prop.field === 'sources') {
              obj.sources = prop.values.map(val => {
@@ -168,7 +167,7 @@ export class DiseaseSerializer implements Serializer {
               return  new GardReference(val)
              });
            }*/
-       // console.log(obj);
+        // console.log(obj);
       });
 
       /*if (obj.sources) {
@@ -251,20 +250,20 @@ export class DiseaseSerializer implements Serializer {
     }*/
   private _mapEntry(entry) {
     return {
-        value: entry.value,
-        label: entry.label,
-         url: entry.url,
+      value: entry.value,
+      label: entry.label,
+      url: entry.url,
       children: entry.isaparent ? entry.isaparent.map(subentry => this._mapEntry(subentry)) : undefined
     };
   }
 
-/*  private _flattenTree(tree, level, parent?) {
-    if(parent && tree) {
-      this.pairs.push({parent: tree.node, child: parent, level: level - 1});
-    }
-    if(tree.parents) {
-      tree.parents.forEach(parent => this.flattenTree(parent, level + 1,  tree.node));
-    }*/
- // }
+  /*  private _flattenTree(tree, level, parent?) {
+      if(parent && tree) {
+        this.pairs.push({parent: tree.node, child: parent, level: level - 1});
+      }
+      if(tree.parents) {
+        tree.parents.forEach(parent => this.flattenTree(parent, level + 1,  tree.node));
+      }*/
+  // }
 
 }

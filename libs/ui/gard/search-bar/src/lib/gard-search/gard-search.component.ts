@@ -11,12 +11,12 @@ import {
 } from '@angular/core';
 import {debounceTime, distinctUntilChanged, switchMap} from "rxjs/operators";
 import {of} from "rxjs";
-import {DiseaseSerializer} from "../../../../../../../models/gard/disease";
 import {FormControl} from "@angular/forms";
 import {MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from "@angular/material/autocomplete";
 import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
 import {NavigationExtras, Router} from "@angular/router";
 import {Neo4jConnectService} from "@ncats-frontend-library/shared/data-access/neo4j-connector";
+import {DiseaseSerializer} from "@ncats-frontend-library/models/gard/gard-models";
 
 /**
  * navigation options to merge query parameters that are added on in navigation/query/facets/pagination

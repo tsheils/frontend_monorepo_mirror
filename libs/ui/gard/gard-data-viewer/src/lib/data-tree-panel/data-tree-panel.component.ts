@@ -7,9 +7,9 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import {Disease} from "../../../../../../../models/gard/disease";
 import {Router} from "@angular/router";
 import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
+import {Disease} from "@ncats-frontend-library/models/gard/gard-models";
 
 @Component({
   selector: 'ncats-frontend-library-data-tree-panel',

@@ -1,8 +1,6 @@
-import {GardBase} from "./gard/gard-base";
 import {Organization} from "./organization";
-import {Principal} from "./principal";
 
-export class Author extends GardBase {
+export class Author {
   position: string;
   URL: string;
   email: string;

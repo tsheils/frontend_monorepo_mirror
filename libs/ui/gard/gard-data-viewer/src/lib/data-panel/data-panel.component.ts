@@ -7,11 +7,9 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import {Disease} from "../../../../../../../models/gard/disease";
-import {BehaviorSubject, Observable} from "rxjs";
-import {map} from "rxjs/operators";
 import {NavigationExtras, Router} from "@angular/router";
 import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
+import {Disease} from "@ncats-frontend-library/models/gard/gard-models";
 
 /**
  * navigation options to merge query parameters that are added on in navigation/query/facets/pagination

@@ -1,4 +1,4 @@
-import {GardBase} from "./gard/gard-base";
+import {GardBase} from "./gard-base";
 
 export class GardCurator extends GardBase {
   username: string;

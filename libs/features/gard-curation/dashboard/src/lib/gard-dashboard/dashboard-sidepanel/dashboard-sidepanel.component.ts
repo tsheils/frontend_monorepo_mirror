@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'ncats-frontend-library-dashboard-sidepanel',
@@ -38,7 +38,9 @@ export class DashboardSidepanelComponent implements OnInit {
   open = true;
 
 
-  constructor() { }
+  constructor(
+    private changeRef: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
   }

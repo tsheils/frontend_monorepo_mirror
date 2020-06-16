@@ -1,7 +1,7 @@
 import {DiseasesEntity} from './diseases.models';
 import {diseaseInitialState, DISEASES_FEATURE_KEY, diseasesAdapter, DiseasesPartialState} from './diseases.reducer';
 import * as DiseasesSelectors from './diseases.selectors';
-import {Disease} from "../../../../../../../models/gard/disease";
+import {Disease} from "@ncats-frontend-library/models/gard/gard-models";
 
 describe('Diseases Selectors', () => {
   const ERROR_MSG = 'No Error Available';

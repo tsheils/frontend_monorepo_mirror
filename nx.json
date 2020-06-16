@@ -111,6 +111,15 @@
     },
     "ui-gard-navigation-tree": {
       "tags": []
+    },
+    "models-gard-gard-models": {
+      "tags": []
+    },
+    "models-core-core-models": {
+      "tags": []
+    },
+    "models-core-interfaces": {
+      "tags": []
     }
   }
 }

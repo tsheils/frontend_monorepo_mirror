@@ -1,7 +1,5 @@
 import { createAction, props } from '@ngrx/store';
 import {DiseasesEntity, Page} from './diseases.models';
-import {Disease} from "../../../../../../../models/gard/disease";
-import {MergedRoute} from "../../../../../store-router/src/lib/+state/merged-route";
 
 export enum DiseasesActionsTypes {
   loadDiseases = '[Diseases] Load Diseases',

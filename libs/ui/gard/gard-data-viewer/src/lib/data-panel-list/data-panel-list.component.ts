@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
-import {Disease} from "../../../../../../../models/gard/disease";
 import {map} from "rxjs/operators";
 import {BehaviorSubject} from "rxjs";
+import {Disease} from "@ncats-frontend-library/models/gard/gard-models";
 
 @Component({
   selector: 'ncats-frontend-library-data-panel-list',
