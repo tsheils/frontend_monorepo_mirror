@@ -1,9 +1,9 @@
 import { createReducer, on, Action } from '@ngrx/store';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
-
 import * as DiseasesActions from './diseases.actions';
-import {DiseasesEntity, Page} from './diseases.models';
+import {DiseasesEntity} from './diseases.models';
 import {Disease, GardHierarchy} from "@ncats-frontend-library/models/gard/gard-models";
+import {Page} from "@ncats-frontend-library/models/interfaces/core-interfaces";
 
 
 export const DISEASES_FEATURE_KEY = 'diseases';
@@ -13,10 +13,11 @@ export interface State extends EntityState<DiseasesEntity> {
   loaded: boolean; // has the Diseases list been loaded
   error?: string | null; // last none error (if any)
   // todo check if this cn be a Disease object
-  selectedDisease?: any;
+  disease?: Disease;
   stats? : any;
   hierarchy?: GardHierarchy;
   page?: Page;
+  typeahead?: any;
 }
 
 export interface DiseasesPartialState {
@@ -45,14 +46,28 @@ const diseasesReducer = createReducer(
     (state, {stats}) => ({...state, stats: stats, loaded: true})
   ),
   on(
-    DiseasesActions.searchDiseasesSuccess, (state, props) => {
-  return diseasesAdapter.setAll(props.diseases, { ...state, page: props['page'], loaded: true })
-}
+    DiseasesActions.setPage,
+    (state, {page}) => ({...state, page: page})
+  ),
+  on(
+    DiseasesActions.searchDiseasesSuccess,
+      (state, {typeahead}) => ({...state, typeahead: typeahead})
 ),
  on(
    DiseasesActions.loadDiseasesSuccess, (state, props) => {
-    return diseasesAdapter.setAll(props.diseases, { ...state, page: props['page'], loaded: true })
+     const diseases = props.diseases.map(disease => {
+       return {
+         id: disease.gard_id,
+         name: disease.name,
+         disease:disease
+       }
+     });
+    return diseasesAdapter.setAll(diseases, { ...state, loaded: true })
     }
+  ),
+  on(
+    DiseasesActions.setDiseaseSuccess,
+      (state, {disease}) => ({...state, disease: disease})
   ),
   on(
     DiseasesActions.setDiseaseFailure,
@@ -64,13 +79,7 @@ const diseasesReducer = createReducer(
     error,
   })),
   on(
-    DiseasesActions.setDiseaseSuccess, (state, {disease}) => diseasesAdapter.setOne(disease, { ...state, selectedId: disease.id, loaded: true })
-  ),
-
-  on(
     DiseasesActions.fetchHierarchySuccess, (state, {hierarchy}) => {
-      console.log(state);
-  //    let merge = hierarchy;
         const setTreeData = (parent: GardHierarchy, data: GardHierarchy) => {
           if (parent.value === data.value) {
             parent = data;
@@ -90,17 +99,7 @@ const diseasesReducer = createReducer(
             }
           }
           return parent;
-        }
-
-      //  const clone = { ...state.hierarchy };
-      //  console.log([setTreeData(state.hierarchy, hierarchy)]);
- /*     if (state.hierarchy) {
-        //const stateHierarchy = [state.hierarchy].map(g => ({ ...g }));
-      //  const stateHierarchy = {...state.hierarchy};
-      //   merge = [setTreeData(stateHierarchy, hierarchy)];
-      }*/
-     // console.log(merge);
-    //  const h = [state.hierarchy].map(hier => setTreeData(hier, hierarchy) )
+        };
       return ({...state, hierarchy: hierarchy, loaded: true})
     }
   )

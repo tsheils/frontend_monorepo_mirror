@@ -26,6 +26,7 @@ export class DataPropertyDisplayComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    /*
             if(this.disease.omimCodes && (this.data)) {
               this.disease.omimCodes.forEach(code => {
                 const params: OmimParams = {
@@ -45,6 +46,7 @@ export class DataPropertyDisplayComponent implements OnInit {
               })
 
             }
+*/
   }
 
   subType():string {

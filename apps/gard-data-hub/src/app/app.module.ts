@@ -22,6 +22,25 @@ import {
 } from "@ncats-frontend-library/shared/data-access/neo4j-connector";
 import {UiGardSearchBarModule} from "@ncats-frontend-library/ui/gard/search-bar";
 import {OmimApiService} from "../../../../libs/shared/services/src/lib/omim-api/omim-api.service";
+import {DiseaseService} from "../../../../libs/stores/diseases/src/lib/disease.service";
+
+export function init_connections(diseaseService: DiseaseService) {
+  return () => {
+    environment.neo4j.forEach(db => {
+      diseaseService.createDriver(db);
+    });
+  }
+}
+
+export function set_omim_api(omimApiService: OmimApiService) {
+  return () => {
+    omimApiService.setHeaders(
+      new HttpHeaders({
+        'Content-Type': 'text/plain',
+        'ApiKey' : environment.omimkey
+      }))
+  }
+}
 
 
 const ROUTES: Routes = [
@@ -99,25 +118,8 @@ const ROUTES: Routes = [
     UiGardSearchBarModule
   ],
   providers: [
-    DiseasesFacade,
-    {
-      provide: APP_INITIALIZER,
-      useFactory: (facade: DiseasesFacade, connectionService: Neo4jConnectService, omimApiService: OmimApiService) => {
-        return () => {
-          environment.neo4j.forEach(db => {
-            connectionService.createDriver(db);
-          });
-          omimApiService.setHeaders(
-            new HttpHeaders({
-                  'Content-Type': 'text/plain',
-                  'ApiKey' : environment.omimkey
-                }))
-        //  facade.dispatch(loadDiseases());
-        };
-      },
-      multi: true,
-      deps: [DiseasesFacade, Neo4jConnectService, OmimApiService]
-    }
+    { provide: APP_INITIALIZER, useFactory: init_connections, deps: [DiseaseService], multi: true },
+    { provide: APP_INITIALIZER, useFactory: set_omim_api, deps: [OmimApiService], multi: true },
   ],
   bootstrap: [AppComponent]
 })

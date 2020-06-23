@@ -15,6 +15,7 @@ import {SharedUiDynamicAppLayoutModule} from "@ncats-frontend-library/shared/ui/
 import {UiGardNavigationTreeModule} from "@ncats-frontend-library/ui/gard/navigation-tree";
 import { DashboardSidepanelComponent } from './gard-dashboard/dashboard-sidepanel/dashboard-sidepanel.component';
 import { DashboardMainComponent } from './gard-dashboard/dashboard-main/dashboard-main.component';
+import {DiseaseService} from "../../../../../stores/diseases/src/lib/disease.service";
 
 const ROUTES: Routes = [
   {

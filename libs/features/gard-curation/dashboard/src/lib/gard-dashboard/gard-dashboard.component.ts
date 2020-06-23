@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, InjectionToken, OnInit, ViewChild} from '@angular/core';
-import {DiseasesFacade, Page, setDiseaseStats} from "@ncats-frontend-library/stores/diseases";
+import {DiseasesFacade, fetchHierarchy, setDiseaseStats} from "@ncats-frontend-library/stores/diseases";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {SelectionModel} from "@angular/cdk/collections";
@@ -59,6 +59,7 @@ export class GardDashboardComponent implements OnInit {
   ) {
 
     this.diseasesFacade.dispatch(setDiseaseStats({}));
+    this.diseasesFacade.dispatch(fetchHierarchy({node: {value: 'MONDO:0000001'}}));
   }
 
 
@@ -72,10 +73,6 @@ export class GardDashboardComponent implements OnInit {
       if(res && res.diseaseCount) {
         this.stats = res;
       }
-    });
-
-    this.diseasesFacade.page$.subscribe(res => {
-    //  this.page = res;
     });
 
 this.diseasesFacade.loaded$.subscribe(res => {

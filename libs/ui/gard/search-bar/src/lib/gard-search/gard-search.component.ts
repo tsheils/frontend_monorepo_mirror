@@ -13,7 +13,7 @@ import {debounceTime, distinctUntilChanged, switchMap} from "rxjs/operators";
 import {of} from "rxjs";
 import {FormControl} from "@angular/forms";
 import {MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from "@angular/material/autocomplete";
-import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
+import {DiseasesFacade, searchDiseases, setDiseaseStats} from "@ncats-frontend-library/stores/diseases";
 import {NavigationExtras, Router} from "@angular/router";
 import {Neo4jConnectService} from "@ncats-frontend-library/shared/data-access/neo4j-connector";
 import {DiseaseSerializer} from "@ncats-frontend-library/models/gard/gard-models";
@@ -76,6 +76,18 @@ export class GardSearchComponent implements OnInit {
         distinctUntilChanged()
       )
       .subscribe(term => this.typeahead(term));
+
+    this.diseasesFacade.searchDiseases$
+      .pipe(
+      switchMap(res => {
+          if(res && res.typeahead) {
+            this.filteredGroups = [{name: 'GARD names', options: res.typeahead}];
+            this.changeRef.markForCheck();
+          }
+          return of(res);
+        }
+      ),
+    ).subscribe()
   }
 
   /**
@@ -104,27 +116,9 @@ export class GardSearchComponent implements OnInit {
   }
 
   typeahead(event: any) {
-    if(event.length > 0) {
+    if (event.length > 0) {
       this.options = [];
-      const call = `
-      CALL db.index.fulltext.queryNodes("namesAndSynonyms", "name:${event}* OR ${event}*") YIELD node 
-      with collect(properties(node)) AS arr 
-      with arr[0..10] AS typeahead
-      RETURN typeahead
-      `;
-     // console.log(call);
-      this.connectionService.read('gard-data', call)
-        .pipe(
-          switchMap(res => {
-            if(res.typeahead) {
-              this.filteredGroups = [{name: 'GARD names', options: res.typeahead}];
-              this.changeRef.markForCheck();
-            }
-              return of(res);
-            }
-          ),
-        ).subscribe()
-    } else {
+      this.diseasesFacade.dispatch(searchDiseases({query: event}));
     }
   }
 }

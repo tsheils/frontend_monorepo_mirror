@@ -2,26 +2,21 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  EventEmitter,
+  EventEmitter, Injectable,
   Input,
   Output,
   ViewEncapsulation
 } from '@angular/core';
-import {MatTreeNestedDataSource} from "@angular/material/tree";
-import {NestedTreeControl} from "@angular/cdk/tree";
+import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeNestedDataSource} from "@angular/material/tree";
+import {FlatTreeControl, NestedTreeControl} from "@angular/cdk/tree";
 import {SelectionModel} from "@angular/cdk/collections";
 import {BehaviorSubject} from "rxjs";
+import {Hierarchy} from "@ncats-frontend-library/models/core/core-models";
 
-/**
- * Food data with nested structure.
- * Each node has a name and an optional list of children.
- */
-interface NestedNode {
-  label: string;
-  value?: string;
-  url?: string;
-  count?: number;
-  children?: NestedNode[];
+/** Flat tree item node with expandable and level information */
+export class HierarchyFlatNode extends Hierarchy {
+  level: number;
+  expandable: boolean;
 }
 
 @Component({
@@ -31,6 +26,7 @@ interface NestedNode {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
+
 export class ObjectTreeComponent {
   @Output() fieldSelectChange: EventEmitter<any> = new EventEmitter<any>();
   @Output() nodeExpandChange: EventEmitter<any> = new EventEmitter<any>();
@@ -42,7 +38,8 @@ export class ObjectTreeComponent {
 
   @Input() loading = false;
 
-  /**
+
+/**
   * initialize a private variable _data, it's a BehaviorSubject
 * @type {BehaviorSubject<any>}
 * @private
@@ -50,134 +47,159 @@ export class ObjectTreeComponent {
 protected _data = new BehaviorSubject<any>({});
 
 /**
- * pushes changed data to {BehaviorSubject}
- * @param value
- */
+* pushes changed data to {BehaviorSubject}
+* @param value
+*/
 @Input()
 set data(value: any) {
-  console.log(value);
   this._data.next(value);
 }
 
 /**
- * returns value of {BehaviorSubject}
- * @returns {any}
- */
+* returns value of {BehaviorSubject}
+* @returns {any}
+*/
 get data() {
   return this._data.getValue();
 }
 
-  treeControl = new NestedTreeControl<NestedNode>(node => node.children);
-  dataSource = new MatTreeNestedDataSource<NestedNode>();
-  fieldSelection = new SelectionModel<NestedNode>(true /* multiple */);
+/** The selection for checklist */
+checklistSelection = new SelectionModel<HierarchyFlatNode>(true);
 
-  constructor(
-    private changeRef: ChangeDetectorRef
-  ) {
-  }
+  private _transformer = (node: Hierarchy, level: number) => {
+    const flatNode = new HierarchyFlatNode();
+    Object.entries((node)).forEach((prop) => flatNode[prop[0]] = prop[1]);
+   // flatNode.value = node.value;
+   // flatNode.label = node.label;
+    flatNode.expandable = (!!node.children && node.children.length > 0) ||  (!!node.count && node.count > 1);
+      flatNode.level = level;
+    return flatNode;
+  };
+
+  treeControl = new FlatTreeControl<HierarchyFlatNode>(
+    node => node.level, node => node.expandable);
+
+  treeFlattener = new MatTreeFlattener(
+    this._transformer, node => node.level, node => node.expandable, node => node.children);
+
+  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+
+constructor(
+  private changeRef: ChangeDetectorRef
+) {
+}
 
   ngOnInit() {
     this._data.subscribe( res => {
-      // this.dataSource.data = [];
-      console.log(res);
-       this.dataSource.data = this.data;
-      this.treeControl.expansionModel.selected.reverse().forEach(node => this.treeControl.expandDescendants(node));
-      this.changeRef.markForCheck();
-    })
-    this.treeControl.expand(this.dataSource.data[0]);
-  }
+      if(res && res.length) {
+        this.dataSource.data = res;
+        this.dataSource._flattenedData.subscribe(data => {
+          this.treeControl.dataNodes = data;
+          this.treeControl.expansionModel.selected.forEach(node => {
+            const n = this.treeControl.dataNodes.find(d => d.value === node.value);
+            if(n) {
+              this.treeControl.expand(n);
+            }
+          });
+        });
 
-  hasChild = (_: number, _nodeData: NestedNode) => _nodeData.count || (_nodeData.children && _nodeData.children.length > 1);
-
-  /** Whether all the descendants of the node are selected. */
-  descendantsAllSelected(node: NestedNode): boolean {
-    const descendants = this.treeControl.getDescendants(node);
-    const descAllSelected = descendants.every(child =>  this.fieldSelection.isSelected(child)
-    );
-    return false // descAllSelected;
-  }
-
-  /** Whether part of the descendants are selected */
-  descendantsPartiallySelected(node: NestedNode): boolean {
-    const descendants = this.treeControl.getDescendants(node);
-    const result = descendants.some(child => this.fieldSelection.isSelected(child));
-    return result && !this.descendantsAllSelected(node);
-  }
-
-  /** Toggle the to-do item selection. Select/deselect all the descendants node */
-  selectParentNode(node: NestedNode): void {
-    this.fieldSelection.toggle(node);
-    const descendants = this.treeControl.getDescendants(node);
-    this.fieldSelection.isSelected(node)
-      ? this.fieldSelection.select(...descendants)
-      : this.fieldSelection.deselect(...descendants);
-
-    // Force update for the parent
-    descendants.every(child =>
-      this.fieldSelection.isSelected(child)
-    );
-    this.checkAllParentsSelection(node);
-  }
-
-  /** Toggle a leaf to-do item selection. Check all the parents to see if they changed */
-  selectLeafNode(node: NestedNode): void {
-   this.fieldSelection.toggle(node);
-    this.checkAllParentsSelection(node);
-  }
-
-
-  /* Checks all the parents when a leaf node is selected/unselected */
-  checkAllParentsSelection(node: NestedNode): void {
-    let parent: NestedNode | null = this.getParentNode(node);
-    while (parent) {
-      this.checkRootNodeSelection(parent);
-      parent = this.getParentNode(parent);
-    }
-  }
-
-  /** Check root node checked state and change it accordingly */
-  checkRootNodeSelection(node: NestedNode): void {
-    const nodeSelected = this.fieldSelection.isSelected(node);
-    const descendants = this.treeControl.getDescendants(node);
-    const descAllSelected = descendants.every(child =>
-       this.fieldSelection.isSelected(child)
-    );
-    if (nodeSelected && !descAllSelected) {
-      this.fieldSelection.deselect(node);
-    } else if (!nodeSelected && descAllSelected) {
-      this.fieldSelection.select(node);
-    }
-    this.fieldSelectChange.emit(this.fieldSelection.selected);
-  }
-
-  /* Get the parent node of a node */
-  getParentNode(node: NestedNode): NestedNode | null {
-    const currentLevel = this.getLevel(node);
-
-    if (currentLevel < 1) {
-      return null;
-    }
-
-    const startIndex = this.treeControl.dataNodes.indexOf(node) - 1;
-
-    for (let i = startIndex; i >= 0; i--) {
-      const currentNode = this.treeControl.dataNodes[i];
-
-      if (this.getLevel(currentNode) < currentLevel) {
-        return currentNode;
+        this.treeControl.expand(this.treeControl.dataNodes[0]);
+        this.changeRef.markForCheck();
       }
-    }
+    });
+
+  }
+
+  hasChild = (_: number, _nodeData: HierarchyFlatNode) => _nodeData.expandable;
+
+/** Whether all the descendants of the node are selected. */
+descendantsAllSelected(node: HierarchyFlatNode): boolean {
+  const descendants = this.treeControl.getDescendants(node);
+  const descAllSelected = descendants.every(child =>
+    this.checklistSelection.isSelected(child)
+  );
+  return descAllSelected;
+}
+
+/** Whether part of the descendants are selected */
+descendantsPartiallySelected(node: HierarchyFlatNode): boolean {
+  const descendants = this.treeControl.getDescendants(node);
+  const result = descendants.some(child => this.checklistSelection.isSelected(child));
+  return result && !this.descendantsAllSelected(node);
+}
+
+/** Toggle the to-do item selection. Select/deselect all the descendants node */
+todoItemSelectionToggle(node: HierarchyFlatNode): void {
+  this.checklistSelection.toggle(node);
+const descendants = this.treeControl.getDescendants(node);
+this.checklistSelection.isSelected(node)
+  ? this.checklistSelection.select(...descendants)
+  : this.checklistSelection.deselect(...descendants);
+
+// Force update for the parent
+descendants.every(child =>
+  this.checklistSelection.isSelected(child)
+);
+this.checkAllParentsSelection(node);
+}
+
+/** Toggle a leaf to-do item selection. Check all the parents to see if they changed */
+todoLeafItemSelectionToggle(node: HierarchyFlatNode): void {
+  this.checklistSelection.toggle(node);
+this.checkAllParentsSelection(node);
+}
+
+/* Checks all the parents when a leaf node is selected/unselected */
+checkAllParentsSelection(node: HierarchyFlatNode): void {
+  let parent: HierarchyFlatNode | null = this.getParentNode(node);
+while (parent) {
+  this.checkRootNodeSelection(parent);
+  parent = this.getParentNode(parent);
+}
+}
+
+/** Check root node checked state and change it accordingly */
+checkRootNodeSelection(node: HierarchyFlatNode): void {
+  const nodeSelected = this.checklistSelection.isSelected(node);
+const descendants = this.treeControl.getDescendants(node);
+const descAllSelected = descendants.every(child =>
+  this.checklistSelection.isSelected(child)
+);
+if (nodeSelected && !descAllSelected) {
+  this.checklistSelection.deselect(node);
+} else if (!nodeSelected && descAllSelected) {
+  this.checklistSelection.select(node);
+}
+}
+
+/* Get the parent node of a node */
+getParentNode(node: HierarchyFlatNode): HierarchyFlatNode | null {
+  const currentLevel = node.level;
+
+  if (currentLevel < 1) {
     return null;
   }
 
-  fetchData(node: NestedNode) {
-    if(this.dynamic) {
+  const startIndex = this.treeControl.dataNodes.indexOf(node) - 1;
+
+  for (let i = startIndex; i >= 0; i--) {
+    const currentNode = this.treeControl.dataNodes[i];
+
+    if (currentNode.level < currentLevel) {
+      return currentNode;
+    }
+  }
+  return null;
+}
+
+  fetchData(node: Hierarchy) {
+    if(this.dynamic  && !node.children) {
       this.nodeExpandChange.emit(node);
     }
   }
 
-  fetchLeafData(node: NestedNode) {
-    if(this.dynamic) {
+  fetchLeafData(node: Hierarchy) {
+    if(this.dynamic && !node.children) {
       this.nodeExpandChange.emit(node);
     }
   }

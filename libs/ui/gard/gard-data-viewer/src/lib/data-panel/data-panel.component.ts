@@ -44,14 +44,14 @@ export class DataPanelComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // todo unsubscribe on destroy
+   /* // todo unsubscribe on destroy
     this.diseaseFacade.selectedDisease$.subscribe(res=> {
       if(res && res.disease) {
         this.disease = res.disease;
        // this.data = this.disease.properties.get(this.field.section);
       }
-    });
-    this.changeDetectorRef.detectChanges();
+    });*/
+  //  this.changeDetectorRef.detectChanges();
   }
 
   setCuratedObject(object, field): void {

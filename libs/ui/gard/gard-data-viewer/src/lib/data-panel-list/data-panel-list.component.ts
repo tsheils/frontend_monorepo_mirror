@@ -48,11 +48,19 @@ export class DataPanelListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this);
     this._data.pipe(
-      map(res=> {
+      map(res => {
         if (res) {
-          Object.keys(res).forEach(key => this[key] = res[key]);
+          Object.keys(this.data).forEach(key => this[key] = res[key]);
+
+          // todo: this filters out sections that don't have any data, but should a placeholder be left instead?
+          if (this.object) {
+            this.fields = this.fields.filter(field => {
+              if(this.object[field.section]){
+                return field;
+              }
+            });
+          }
           this.changeDetectorRef.markForCheck();
         }
         }

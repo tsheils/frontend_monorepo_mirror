@@ -50,7 +50,6 @@ export class MapperFeatureComponent implements OnDestroy {
     private changeRef: ChangeDetectorRef,
     private connectionService: Neo4jConnectService
   ) {
-    console.log(this);
     // this.fetchKeys();
   }
 
@@ -63,9 +62,11 @@ export class MapperFeatureComponent implements OnDestroy {
     WITH DISTINCT keys(d) AS keys UNWIND keys AS keyslisting WITH DISTINCT keyslisting AS allfields 
     RETURN collect(allfields) as data;
     `;
+
+    /*
     this.connectionService.read('raw-data', call, {payload: this.allSources}).subscribe(res => {
       }
-    )
+    )*/
   }
 
   setObjectFields(event: any) {
@@ -87,7 +88,7 @@ export class MapperFeatureComponent implements OnDestroy {
         match (n:S_GARD)-[]-(d:DATA) 
         return d.name as name, d.gard_id as gard_id, n.N_Name as synonyms, n._N_Name as synonymsString, n.I_CODE as codes;
         `;
-    this.connectionService.read('raw-data', call)
+/*    this.connectionService.read('raw-data', call)
       .subscribe({
         next: (res) => {
           const resObject: any = res;
@@ -108,13 +109,13 @@ export class MapperFeatureComponent implements OnDestroy {
                return count(n)`;
           this.connectionService.write('gard-data', writecall, {payload: diseases}).subscribe(res => console.log(res))
         }
-      });
+      });*/
   }
 
-  initialBuild() {
+/*  initialBuild() {
     const diseases: any[] = [];
     const call = `
-        match (n:S_GARD)-[]-(d:DATA) 
+        match (n:S_GARD)-[]-(d:DATA)
         return d.name as name, d.gard_id as gard_id, n.N_Name as synonyms, n._N_Name as synonymsString, n.I_CODE as codes;
         `;
     this.connectionService.read('raw-data', call)
@@ -165,34 +166,34 @@ export class MapperFeatureComponent implements OnDestroy {
           const writecall = `
               UNWIND {payload} as data
               CREATE (n:Disease)
-              set n.name = data.name 
+              set n.name = data.name
               set n.gard_id = data.gard_id
               set n.synonyms = data.synonyms
               set n.synonymsString = data.synonymsString
-              SET n.dateCreated = ${Date.now().toString()} 
-         
+              SET n.dateCreated = ${Date.now().toString()}
+
               CREATE (d2:MainProperty:Synonyms) //dataRef node for synonym
               set d2.field = 'synonyms'
               set d2.count = size(data.synonyms)
-              SET d2.dateCreated = ${Date.now().toString()} 
+              SET d2.dateCreated = ${Date.now().toString()}
               CREATE (n)-[:Properties { dateCreated: '${Date.now().toString()}' }]->(d2) // link disease to synonym display node
-              
+
               CREATE (d3:MainProperty:Codes) //dataRef node for synonym
               set d3.field = 'codes'
               set d3.count = size(data.codes)
-              SET d3.dateCreated = ${Date.now().toString()} 
+              SET d3.dateCreated = ${Date.now().toString()}
               CREATE (n)-[:Properties { dateCreated: '${Date.now().toString()}'}]->(d3) // link disease to synonym display node
-              
+
               CREATE (d4:MainProperty:Sources) //dataRef node for synonym
               set d4.field = 'sources'
               set d4.count = size(data.sources)
-              SET d4.dateCreated = ${Date.now().toString()} 
+              SET d4.dateCreated = ${Date.now().toString()}
               CREATE (n)-[:Properties { dateCreated: '${Date.now().toString()}' }]->(d4) // link disease to synonym display node
 
               FOREACH (source in data.sources | //disease code data
               CREATE (src:Property:DataSource) //dataRef node for code
               SET src = source // set node
-              SET src.dateCreated = ${Date.now().toString()} 
+              SET src.dateCreated = ${Date.now().toString()}
               MERGE (d4)-[:DisplayValue { dateCreated: '${Date.now().toString()}' }]->(src)  // link disease to code display node
               ) with data, n, d2, d3, d4
 
@@ -200,17 +201,17 @@ export class MapperFeatureComponent implements OnDestroy {
               CREATE (d:Property:Synonym) //dataRef node for synonym
               SET d.displayValue = s // set node
               SET d.sourceCount = 1 // default setting - this will be modified with new name sources
-              SET d.dateCreated = ${Date.now().toString()} 
+              SET d.dateCreated = ${Date.now().toString()}
               MERGE (d2)-[:DisplayValue { dateCreated: '${Date.now().toString()}' }]->(d) // link disease to synonym display node
-              ) with data, n, d2, d3  
-                         
+              ) with data, n, d2, d3
+
               FOREACH (cs in data.codes | //disease synonym data
               CREATE (cd:Property:Code) //dataRef node for synonym
               SET cd = cs // set node
               SET cd.sourceCount = 1 // default setting - this will be modified with new name sources
-              SET cd.dateCreated = ${Date.now().toString()} 
+              SET cd.dateCreated = ${Date.now().toString()}
               MERGE p2=(d3)-[:DisplayValue { dateCreated: '${Date.now().toString()}' }]->(cd) // link disease to synonym display node
-              ) with data, n 
+              ) with data, n
               optional MATCH (n)-[]-(:Codes)-[]->(c:Code) with n, c
               optional MATCH (n)-[]-(:Sources)-[]->(ds:DataSource) WHERE ds.source = c.source with n, c, ds
               CREATE (c)-[:DataSourceReference { dateCreated: '${Date.now().toString()}' }]->(ds)
@@ -283,39 +284,39 @@ WITH {disease: id, inheritance: omim + orphas} AS ret
       CREATE (a:MainProperty:${type}s) with a, a2, row //dataRef node for inheritance
       SET a.field = '${type.toLowerCase()}'
       SET a.count = size(row['${type.toLowerCase()}'])
-      SET a.dateCreated = ${Date.now().toString()} 
+      SET a.dateCreated = ${Date.now().toString()}
       CREATE (a2)-[:Properties { dateCreated: ${Date.now().toString()} }]->(a) // link disease to inheritance display node
-         
+
       FOREACH (noDisplayValue in row.noDisplay | //disease inheritance data
       CREATE (n2:Property:NoDisplayProperty:${type}) //dataRef node for inheritance with hpo mapping
       SET n2 += noDisplayValue
       SET n2.sourceCount = 1
-      SET n2.dateCreated = ${Date.now().toString()} 
+      SET n2.dateCreated = ${Date.now().toString()}
       create p2=(a)-[r2:Value { dateCreated: ${Date.now().toString()} }]->(n2)// link disease to inheritance display node
-      ) with row, a, a2 
-      
+      ) with row, a, a2
+
       unwind row.displayValue as displayValue //disease inheritance data
       CREATE (n:Property:DisplayProperty:${type}) //dataRef node for inheritance
       SET n.displayValue = displayValue.displayValue // set node
       set n.sourceCount = size(displayValue.inheritance)
-      SET n.dateCreated = ${Date.now().toString()} 
+      SET n.dateCreated = ${Date.now().toString()}
       CREATE p=(a)-[r:DisplayValue { dateCreated: ${Date.now().toString()} }]->(n) with a, p, n, displayValue, row ,a2// link disease to inheritance display node
 
       match (d:DataDictionary {field: '${type.toLowerCase()}'})-[:TermOf]-(t:DataDictionaryTerm {displayValue: displayValue.displayValue }) //get dictionary
       CREATE p3=(n)-[r3:HasDisplayTerm]->(t) with distinct displayValue, row, a, n, t, a2
-     
+
       FOREACH (term in displayValue['${type.toLowerCase()}'] |
-      CREATE (ref:DataRef) //dataRef node for inheritance 
+      CREATE (ref:DataRef) //dataRef node for inheritance
       SET ref += term
       CREATE p4=(n)-[r4: ReferenceSource { dateCreated: '${Date.now().toString()}'}]->(ref)  // link disease to inheritance node
       ) with a2
-    
+
     OPTIONAL MATCH (a2)-[]-(:MainProperty)-[]-(:DisplayProperty)-[]-(d2:DataRef) with a2, d2
-    Optional MATCH (a2)-[]-(:MainProperty)-[]-(ds:DataSource) WHERE ds.source = d2.reference with a2,d2,ds 
+    Optional MATCH (a2)-[]-(:MainProperty)-[]-(ds:DataSource) WHERE ds.source = d2.reference with a2,d2,ds
     WHERE ds IS NOT NULL
     MERGE (d2)-[:DataSourceReference { dateCreated: ${Date.now().toString()} }]->(ds) with a2
     OPTIONAL MATCH (a2)-[]-(:MainProperty)-[]-(dd:NoDisplayProperty) with a2, dd
-    Optional MATCH (a2)-[]-(:MainProperty)-[]-(ds2:DataSource) WHERE ds2.source = dd.reference with a2,dd,ds2 
+    Optional MATCH (a2)-[]-(:MainProperty)-[]-(ds2:DataSource) WHERE ds2.source = dd.reference with a2,dd,ds2
     WHERE ds2 IS NOT NULL
     MERGE (dd)-[:DataSourceReference { dateCreated: '${Date.now().toString()}' }]->(ds2)
       return true;
@@ -408,13 +409,11 @@ RETURN collect(diseases) as data LIMIT 10
     ).subscribe(res => {
       console.log(res);
     })
-  }
+  }*/
 
   getHierarchy() {
     const driver = neo4j.driver('bolt://gard-dev-neo4j.ncats.io:7687', neo4j.auth.basic('neo4j', 'eic1akeghaTha4OhKahr'));
     const session = driver.rxSession();
-
-    console.log("get hierarchy");
     const mondocall = `
 match (disease:DATA)-[:PAYLOAD]->(m:S_GARD)-[:R_exactMatch|:R_equivalentClass]-(n:S_MONDO)<-[:PAYLOAD]-(d:DATA)  with n, disease.gard_id as id, d.id as mondoId
 match p=(n)-[e:R_subClassOf*0..]->(m:S_MONDO)<-[:PAYLOAD]-(l:DATA) where all(x in e where n.source=x.source or n.source in x.source) and not 'TRANSIENT' in labels(m)
@@ -471,7 +470,7 @@ return {disease: id, nodeId: nodeId,tree: value} as data
               this.dataz.push({disease: entry.disease, nodeId: this._makeCode(entry.nodeId), paths: this.clones});
             }
           });
-          console.log(this.dataz.length);
+         // console.log(this.dataz.length);
          //this.writeTree(write)
       //  this.dataz.push(write);
       })).subscribe()
@@ -493,6 +492,7 @@ return {disease: id, nodeId: nodeId,tree: value} as data
       }
    }
 
+/*
    writeTree(payload) {
     console.log('writing tree');
     console.log(payload);
@@ -507,30 +507,30 @@ return {disease: id, nodeId: nodeId,tree: value} as data
           CREATE (s1:Property:DataSource {source: 'ORPHA'})
           merge (ss)-[:DisplayValue]->(s1)
           MERGE (p3)-[:DataSourceReference { dateCreated: '${Date.now().toString()}' }]->(s1)
-      SET p3.dateCreated = ${Date.now().toString()} 
-          MERGE (p5)-[:DisplayValue]->(p3)          
-           Merge (cd:Property:Code {value: row.nodeId.displayValue}) 
-              SET cd = row.nodeId 
-              SET cd.sourceCount = 1 
-              SET cd.dateCreated = ${Date.now().toString()} 
-              MERGE (c)-[:DisplayValue { dateCreated: '${Date.now().toString()}' }]->(cd) 
+      SET p3.dateCreated = ${Date.now().toString()}
+          MERGE (p5)-[:DisplayValue]->(p3)
+           Merge (cd:Property:Code {value: row.nodeId.displayValue})
+              SET cd = row.nodeId
+              SET cd.sourceCount = 1
+              SET cd.dateCreated = ${Date.now().toString()}
+              MERGE (c)-[:DisplayValue { dateCreated: '${Date.now().toString()}' }]->(cd)
               with d, c, row, p3
-            
-            FOREACH (path in row.paths | 
+
+            FOREACH (path in row.paths |
            MERGE (p4:HierarchyNode:Property {value: path[0].child.value})
                      SET p4 = path[0].child
                      MERGE (p4)<-[:IsAChild]-(p3)
                     MERGE (p4)-[:IsAParent]->(p3)
-            FOREACH (node in path | 
+            FOREACH (node in path |
         MERGE (p:HierarchyNode:Property {value: node.parent.value})
         MERGE (p2:HierarchyNode:Property {value: node.child.value})
           SET p = node.parent
           SET p2 = node.child
-          SET p.dateCreated = '${Date.now().toString()}' 
+          SET p.dateCreated = '${Date.now().toString()}'
           MERGE (p2)-[:IsAChild]->(p)
           MERGE (p2)<-[:IsAParent]-(p)
         )) with row, p3
-        
+
         RETURN row.disease;
     `;
 
@@ -540,6 +540,7 @@ return {disease: id, nodeId: nodeId,tree: value} as data
        console.log(res);
      })
    }
+*/
 
    _makeCode(codeString: string){
     console.log(codeString);

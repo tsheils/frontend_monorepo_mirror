@@ -1,9 +1,10 @@
 import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
-import {DiseasesFacade, Page, setDiseaseStats} from "@ncats-frontend-library/stores/diseases";
+import {DiseasesFacade, setDiseaseStats} from "@ncats-frontend-library/stores/diseases";
 import {NavigationExtras, Router} from "@angular/router";
 import {SelectionModel} from "@angular/cdk/collections";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
+import {Page} from "@ncats-frontend-library/models/interfaces/core-interfaces";
 
 /**
  * navigation options to merge query parameters that are added on in navigation/query/facets/pagination
@@ -68,7 +69,9 @@ export class DashboardMainComponent implements OnInit {
     });
 
     this.diseasesFacade.page$.subscribe(res => {
-      this.page = res;
+      if(res) {
+        this.page = res;
+      }
     });
 
     this.diseasesFacade.loaded$.subscribe(res => {

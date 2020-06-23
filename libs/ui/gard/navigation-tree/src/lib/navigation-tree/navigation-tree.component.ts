@@ -42,24 +42,21 @@ export class NavigationTreeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.diseasesFacade.dispatch(fetchHierarchy({node: {value: 'MONDO:0000001'}}))
+    this.diseasesFacade.dispatch(fetchHierarchy({node: {value: 'MONDO:0000001'}}));
     this.diseasesFacade.fetchHierarchy$.subscribe(res=> {
-      console.log(res);
       if(res && res.children) {
         this.data = [res];
         this.loading = false;
-        //    this.callsMap.set(node.value, true);
         this.changeRef.markForCheck();
       }
     })
   }
 
   nodeClicked(node) {
-    this.diseasesFacade.dispatch(fetchHierarchy({node: node}));
     navigationExtras.queryParams = {
       parent: node.value
     };
-    // this._navigate(navigationExtras)
+    this._navigate(navigationExtras)
   }
 
   /**

@@ -16,7 +16,6 @@ export class DiseaseListCardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // console.log(this);
   }
 
   navigate(id: string): void {

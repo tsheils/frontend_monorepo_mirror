@@ -1,5 +1,6 @@
-import { createAction, props } from '@ngrx/store';
-import {DiseasesEntity, Page} from './diseases.models';
+import {createAction, props} from '@ngrx/store';
+import {Page} from "@ncats-frontend-library/models/interfaces/core-interfaces";
+import {Disease} from "@ncats-frontend-library/models/gard/gard-models";
 
 export enum DiseasesActionsTypes {
   loadDiseases = '[Diseases] Load Diseases',
@@ -21,15 +22,22 @@ export enum DiseasesActionsTypes {
   fetchHierarchy = '[Diseases] Fetch Hierarchy',
   fetchHierarchySuccess = '[Diseases] Fetch Hierarchy Success',
   fetchHierarchyFailure = '[Diseases] Fetch Hierarchy Failure',
+
+  setPage = '[Diseases] Fetch Hierarchy'
 }
 
 export const loadDiseases = createAction(
   DiseasesActionsTypes.loadDiseases
 );
 
+export const setPage = createAction(
+  DiseasesActionsTypes.setPage,
+  props<{page: Page }>()
+);
+
 export const loadDiseasesSuccess = createAction(
   DiseasesActionsTypes.loadDiseasesSuccess,
-  props<{ diseases: DiseasesEntity[], page: Page }>()
+  props<{ diseases: Disease[]}>()
 );
 
 export const loadDiseasesFailure = createAction(
@@ -46,7 +54,7 @@ export const searchDiseases = createAction(
 //output
 export const searchDiseasesSuccess = createAction(
   DiseasesActionsTypes.searchDiseasesSuccess,
-  props<{ diseases: DiseasesEntity[] }>()
+  props<{ typeahead: any }>()
 );
 //errors
 export const searchDiseasesFailure = createAction(
@@ -62,7 +70,7 @@ export const setDisease = createAction(
 //output
 export const setDiseaseSuccess = createAction(
   DiseasesActionsTypes.setDiseaseSuccess,
-  props<{ disease: DiseasesEntity }>()
+  props<{ disease: Disease }>()
 );
 //errors
 export const setDiseaseFailure = createAction(

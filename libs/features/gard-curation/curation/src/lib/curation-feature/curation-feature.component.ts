@@ -111,8 +111,8 @@ export class CurationFeatureComponent implements OnInit {
 
   ngOnInit(): void {
     this.diseasesFacade.selectedDisease$.subscribe(res=> {
-      if(res && res.disease) {
-        this.disease = res.disease;
+      if(res) {
+        this.disease = res;
         this._diseaseObservableSource.next({object: this.disease, fields: this.displayFields});
         this._fieldsObservableSource.next({data: this.displayFields});
       //  this.data = {object: this.disease, fields: [{section: 'inheritance'},{section: 'synonyms'}]};

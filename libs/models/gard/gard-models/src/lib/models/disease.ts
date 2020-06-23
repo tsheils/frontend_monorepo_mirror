@@ -129,7 +129,6 @@ export class Disease extends GardBase {
   treatments?: GardDataProperty[];
 
   clinicalGuideline?: 'Diagnostic' | 'Treatment';
-
 }
 
 export class DiseaseSerializer implements Serializer {
@@ -183,11 +182,6 @@ export class DiseaseSerializer implements Serializer {
       // obj.dateCreated = json.dateCreated.toString()
     }
 
-    /*if (obj.hierarchies) {
-      console.log(obj.hierarchies)
-      const hh = this._mapEntry(obj.hierarchies.tree);
-      console.log(hh);
-    }*/
 
     /*  // array of strings
       if (json.categories) {
