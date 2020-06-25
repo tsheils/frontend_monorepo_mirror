@@ -1,12 +1,13 @@
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import * as DiseasesActions from './diseases.actions';
-import {filter, map, tap} from "rxjs/operators";
+import {filter, map, mergeMap, tap} from "rxjs/operators";
 import {ROUTER_NAVIGATION, RouterNavigationAction} from "@ngrx/router-store";
 import {DiseaseService} from "../../disease.service";
 import {State} from "@ncats-frontend-library/stores/diseases";
 import {Neo4jConnectService} from "@ncats-frontend-library/shared/data-access/neo4j-connector";
 import {Store} from "@ngrx/store";
+import {of} from "rxjs";
 
 @Injectable()
 export class DiseasesEffects {
@@ -127,6 +128,7 @@ export class DiseasesEffects {
       this.actions$.pipe(
         ofType(DiseasesActions.fetchHierarchy),
         tap((action) => {
+          console.log(action);
           if(action.node) {
             const call = `
            match p=(e:HierarchyNode)-[:IsAParent]->(h:HierarchyNode)
@@ -141,6 +143,18 @@ export class DiseasesEffects {
           } ))
     ,{dispatch: false});
 
+
+  isLoading$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(ROUTER_NAVIGATION),
+      filter((r: RouterNavigationAction) => {
+        return r.payload.routerState.url.startsWith('/diseases')
+      }),
+      mergeMap(() => {
+        return of(DiseasesActions.loadDiseases());
+      })
+    )
+  });
 
  /* fetchStats$ = createEffect(() => {
     return this.actions$.pipe(
@@ -175,17 +189,7 @@ with count(results) as matchCount, inheritanceCount, diseaseCount, misMatchCount
   });
 
 
-  isLoading$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(ROUTER_NAVIGATION),
-      filter((r: RouterNavigationAction) => {
-        return r.payload.routerState.url.startsWith('/diseases')
-      }),
-      mergeMap(() => {
-        return of(DiseasesActions.loadDiseases());
-      })
-    )
-  });*/
+  */
 }
 
 

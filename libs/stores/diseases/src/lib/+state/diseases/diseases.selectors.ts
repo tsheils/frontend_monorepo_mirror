@@ -13,7 +13,10 @@ const { selectAll, selectEntities } = diseasesAdapter.getSelectors();
 
 export const getDiseasesLoaded = createSelector(
   getDiseasesState,
-  (state: State) => state.loaded
+  (state: State) => {
+    console.log(state);
+    return state.loaded
+  }
 );
 
 export const getDiseasesError = createSelector(

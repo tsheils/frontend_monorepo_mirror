@@ -23,7 +23,7 @@ export enum DiseasesActionsTypes {
   fetchHierarchySuccess = '[Diseases] Fetch Hierarchy Success',
   fetchHierarchyFailure = '[Diseases] Fetch Hierarchy Failure',
 
-  setPage = '[Diseases] Fetch Hierarchy'
+  setPage = '[Diseases] Set Page'
 }
 
 export const loadDiseases = createAction(

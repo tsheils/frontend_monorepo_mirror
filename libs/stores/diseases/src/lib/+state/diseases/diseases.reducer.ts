@@ -100,7 +100,7 @@ const diseasesReducer = createReducer(
           }
           return parent;
         };
-      return ({...state, hierarchy: hierarchy, loaded: true})
+      return ({...state, hierarchy: hierarchy})
     }
   )
 );

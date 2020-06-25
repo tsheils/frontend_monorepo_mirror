@@ -26,9 +26,10 @@ import {DiseaseService} from "../../../../libs/stores/diseases/src/lib/disease.s
 
 export function init_connections(diseaseService: DiseaseService) {
   return () => {
-    environment.neo4j.forEach(db => {
+/*    environment.neo4j.forEach(db => {
       diseaseService.createDriver(db);
-    });
+    });*/
+    diseaseService.createDriver(environment.neo4j);
   }
 }
 

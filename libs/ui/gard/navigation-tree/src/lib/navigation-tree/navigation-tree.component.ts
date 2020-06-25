@@ -18,7 +18,7 @@ import {GardHierarchy} from "@ncats-frontend-library/models/gard/gard-models";
  * navigation options to merge query parameters that are added on in navigation/query/facets/pagination
  */
 const navigationExtras: NavigationExtras = {
-  queryParamsHandling: 'merge'
+  queryParamsHandling: 'preserve'
 };
 
 @Component({
@@ -42,7 +42,7 @@ export class NavigationTreeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.diseasesFacade.dispatch(fetchHierarchy({node: {value: 'MONDO:0000001'}}));
+   // this.diseasesFacade.dispatch(fetchHierarchy({node: {value: 'MONDO:0000001'}}));
     this.diseasesFacade.fetchHierarchy$.subscribe(res=> {
       if(res && res.children) {
         this.data = [res];
@@ -53,6 +53,7 @@ export class NavigationTreeComponent implements OnInit {
   }
 
   nodeClicked(node) {
+    this.diseasesFacade.dispatch(fetchHierarchy({node:node}));
     navigationExtras.queryParams = {
       parent: node.value
     };

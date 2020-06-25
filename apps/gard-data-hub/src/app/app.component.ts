@@ -1,15 +1,10 @@
-import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 
 import RxSession from "neo4j-driver/types/session-rx";
 import {MatDialog} from "@angular/material/dialog";
 import {QuestionBase, TextboxQuestion} from "@ncats-frontend-library/shared/ui/ncats-form";
-import {ActivatedRoute, NavigationEnd, NavigationExtras, Router} from "@angular/router";
-import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
-import {environment} from "../environments/environment";
-import {
-  Neo4jConnectionFormComponent,
-  Neo4jConnectService
-} from "@ncats-frontend-library/shared/data-access/neo4j-connector";
+import {NavigationEnd, NavigationExtras, Router} from "@angular/router";
+import {Neo4jConnectionFormComponent} from "@ncats-frontend-library/shared/data-access/neo4j-connector";
 
 export const QUESTIONS: QuestionBase<any>[] = [
   new TextboxQuestion({
@@ -39,31 +34,19 @@ export const QUESTIONS: QuestionBase<any>[] = [
   styleUrls: ['./app.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit {
   title = 'gard-data-hub';
-  session: RxSession;
   links: any[] = [];
   disease: any;
   hideSearch = false;
 
   constructor (
     public dialog: MatDialog,
-    private router: Router,
-    private _route: ActivatedRoute,
-    private diseasesFacade: DiseasesFacade,
-   private connectionService: Neo4jConnectService
+    private router: Router
   ) {
-    //this.links = [{link:'mapper'}, {link: 'curation', label: 'curation'}];
   }
 
   ngOnInit() {
-    // todo: this should happen in app_initializer (and does), but the stats call won't load if this isn't here
-/*
-    environment.neo4j.forEach(db => {
-      this.connectionService.createDriver(db);
-    });
-*/
-
     this.router.events
       .subscribe((e: any) => {
         // If it is a NavigationEnd event re-initalise the component
@@ -90,15 +73,6 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       });
 
-    //this.connectionService.connect({});
-  }
-
-  disconnect(): void {
-    if(this.session) {
-      this.session.close();
-      this.session = null;
-    }
-    this.router.navigate(['/']);
   }
 
   search(params: NavigationExtras) {
@@ -106,12 +80,4 @@ export class AppComponent implements OnInit, OnDestroy {
     params.queryParamsHandling = '';
     this.router.navigate(['/curation'], params);
   }
-
-  ngOnDestroy(): void {
-    this.connectionService.destroy();
-    if(this.session) {
-      this.session.close();
-    }
-  }
-
 }

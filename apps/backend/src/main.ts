@@ -23,28 +23,21 @@ wss.on('connection', ws => {
     const session = driver.rxSession();
     const mes = JSON.parse(message);
     if (mes.txcType) {
-      let subscription;
       switch (mes.txcType) {
         case 'write': {
-          subscription = session.writeTransaction(txc => txc.run(mes.call, mes.params).records());
+            session.writeTransaction(txc => txc.run(mes.call, mes.params).records()).subscribe(res=> {
+            ws.send(JSON.stringify({origin: mes.origin, data: res.toObject(), params: mes.params}));
+          });
           break;
         }
         case 'read':
         default: {
-          subscription = session.readTransaction(txc => txc.run(mes.call, mes.params).records());
+          session.readTransaction(txc => txc.run(mes.call, mes.params).records()).subscribe(res=> {
+            ws.send(JSON.stringify({origin: mes.origin, data: res.toObject(), params: mes.params}));
+          });
           break;
         }
       }
-      subscription.subscribe({
-        next: res => {
-          ws.send(JSON.stringify({origin: mes.origin, data: res.toObject(), params: mes.params}));
-        },
-        complete: (res) => {
-        },
-        error: (error) => {
-          console.log(error);
-        }
-      });
     }
   });
   ws.on('error', error => {

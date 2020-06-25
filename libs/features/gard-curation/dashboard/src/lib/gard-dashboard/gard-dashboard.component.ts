@@ -57,14 +57,15 @@ export class GardDashboardComponent implements OnInit {
     private router: Router,
     private changeRef: ChangeDetectorRef
   ) {
-
-    this.diseasesFacade.dispatch(setDiseaseStats({}));
+    console.log("dashboard constructor");
+  //  this.diseasesFacade.dispatch(setDiseaseStats({}));
     this.diseasesFacade.dispatch(fetchHierarchy({node: {value: 'MONDO:0000001'}}));
   }
 
+  //todo: should this be the main source of data subscriptions?
 
   ngOnInit(): void {
-     this.diseasesFacade.diseases$.subscribe(res => {
+/*     this.diseasesFacade.diseases$.subscribe(res => {
        this.data = res;
        this.changeRef.markForCheck()
     });
@@ -75,8 +76,9 @@ export class GardDashboardComponent implements OnInit {
       }
     });
 
-this.diseasesFacade.loaded$.subscribe(res => {
-   //   this.loaded = res;
-    });
+*/
+ /*   this.diseasesFacade.loaded$.subscribe(res => {
+         this.loaded = res;
+    });*/
   }
 }
