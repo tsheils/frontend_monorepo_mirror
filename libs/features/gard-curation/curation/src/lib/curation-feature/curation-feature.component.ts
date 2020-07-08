@@ -95,6 +95,12 @@ export class CurationFeatureComponent implements OnInit {
     {section: 'synonyms', label: 'Synonyms'},
     {section: 'hierarchies', label: 'Disease Hierarchy'},
     {section: 'inheritance', label: 'Inheritance'},
+    {section: 'causes', label: 'Cause'},
+    {section: 'symptoms', label: 'Symptoms'},
+    {section: 'treatments', label: 'Treatments'},
+    {section: 'prognosis', label: 'Prognosis'},
+    {section: 'statistics', label: 'Statistics'},
+    {section: 'organizations', label: 'Organizations'},
     {section: 'sources', label: 'References'}
     ];
 
@@ -113,6 +119,9 @@ export class CurationFeatureComponent implements OnInit {
     this.diseasesFacade.selectedDisease$.subscribe(res=> {
       if(res) {
         this.disease = res;
+        console.log(res);
+        const keys = Object.keys(this.disease);
+        this.displayFields = this.displayFields.filter(field => keys.includes(field.section));
         this._diseaseObservableSource.next({object: this.disease, fields: this.displayFields});
         this._fieldsObservableSource.next({data: this.displayFields});
       //  this.data = {object: this.disease, fields: [{section: 'inheritance'},{section: 'synonyms'}]};

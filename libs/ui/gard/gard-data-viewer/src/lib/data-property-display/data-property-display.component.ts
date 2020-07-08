@@ -53,6 +53,9 @@ export class DataPropertyDisplayComponent implements OnInit {
 /*    if(this.data['source']) {
       return 'source'
     }*/
+  if(this.data && this.data.type === 'html') {
+    return 'html';
+  }
     if(this.data && (this.data.sources && this.data.references)) {
       return 'references';
     }

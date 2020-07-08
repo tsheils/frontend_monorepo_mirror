@@ -70,6 +70,9 @@
     "shared-ui-object-tree": {
       "tags": []
     },
+    "shared-ui-selected-filters": {
+      "tags": []
+    },
     "shared-ui-header-template": {
       "tags": []
     },

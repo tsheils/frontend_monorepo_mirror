@@ -13,10 +13,7 @@ const { selectAll, selectEntities } = diseasesAdapter.getSelectors();
 
 export const getDiseasesLoaded = createSelector(
   getDiseasesState,
-  (state: State) => {
-    console.log(state);
-    return state.loaded
-  }
+  (state: State) =>  state.loaded
 );
 
 export const getDiseasesError = createSelector(
@@ -73,9 +70,13 @@ export const getDiseasesStats = createSelector(
 );
 
 export const getDiseases = createSelector(
-  getMergedRoute,
   getDiseasesState,
-  (route:MergedRoute, state: State) =>  {
+  (state: State) =>  {
     return Object.values(state.entities).map(entity => entity.disease);
   }
+);
+
+export const getFilters = createSelector(
+  getDiseasesState,
+  (state) => state.filters
 );

@@ -71,7 +71,7 @@ checklistSelection = new SelectionModel<HierarchyFlatNode>(true);
     Object.entries((node)).forEach((prop) => flatNode[prop[0]] = prop[1]);
    // flatNode.value = node.value;
    // flatNode.label = node.label;
-    flatNode.expandable = (!!node.children && node.children.length > 0) ||  (!!node.count && node.count > 1);
+    flatNode.expandable = (!!node.children && node.children.length > 0) ||  (!!node.count && node.count > 0);
       flatNode.level = level;
     return flatNode;
   };

@@ -18,7 +18,7 @@ import {GardHierarchy} from "@ncats-frontend-library/models/gard/gard-models";
  * navigation options to merge query parameters that are added on in navigation/query/facets/pagination
  */
 const navigationExtras: NavigationExtras = {
-  queryParamsHandling: 'preserve'
+ // queryParamsHandling: 'preserve'
 };
 
 @Component({
@@ -57,6 +57,7 @@ export class NavigationTreeComponent implements OnInit {
     navigationExtras.queryParams = {
       parent: node.value
     };
+    console.log(navigationExtras);
     this._navigate(navigationExtras)
   }
 

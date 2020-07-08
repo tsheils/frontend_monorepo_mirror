@@ -128,7 +128,6 @@ export class DiseasesEffects {
       this.actions$.pipe(
         ofType(DiseasesActions.fetchHierarchy),
         tap((action) => {
-          console.log(action);
           if(action.node) {
             const call = `
            match p=(e:HierarchyNode)-[:IsAParent]->(h:HierarchyNode)
@@ -154,7 +153,17 @@ export class DiseasesEffects {
         return of(DiseasesActions.loadDiseases());
       })
     )
-  });
+  }, {dispatch: false});
+
+
+  setFilters$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(ROUTER_NAVIGATION),
+      mergeMap((r:RouterNavigationAction) => {
+        return of(DiseasesActions.setFiltersSuccess({filters: r.payload.routerState.root.queryParams}))
+      })
+    )
+  })
 
  /* fetchStats$ = createEffect(() => {
     return this.actions$.pipe(

@@ -16,6 +16,7 @@ export interface State extends EntityState<DiseasesEntity> {
   disease?: Disease;
   stats? : any;
   hierarchy?: GardHierarchy;
+  filters?: any;
   page?: Page;
   typeahead?: any;
 }
@@ -70,41 +71,25 @@ const diseasesReducer = createReducer(
       (state, {disease}) => ({...state, disease: disease})
   ),
   on(
-    DiseasesActions.setDiseaseFailure,
-    DiseasesActions.setDiseaseStatsFailure,
-    DiseasesActions.searchDiseasesFailure,
-    DiseasesActions.fetchHierarchyFailure,
-    DiseasesActions.loadDiseasesFailure, (state, { error }) => ({
-    ...state,
-    error,
-  })),
+    DiseasesActions.setFiltersSuccess,
+      (state, {filters}) =>  ({...state, filters: filters})
+  ),
   on(
     DiseasesActions.fetchHierarchySuccess, (state, {hierarchy}) => {
-        const setTreeData = (parent: GardHierarchy, data: GardHierarchy) => {
-          if (parent.value === data.value) {
-            parent = data;
-          } else if (parent.children) {
-            let found = false;
-            parent.children.map(child => {
-              if(child.value === data.value) {
-                child.children = data.children;
-                found = true;
-              }
-              return child;
-            });
-            if(found){
-              return parent;
-            } else {
-              parent.children.map(child => setTreeData(child, data));
-            }
-          }
-          return parent;
-        };
       return ({...state, hierarchy: hierarchy})
     }
-  )
+  ),
+on(
+  DiseasesActions.setDiseaseFailure,
+  DiseasesActions.setDiseaseStatsFailure,
+  DiseasesActions.searchDiseasesFailure,
+  DiseasesActions.fetchHierarchyFailure,
+  DiseasesActions.setFiltersFailure,
+  DiseasesActions.loadDiseasesFailure, (state, { error }) => ({
+    ...state,
+    error,
+  }))
 );
-
 
 
 export function reducer(state: State | undefined, action: Action) {

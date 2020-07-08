@@ -2,7 +2,10 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {
   DASHBOARD_MAIN_COMPONENT,
-  GARD_DASHBOARD_SIDENAV_COMPONENT, GARD_DISEASE_SEARCH_COMPONENT, GARD_FOOTER_COMPONENT,
+  GARD_DASHBOARD_SIDENAV_COMPONENT,
+  GARD_DISEASE_SEARCH_COMPONENT,
+  GARD_FOOTER_COMPONENT,
+  GARD_SELECTED_FILTERS_COMPONENT,
   GardDashboardComponent
 } from './gard-dashboard/gard-dashboard.component';
 import {RouterModule, Routes} from "@angular/router";
@@ -15,7 +18,7 @@ import {SharedUiDynamicAppLayoutModule} from "@ncats-frontend-library/shared/ui/
 import {UiGardNavigationTreeModule} from "@ncats-frontend-library/ui/gard/navigation-tree";
 import { DashboardSidepanelComponent } from './gard-dashboard/dashboard-sidepanel/dashboard-sidepanel.component';
 import { DashboardMainComponent } from './gard-dashboard/dashboard-main/dashboard-main.component';
-import {DiseaseService} from "../../../../../stores/diseases/src/lib/disease.service";
+import {SelectedFiltersComponent} from "@ncats-frontend-library/shared/ui/selected-filters";
 
 const ROUTES: Routes = [
   {
@@ -39,6 +42,7 @@ const ROUTES: Routes = [
     DiseasesFacade,
     {provide: GARD_DASHBOARD_SIDENAV_COMPONENT, useValue: DashboardSidepanelComponent},
     {provide: GARD_DISEASE_SEARCH_COMPONENT, useValue: GardSearchComponent},
+    {provide: GARD_SELECTED_FILTERS_COMPONENT, useValue: SelectedFiltersComponent},
     {provide: DASHBOARD_MAIN_COMPONENT, useValue: DashboardMainComponent},
     {provide: GARD_FOOTER_COMPONENT, useValue: GardFooterComponent}
   ]

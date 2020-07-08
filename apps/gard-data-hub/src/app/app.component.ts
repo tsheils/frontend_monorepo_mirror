@@ -49,9 +49,8 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.router.events
       .subscribe((e: any) => {
-        // If it is a NavigationEnd event re-initalise the component
         if (e instanceof NavigationEnd) {
-          this.hideSearch = e.url === '/diseases';
+          this.hideSearch = e.url.split('/diseases').length > 1;
         }
       });
   }

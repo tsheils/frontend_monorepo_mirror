@@ -8,6 +8,5 @@ export interface DiseasesEntity {
   id: string | number; // Primary ID
   name: string;
   disease?: Disease;
-  hierarchy?: GardHierarchy;
 }
 

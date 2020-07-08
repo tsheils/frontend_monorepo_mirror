@@ -75,7 +75,6 @@ export class DashboardMainComponent implements OnInit {
     });
 
     this.diseasesFacade.loaded$.subscribe(res => {
-      console.log(res)
       this.loaded = res;
     });
 

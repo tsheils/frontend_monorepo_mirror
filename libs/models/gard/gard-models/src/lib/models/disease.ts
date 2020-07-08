@@ -144,12 +144,7 @@ export class DiseaseSerializer implements Serializer {
     Object.entries((json)).forEach((prop) => obj[prop[0]] = prop[1]);
 
     if (json.properties) {
-      /*if (json.properties.sources) {
-        obj.sourcesMap = new Map<string, any>();
-        json.properties.sources.forEach(source => obj.sourcesMap.set(source.source, source));
-      }*/
       json.properties.forEach(prop => {
-        //   if(prop.field !== 'sources') {
         obj[prop.field] = prop.values.map(val => {
           if (val.tree) {
             val.tree = this._mapEntry(val.tree)
@@ -158,24 +153,7 @@ export class DiseaseSerializer implements Serializer {
           }
           return val;
         })
-        //  });
-        /*   }
-           if(prop.field === 'sources') {
-             obj.sources = prop.values.map(val => {
-               console.log(val);
-              return  new GardReference(val)
-             });
-           }*/
-        // console.log(obj);
       });
-
-      /*if (obj.sources) {
-        obj.sourcesMap = new Map<string, any>();
-        obj.sources.forEach(source => obj.sourcesMap.set(source.source, source));
-        Object.values(obj).forEach(val => {
-          console.log(typeof val);
-        })
-      }*/
     }
 // todo parse this object to a date
     if (json.dateCreated) {
@@ -201,10 +179,10 @@ export class DiseaseSerializer implements Serializer {
 
       if (json.created) {
         obj.created = new Date(json.created.low).toString();
-      }
+      }*/
 
-      if (json.Cause) {
-        obj.cause = json.Cause.map(val => gardPropertySerializer.fromJson({value: val, propertyType: 'html'}));
+    /*  if (json.Cause) {
+        obj.cause = json.Cause.map(val => val = this.gardPropertySerializer.fromJson(val));
         delete obj['Cause'];
       }
 

@@ -16,6 +16,7 @@ export class GardDataProperty {
   sources?: GardReference[];
   displayValue?: string;
   preferred?: boolean;
+  type?: string;
 
   constructor() {
   }

@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, InjectionToken, OnInit, ViewChild} from '@angular/core';
-import {DiseasesFacade, fetchHierarchy, setDiseaseStats} from "@ncats-frontend-library/stores/diseases";
+import {DiseasesFacade, fetchHierarchy, setDiseaseStats, setFilters} from "@ncats-frontend-library/stores/diseases";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {SelectionModel} from "@angular/cdk/collections";
@@ -8,6 +8,7 @@ import {PanelConfig, Position} from "@ncats-frontend-library/shared/ui/dynamic-a
 
 export const GARD_DASHBOARD_SIDENAV_COMPONENT = new InjectionToken<string>('DashboardSidepanelComponent');
 export const GARD_DISEASE_SEARCH_COMPONENT = new InjectionToken<string>('GardDiseaseSearchComponent');
+export const GARD_SELECTED_FILTERS_COMPONENT = new InjectionToken<string>('SelectedFiltersComponent');
 export const DASHBOARD_MAIN_COMPONENT = new InjectionToken<string>('DashboardMainComponent');
 export const GARD_FOOTER_COMPONENT = new InjectionToken<string>('GardFooter');
 
@@ -28,6 +29,11 @@ export class GardDashboardComponent implements OnInit {
     },
     {
        token: GARD_DISEASE_SEARCH_COMPONENT,
+       section: Position.Content,
+     //  dataObservable: this.diseaseObservable$
+     },
+    {
+       token: GARD_SELECTED_FILTERS_COMPONENT,
        section: Position.Content,
      //  dataObservable: this.diseaseObservable$
      },
@@ -57,8 +63,8 @@ export class GardDashboardComponent implements OnInit {
     private router: Router,
     private changeRef: ChangeDetectorRef
   ) {
-    console.log("dashboard constructor");
   //  this.diseasesFacade.dispatch(setDiseaseStats({}));
+    this.diseasesFacade.dispatch(setFilters());
     this.diseasesFacade.dispatch(fetchHierarchy({node: {value: 'MONDO:0000001'}}));
   }
 

@@ -35,7 +35,6 @@ export class DiseaseService  {
     this.socket = webSocket({url: params.url});
     this.socket.pipe(
       mergeMap(response => {
-        console.log(response);
       switch (response.origin) {
         case 'fetch-hierarchy': {
           let hierarchy: GardHierarchy = this.gardHierarchySerializer.fromJson(response.data.hierarchy);
@@ -64,6 +63,10 @@ export class DiseaseService  {
         case 'set-disease': {
           const diseases = this.diseaseSerializer.fromJson(response.data.disease);
           this.diseaseFacade.dispatch(DiseaseActions.setDiseaseSuccess({disease: diseases}));
+          break;
+        }
+        case 'mapper': {
+          console.log(response);
           break;
         }
       }
