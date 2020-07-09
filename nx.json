@@ -123,6 +123,16 @@
     },
     "models-core-interfaces": {
       "tags": []
+    },
+    "shared-visualizations-xyplot": {
+      "tags": []
+    },
+    "pluriprot": {
+      "tags": []
+    },
+    "pluriprot-e2e": {
+      "tags": [],
+      "implicitDependencies": ["pluriprot"]
     }
   }
 }
