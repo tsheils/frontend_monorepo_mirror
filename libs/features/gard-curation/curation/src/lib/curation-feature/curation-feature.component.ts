@@ -119,7 +119,6 @@ export class CurationFeatureComponent implements OnInit {
     this.diseasesFacade.selectedDisease$.subscribe(res=> {
       if(res) {
         this.disease = res;
-        console.log(res);
         const keys = Object.keys(this.disease);
         this.displayFields = this.displayFields.filter(field => keys.includes(field.section));
         this._diseaseObservableSource.next({object: this.disease, fields: this.displayFields});

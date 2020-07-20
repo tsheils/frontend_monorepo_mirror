@@ -569,10 +569,8 @@ fetchEpidemiology() {
        match (dd:DATA)-[:PAYLOAD]->(n:S_GARD)-[e:I_CODE|:N_Name]-(m:S_ORDO_ORPHANET)<-[:PAYLOAD]-(d:DATA) 
 where not exists(d.reason_for_obsolescence) with count(e) as s, dd.gard_id as gard_id, m
 where s > 2 
-match (m)-[e:R_subClassOf]->(x:S_ORDO_ORPHANET) with x, gard_id
-match p=(x)-[l:R_rel{name:'intersectionOf'}]->(ss:S_ORDO_ORPHANET) with p, x, gard_id, {parent: '_'+ID(x), nodes: collect({value: l.value, name: ss.N_Name})} as names, l
-with collect(names) as nnn, gard_id
-return collect({disease: gard_id, epidemiology:nnn}) as data
+match (m:S_ORDO_ORPHANET)<-[:PREVALENCE]-(d2:DATA) with m, gard_id, collect(properties(d2)) as props
+return collect({gard_id: gard_id, properties: props}) as data
        `
   session.readTransaction(txc => txc.run(call).records()).pipe(
   map(res=> {
@@ -580,6 +578,11 @@ return collect({disease: gard_id, epidemiology:nnn}) as data
   })
     ).subscribe()
 }
+
+
+
+
+
 
 buildGARDData() {
   const driver = neo4j.driver('bolt://gard-dev-neo4j.ncats.io:7687', neo4j.auth.basic('neo4j', ''));

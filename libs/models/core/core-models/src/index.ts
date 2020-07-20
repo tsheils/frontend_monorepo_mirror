@@ -10,3 +10,5 @@ export * from './lib/models/organization';
 export * from './lib/models/phenotype';
 export * from './lib/models/principal';
 export * from './lib/models/publication';
+export * from './lib/models/xychart-options';
+export * from './lib/models/xypoint';

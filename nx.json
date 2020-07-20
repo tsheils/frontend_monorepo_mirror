@@ -133,6 +133,21 @@
     "pluriprot-e2e": {
       "tags": [],
       "implicitDependencies": ["pluriprot"]
+    },
+    "models-pluriprot-pluriprot-models": {
+      "tags": []
+    },
+    "ui-pluriprot-pluriprot-filter-menu": {
+      "tags": []
+    },
+    "features-pluriprot-scatter-plot": {
+      "tags": []
+    },
+    "features-pluriprot-network": {
+      "tags": []
+    },
+    "shared-smrtgraph-smrtgraph-core": {
+      "tags": []
     }
   }
 }

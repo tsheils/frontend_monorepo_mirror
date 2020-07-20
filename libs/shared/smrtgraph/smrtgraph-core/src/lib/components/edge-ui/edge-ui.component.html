@@ -1,0 +1,35 @@
+<svg:g class ="edge-group"
+       (click) = clickedEdge()>
+  <svg:line
+    *ngIf="edge.edgeType != 'down'"
+    class="edge end arrow"
+    [ngClass]="edge.classList"
+    [attr.x1]="endpointLessRadius(edge, 'x1') || 0"
+    [attr.y1]="endpointLessRadius(edge, 'y1') || 0"
+    [attr.x2]="endpointLessRadius(edge, 'x2') || 0"
+    [attr.y2]="endpointLessRadius(edge, 'y2') || 0"
+  />
+  <svg:line
+    *ngIf="edge.edgeType === 'down'"
+    class="edge end flatarrow"
+    [ngClass]="edge.classList"
+    [attr.x1]="endpointLessRadius(edge, 'x1') || 0"
+    [attr.y1]="endpointLessRadius(edge, 'y1') || 0"
+    [attr.x2]="endpointLessRadius(edge, 'x2') || 0"
+    [attr.y2]="endpointLessRadius(edge, 'y2') || 0"
+  />
+  <!--<svg:text class="edge-name" *ngIf="showEdgeLabel"
+            [attr.font-size]= 10
+            [attr.x]="(edge.source?.x + edge.target?.x)/2 "
+            [attr.y]="(edge.source?.y + edge.target?.y)/2 "
+  >
+    {{edge?.type }}
+  </svg:text>
+  -->
+  <svg:line class="clickable-area"
+            [attr.x1]= "getSource(edge?.source,'x')"
+            [attr.y1]= "getSource(edge?.source,'y')"
+            [attr.x2]= "getSource(edge?.target,'x')"
+            [attr.y2]= "getSource(edge?.target,'y')"
+  />
+</svg:g>

@@ -1,12 +1,19 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "rootDir": ".",
-    "paths": {
-      "@ncats-frontend-library/shared/visualizations/xyplot": [
-        "libs/shared/visualizations/xyplot/src/index.ts"
-      ]
-    }
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2017", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": "."
   },
   "files": [],
   "references": [
@@ -27,6 +34,15 @@
     },
     {
       "path": "./apps/gard-frontend-e2e/tsconfig.e2e.json"
+    },
+    {
+      "path": "./apps/pluriprot/tsconfig.app.json"
+    },
+    {
+      "path": "./apps/pluriprot/tsconfig.spec.json"
+    },
+    {
+      "path": "./apps/pluriprot-e2e/tsconfig.e2e.json"
     },
     {
       "path": "./apps/backend/tsconfig.app.json"
@@ -126,6 +142,9 @@
     },
     {
       "path": "./libs/models/core/core-models/tsconfig.spec.json"
+    },
+    {
+      "path": "./libs/models/pluriprot/pluriprot-models/tsconfig.spec.json"
     },
     {
       "path": "./libs/models/interfaces/core-interfaces/tsconfig.spec.json"

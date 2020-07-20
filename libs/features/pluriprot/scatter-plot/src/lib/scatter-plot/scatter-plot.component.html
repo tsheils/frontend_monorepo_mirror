@@ -1,0 +1,15 @@
+<div class ="scatter-graph" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-around start">
+  <div fxFlex="25" fxFlex.lt-md="90" class = "scatter-menu" fxFlexOrder.lt-md="-1">
+        <mat-card>
+          <ncats-frontend-library-pluriprot-filter-menu (resetZoom)="reset()" (filterScatterChange)="filterData($event)"></ncats-frontend-library-pluriprot-filter-menu>
+        </mat-card>
+  </div>
+  <div fxFlex = "75" fxFlex.lt-md="90">
+    <div *ngIf="loading" class="loadingIcon" fxLayoutAlign="center center">
+      <mat-spinner></mat-spinner>
+    </div>
+<!--
+    <ncats-frontend-library-xyplot [data]="displayData" [options]="chartOptions" #scatterInstance></ncats-frontend-library-xyplot>
+-->
+  </div>
+</div>

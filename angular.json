@@ -1410,6 +1410,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": ["d3"],
             "outputPath": "dist/apps/pluriprot",
             "index": "apps/pluriprot/src/index.html",
             "main": "apps/pluriprot/src/main.ts",
@@ -1420,6 +1421,9 @@
               "apps/pluriprot/src/favicon.ico",
               "apps/pluriprot/src/assets"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": ["libs/styles/src/styles/"]
+            },
             "styles": ["apps/pluriprot/src/styles.scss"],
             "scripts": []
           },
@@ -1516,6 +1520,181 @@
             "tsConfig": ["apps/pluriprot-e2e/tsconfig.e2e.json"],
             "exclude": ["**/node_modules/**", "!apps/pluriprot-e2e/**/*"]
           }
+        }
+      }
+    },
+    "models-pluriprot-pluriprot-models": {
+      "projectType": "library",
+      "root": "libs/models/pluriprot/pluriprot-models",
+      "sourceRoot": "libs/models/pluriprot/pluriprot-models/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/models/pluriprot/pluriprot-models/tsconfig.lib.json",
+              "libs/models/pluriprot/pluriprot-models/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/models/pluriprot/pluriprot-models/**/*"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/models/pluriprot/pluriprot-models/jest.config.js",
+            "tsConfig": "libs/models/pluriprot/pluriprot-models/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/models/pluriprot/pluriprot-models/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      }
+    },
+    "ui-pluriprot-pluriprot-filter-menu": {
+      "projectType": "library",
+      "root": "libs/ui/pluriprot/pluriprot-filter-menu",
+      "sourceRoot": "libs/ui/pluriprot/pluriprot-filter-menu/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ui/pluriprot/pluriprot-filter-menu/tsconfig.lib.json",
+              "libs/ui/pluriprot/pluriprot-filter-menu/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/ui/pluriprot/pluriprot-filter-menu/**/*"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ui/pluriprot/pluriprot-filter-menu/jest.config.js",
+            "tsConfig": "libs/ui/pluriprot/pluriprot-filter-menu/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/ui/pluriprot/pluriprot-filter-menu/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      }
+    },
+    "features-pluriprot-scatter-plot": {
+      "projectType": "library",
+      "root": "libs/features/pluriprot/scatter-plot",
+      "sourceRoot": "libs/features/pluriprot/scatter-plot/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/features/pluriprot/scatter-plot/tsconfig.lib.json",
+              "libs/features/pluriprot/scatter-plot/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/features/pluriprot/scatter-plot/**/*"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/features/pluriprot/scatter-plot/jest.config.js",
+            "tsConfig": "libs/features/pluriprot/scatter-plot/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/features/pluriprot/scatter-plot/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      }
+    },
+    "features-pluriprot-network": {
+      "projectType": "library",
+      "root": "libs/features/pluriprot/network",
+      "sourceRoot": "libs/features/pluriprot/network/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/features/pluriprot/network/tsconfig.lib.json",
+              "libs/features/pluriprot/network/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/features/pluriprot/network/**/*"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/features/pluriprot/network/jest.config.js",
+            "tsConfig": "libs/features/pluriprot/network/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/features/pluriprot/network/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      }
+    },
+    "shared-smrtgraph-smrtgraph-core": {
+      "projectType": "library",
+      "root": "libs/shared/smrtgraph/smrtgraph-core",
+      "sourceRoot": "libs/shared/smrtgraph/smrtgraph-core/src",
+      "prefix": "ncats-frontend-library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/smrtgraph/smrtgraph-core/tsconfig.lib.json",
+              "libs/shared/smrtgraph/smrtgraph-core/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/smrtgraph/smrtgraph-core/**/*"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/smrtgraph/smrtgraph-core/jest.config.js",
+            "tsConfig": "libs/shared/smrtgraph/smrtgraph-core/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/shared/smrtgraph/smrtgraph-core/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
         }
       }
     }

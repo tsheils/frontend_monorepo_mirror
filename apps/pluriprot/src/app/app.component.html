@@ -1,0 +1,35 @@
+<div fxLayout="row" fxLayoutAlign="center start">
+  <div fxFlex>
+    <nav mat-tab-nav-bar>
+      <a mat-tab-link
+         (click)="activeLink = 'data'"
+         [routerLink]="'/data'"
+         [active]="activeLink === 'data'"> Data </a>
+      <a mat-tab-link
+         (click)="activeLink = 'scatter'"
+         [routerLink]="'/scatter'"
+         [active]="activeLink === 'scatter'"> Scatter Plot </a>
+      <a mat-tab-link
+         (click)="activeLink = 'network'"
+         [routerLink]="'/network'"
+         [active]="activeLink === 'network'"> Network </a>
+    </nav>
+
+    <!--<mat-tab-group selectedIndex="1">
+  <mat-tab [label] = '"Data"'>
+<iframe src="https://ipsc.ncats.io/pluriprot/" width="100%"></iframe>
+  </mat-tab>
+  <mat-tab [label]='"Scatter Plot"'>
+    <ncats-frontend-library-scatter-plot></ncats-frontend-library-scatter-plot>
+  </mat-tab>
+  <mat-tab [label]='"Network"'>
+    <ncats-frontend-library-pluriprot-network></ncats-frontend-library-pluriprot-network>
+  </mat-tab>
+  <mat-tab></mat-tab>
+</mat-tab-group>-->
+  </div>
+</div>
+
+<div class="main-content">
+  <router-outlet></router-outlet>
+</div>

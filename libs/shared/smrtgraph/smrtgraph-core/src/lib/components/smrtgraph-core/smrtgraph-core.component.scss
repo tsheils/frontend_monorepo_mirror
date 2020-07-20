@@ -1,0 +1,146 @@
+.placeholder {
+  min-width: 100%;
+  min-height: 100%;
+ // background-color: red;
+}
+
+.node {
+  cursor: pointer;
+  transition: stroke-width 0.1s ease-out,
+  fill 0.1s ease-out,
+  stroke 0.1s ease-out;
+  pointer-events: all;
+  diameter: 50px;
+  stroke-width: 2px;
+  z-index: 666;
+  fill: #DDDDDD;
+}
+
+.square-node {
+  cursor: pointer;
+  transition: stroke-width 0.1s ease-out,
+  fill 0.1s ease-out,
+  stroke 0.1s ease-out;
+  pointer-events: all;
+  diameter: 50px;
+  stroke-width: 2px;
+  z-index: 666;
+  fill: #DDDDDD;
+}
+
+.node-name {
+  font-family: 'Lato';
+  text-anchor: middle;
+  alignment-baseline: central;
+  font-weight: 300;
+  pointer-events: all;
+  stroke: none;
+}
+
+.hovering {
+  stroke: #000;
+  stroke-width: 2px;
+}
+
+.clicked {
+  stroke: #000;
+  stroke-width: 5px;
+}
+
+.node > .not-related {
+  fill: #f6f6f6;
+  stroke: #b7b7b7;
+  stroke-width: .5px;
+}
+
+.not-related {
+  &  + .node-text {
+    display: none;
+  }
+}
+
+.node-text {
+  font-size: 1.3em;
+  color: #000000;
+  fill: #000000;
+}
+
+.relationship {
+  color: #A5ABB6;
+  shaft-width: 1px;
+  font-size: 8px;
+  padding: 3px;
+  caption: '<type>';
+}
+
+.hidden {
+  display: none;
+}
+
+.edge {
+  stroke-width: .75;
+  stroke: #A5A5A5;
+  cursor: pointer;
+}
+
+.end {
+  stroke-width: 2;
+  stroke: #A5A5A5;
+  fill: #A5A5A5;
+}
+
+.edge-name {
+  font-family: 'Lato';
+  font-weight: 300;
+  color: #000000;
+}
+
+
+
+.connected{
+  stroke-width: 2 !important;
+  stroke: #595959;
+//  marker-end: url(#hoverarrow);
+}
+
+.connectedflat{
+  stroke-width: 2 !important;
+  stroke: #595959;
+//  marker-end: url(#hoverflatarrow);
+}
+
+.arrow {
+  stroke-width: 2 !important;
+  stroke: #A5A5A5;
+  fill: #A5A5A5;
+//  marker-end: url(#arrow);
+}
+
+.flatarrow {
+  stroke-width: 2 !important;
+  stroke: #A5A5A5;
+  fill: #A5A5A5;
+//  marker-end: url(#flatarrow);
+}
+
+.clickable-area{
+  stroke: transparent;
+  fill:none;
+  stroke-width: 15px;
+  cursor: pointer;
+}
+
+.hovering {
+  stroke: #595959;
+  stroke-width: 3px;
+}
+
+.clicked {
+  stroke: #595959;
+  stroke-width: 5px;
+}
+
+.not-related {
+  stroke: #b7b7b7;
+  stroke-width: .5px !important;
+}
