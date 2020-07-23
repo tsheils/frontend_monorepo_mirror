@@ -46,27 +46,13 @@ export class PluriprotNetworkComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log(this);
     this.nodeService.setSerializer(new SctlNodeSerializer());
 this.loadData().subscribe(res => {
-  console.log(this);
   this.graph = this.dataMap.get('nscs');
  // this.smrtgraphInstance.resize();
   this.loading = false;
   this.changeRef.markForCheck();
 })
-    /*t
-
-/!*    this.dataParserService.LoadData().subscribe(res => {
-      this.dataMap = this.dataParserService.getDataMap();
-      this.graphDataService.setGraph(this.dataMap.get('nscs'))
-    });
-  }*!/
-this.cytoscapeLoaderService.connectToData();
-    this.cytoscapeLoaderService.getData().subscribe(res => {
-      console.log(res);
-      this.graph = res;
-    });*/
   }
 
   nodeEvents(event){

@@ -7,19 +7,23 @@ import { DataPanelListComponent } from './data-panel-list/data-panel-list.compon
 import { DataPropertyDisplayComponent } from './data-property-display/data-property-display.component';
 import {SharedUiObjectTreeModule} from "@ncats-frontend-library/shared/ui/object-tree";
 import { DataTreePanelComponent } from './data-tree-panel/data-tree-panel.component';
+import {SharedUiNcatsDatatableModule} from "@ncats-frontend-library/shared/ui/ncats-datatable";
+import { DataTablePanelComponent } from './data-table-panel/data-table-panel.component';
 
 @NgModule({
   imports: [
     CommonModule,
     SharedUiCurationMatrixModule,
     CustomMaterialModule,
-    SharedUiObjectTreeModule
+    SharedUiObjectTreeModule,
+    SharedUiNcatsDatatableModule
   ],
   declarations: [
     DataPanelComponent,
     DataPanelListComponent,
     DataPropertyDisplayComponent,
-    DataTreePanelComponent
+    DataTreePanelComponent,
+    DataTablePanelComponent
   ],
   exports: [
     DataPanelComponent,

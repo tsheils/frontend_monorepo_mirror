@@ -66,7 +66,6 @@ export class DiseaseService  {
           break;
         }
         case 'mapper': {
-          console.log(response);
           break;
         }
       }

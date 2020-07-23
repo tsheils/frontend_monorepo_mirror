@@ -77,13 +77,11 @@ export class SmrtGraph {
    * @param graph
    */
   private _initSimulation(graph :SmrtGraphData): void {
-    console.log(graph.nodes.length);
     if (!this._options || !this._options.width || !this._options.height) {
       throw new Error('missing options when initializing simulation');
     }
     /** Creating the simulation */
     if (!this.simulation) {
-      console.log("creating simulat");
       this.simulation =
         forceSimulation(graph.nodes)
         .force("link", forceLink(graph.edges).id(d => d.id))

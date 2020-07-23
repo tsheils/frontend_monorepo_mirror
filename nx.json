@@ -148,6 +148,9 @@
     },
     "shared-smrtgraph-smrtgraph-core": {
       "tags": []
+    },
+    "shared-ui-ncats-datatable": {
+      "tags": []
     }
   }
 }

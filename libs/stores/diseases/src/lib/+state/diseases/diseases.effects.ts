@@ -30,8 +30,9 @@ export class DiseasesEffects {
         const diseaseToProperty = `MATCH (d:Disease)-[:Properties]-(p:MainProperty)-[]-(pp:Property)`;
         const collectObj = `WITH d{.*, properties: COLLECT(datas)} AS diseaseObj, d, count`;
         const mapDataSources = `optional match (pp)-[]->(ds1:DataSource) with pp, d, p, ds1, count
-         optional match (pp)-[]-(n:DataRef)-[]->(ds:DataSource) with n, pp, d, p, ds1, ds, count
-         with distinct pp{.*, sources: collect(properties(ds1)), references:collect(n{.*, reference: properties(ds)})} as datarefs, p, d, pp, count
+         OPTIONAL MATCH (pp)-[:ReferenceSource]->(rr:Reference) WITH pp, d, p, ds1, rr, count
+         optional match (pp)-[]-(n:DataRef)-[]->(ds:DataSource) with n, pp, d, p, ds1, ds, rr, count
+         with distinct pp{.*, sources: collect(properties(ds1)), references:collect(properties(rr))} as datarefs, p, d, pp, count
          with {field: p.field, values: collect(properties(datarefs))} as datas, d, count`;
         const orderSkipLimit = `ORDER BY d.name SKIP ${pageIndex * pageSize} LIMIT ${pageSize}`;
         const returnObj = `RETURN COLLECT(diseaseObj) AS diseases, count AS total`;
@@ -105,16 +106,17 @@ export class DiseasesEffects {
          MATCH (d:Disease)-[:Properties]->(p:MainProperty)-[:DisplayValue|:Value]->(pp:Property)
          WHERE d.gard_id = '${params['disease']}' OR d.name = '${params['disease']}'
          OPTIONAL MATCH (pp)-[:DataSourceReference]->(ds1:DataSource) WITH pp, d, p, ds1
-         OPTIONAL MATCH (pp)-[:ReferenceSource]-(n:DataRef)-[:DataSourceReference]->(ds:DataSource) WITH pp, d, p, ds1, n, ds
-         OPTIONAL MATCH (pp)<-[:IsAParent]-(rr:HierarchyNode) WITH pp, d, p, ds1, n, ds, rr
-         OPTIONAL MATCH p3=(e:HierarchyRoot)-[:IsAParent*0..]->(rr) WITH pp, d, p, ds1, n, p3, e, ds
-         WITH collect(distinct p3) AS paths, d.gard_id AS id, e.id AS nodeId, d, pp, ds,  ds1, p, n
+         OPTIONAL MATCH (pp)-[:ReferenceSource]->(rr:Reference) WITH pp, d, p, ds1, rr
+         OPTIONAL MATCH (pp)-[:ReferenceSource]-(n:DataRef)-[:DataSourceReference]->(ds:DataSource) WITH pp, d, p, ds1, n, ds, rr
+         OPTIONAL MATCH (pp)<-[:IsAParent]-(hr:HierarchyNode) WITH pp, d, p, ds1, n, ds, hr, rr
+         OPTIONAL MATCH p3=(e:HierarchyRoot)-[:IsAParent*0..]->(hr) WITH pp, d, p, ds1, n, p3, e, ds, rr
+         WITH collect(distinct p3) AS paths, d.gard_id AS id, e.id AS nodeId, d, pp, ds,  ds1, p, n, rr
          CALL apoc.when(
             size(paths) > 0,
               'CALL apoc.convert.toTree(paths) yield value
-              return value as tree, collect(properties(ds1)) as sources, collect(n{.*, reference: properties(ds)}) as references',
-              'return properties(pp) as props, collect(properties(ds1)) as sources, collect(n{.*, reference: properties(ds)}) as references',
-              {paths:paths, ds1:ds1, ds:ds, p:p, d:d, pp:pp, n:n})
+              return value as tree, collect(properties(ds1)) as sources, collect(properties(rr)) as references',
+              'return properties(pp) as props, collect(properties(ds1)) as sources, collect(properties(rr)) as references',
+              {paths:paths, ds1:ds1, ds:ds, p:p, d:d, pp:pp, n:n, rr: rr})
           YIELD value
           with {field: p.field, values: collect(properties(value))} as datas, d
          with d{.*, properties: collect(datas)} as diseaseObj, d

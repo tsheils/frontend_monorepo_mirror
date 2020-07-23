@@ -13,7 +13,10 @@
     "lib": ["es2017", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+
+    }
   },
   "files": [],
   "references": [
@@ -130,6 +133,9 @@
     },
     {
       "path": "./libs/shared/services/tsconfig.spec.json"
+    },
+    {
+      "path": "./libs/shared/ui/ncats-datatable/tsconfig.spec.json"
     },
     {
       "path": "./libs/stores/filters/tsconfig.spec.json"

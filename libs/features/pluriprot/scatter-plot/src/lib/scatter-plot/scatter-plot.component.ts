@@ -30,7 +30,6 @@ export class ScatterPlotComponent implements OnInit {
       private changeRef: ChangeDetectorRef
   )
   {
-    console.log("constructor");
   }
 
   ngOnInit() {

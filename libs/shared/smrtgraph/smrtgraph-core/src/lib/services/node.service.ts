@@ -13,7 +13,6 @@ import {of} from 'rxjs';
 )
 export class NodeService implements NodeMappingInterface<SGNode> {
   constructor() {
-    console.log("new node service")
   }
   /**
    * map of all nodes all changes are saved here

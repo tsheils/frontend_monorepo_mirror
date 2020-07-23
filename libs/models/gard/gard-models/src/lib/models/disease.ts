@@ -3,6 +3,7 @@ import {DomSanitizer} from "@angular/platform-browser";
 import {Inject, Optional, SecurityContext} from "@angular/core";
 import {GardReference} from "./gard-reference";
 import {Serializer} from "@ncats-frontend-library/models/interfaces/core-interfaces";
+import {Prevalence, PrevalenceSerializer} from "./prevalence";
 
 enum AGE_OF_ONSET {
   none = 'no_age_of_onset_information',
@@ -19,27 +20,6 @@ enum CAUSE_STATUS {
   known = 'known',
   partial = 'partially known',
   unknown = 'unknown'
-}
-
-export class Population {
-  // todo create location service
-  geographicLocation: string;
-  ethnicity: string; // todo set up as enums
-  // todo: what goes in here?
-  other: any;
-}
-
-export class Citation {
-  citation: string;
-  type: string;
-  population: Population[];
-  values: string[];
-}
-
-export class Epidemology {
-  // todo: what is this? can it be an enum
-  sourceText: string;
-  items: Citation[]
 }
 
 // todo: the subtypes are contingent on the type
@@ -82,13 +62,14 @@ export class Disease extends GardBase {
   sourcesMap?: Map<string, any>;
   externalLinks?: GardDataProperty[];
   omimCodes?: string[];
-
-  // in progress
   inheritance?: GardDataProperty[];
   synonyms?: GardDataProperty[];
   references?:  any [];//Publication[];
   sources?: GardReference[];
   hierarchies: any;
+
+  epidemology?: Prevalence[];
+
 
 
   hpo?: GardDataProperty[];
@@ -113,7 +94,6 @@ export class Disease extends GardBase {
   id?: any; // neo4j number object {high, low}
 
   ageOfOnset?: AGE_OF_ONSET[];
-  epidemology?: Epidemology;
 
 // todo: should this just be 1 object?
   cause?: GardDataProperty[];
@@ -133,9 +113,9 @@ export class Disease extends GardBase {
 
 export class DiseaseSerializer implements Serializer {
   private gardPropertySerializer = new GardDataPropertySerializer();
+  private prevalenceSerializer = new PrevalenceSerializer();
 
   constructor(
-    // @Inject(DomSanitizer) public sanitizer: DomSanitizer
   ) {
   }
 
@@ -145,14 +125,33 @@ export class DiseaseSerializer implements Serializer {
 
     if (json.properties) {
       json.properties.forEach(prop => {
-        obj[prop.field] = prop.values.map(val => {
-          if (val.tree) {
-            val.tree = this._mapEntry(val.tree)
-          } else {
-            val = this.gardPropertySerializer.fromJson(val);
+        switch (prop.field) {
+          case 'references': {
+            obj[prop.field] = prop.values.map(val => new GardReference(val.props ? val.props: val));
+            break;
           }
-          return val;
-        })
+          case 'epidemiology': {
+            obj[prop.field] = prop.values.map(val => {
+              const preval = this.prevalenceSerializer.fromJson(val.props ? val.props: val);
+              if(val.references) {
+                preval.source = val.references.map(ref=> new GardReference(ref));
+              }
+              return preval;
+            });
+            break;
+          }
+          default: {
+            obj[prop.field] = prop.values.map(val => {
+              if (val.tree) {
+                val.tree = this._mapEntry(val.tree)
+              } else {
+                val = this.gardPropertySerializer.fromJson(val);
+              }
+              return val;
+            });
+            break;
+          }
+        }
       });
     }
 // todo parse this object to a date

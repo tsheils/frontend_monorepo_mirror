@@ -1,5 +1,5 @@
 import {GardReference} from "./gard-reference";
-import {Serializer} from "@ncats-frontend-library/models/interfaces/core-interfaces";
+import {Serializer} from "../../../../../interfaces/core-interfaces/src/lib/interfaces/serializer";
 import {Audit} from "@ncats-frontend-library/models/gard/gard-models";
 
 export class GardBase {
@@ -8,6 +8,8 @@ export class GardBase {
   version?: string;
   dateCreated?: Date | string | number;
   updated_at?: Date;
+
+  constructor(){}
 }
 
 export class GardDataProperty {
@@ -59,11 +61,6 @@ export class GardDataProperty {
      }
     }
 
-   /* if (json.source) {
-      console.log(json);
-      obj.sources = [new GardReference({source: json.source})];
-      delete obj['source'];
-    }*/
     return obj;
   }
 

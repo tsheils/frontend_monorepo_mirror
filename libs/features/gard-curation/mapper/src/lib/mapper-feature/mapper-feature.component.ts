@@ -16,6 +16,7 @@ import {
   GardDataPropertySerializer
 } from "@ncats-frontend-library/models/gard/gard-models";
 import {DiseaseService} from "@ncats-frontend-library/stores/diseases";
+import {Prevalence, PrevalenceSerializer} from "../../../../../../models/gard/gard-models/src/lib/models/prevalence";
 
 @Component({
   selector: 'ncats-frontend-library-mapper-feature',
@@ -46,6 +47,9 @@ export class MapperFeatureComponent implements OnDestroy {
   dictionary: Map<string, string[]> = new Map<string, string[]>();
   gardPropertySerializer: GardDataPropertySerializer = new GardDataPropertySerializer();
   diseaseSerializer: DiseaseSerializer = new DiseaseSerializer();
+
+
+
 
 
   constructor(
@@ -546,7 +550,6 @@ return {disease: id, nodeId: nodeId,tree: value} as data
 */
 
    _makeCode(codeString: string){
-    console.log(codeString);
      const splitCode = codeString.split(':');
      const reference: GardReference = new GardReference({source: splitCode[0]});
      if (reference.url) {
@@ -562,7 +565,7 @@ return {disease: id, nodeId: nodeId,tree: value} as data
    }
 
 fetchEpidemiology() {
-  const driver = neo4j.driver('bolt://gard-dev-neo4j.ncats.io:7687', neo4j.auth.basic('neo4j', ''));
+  const driver = neo4j.driver('bolt://gard-dev-neo4j.ncats.io:7687', neo4j.auth.basic('neo4j', 'eic1akeghaTha4OhKahr'));
   const session = driver.rxSession();
      const call =
        `
@@ -574,14 +577,66 @@ return collect({gard_id: gard_id, properties: props}) as data
        `
   session.readTransaction(txc => txc.run(call).records()).pipe(
   map(res=> {
-    console.log(res.toObject());
+    const prevalenceSerializer = new PrevalenceSerializer();
+const payload = res.toObject()['data'].map(prevVal => ({gard_id: prevVal.gard_id, epidemiology:
+    prevVal.properties.map(prop => {
+      const p = prevalenceSerializer.fromJson(prop);
+      const ref = p.source;
+      delete p.source;
+      return {epidemiology: p, reference: ref}
+    })}))
+
+const nosource = payload.filter(disease => disease.epidemiology.filter(e => e.reference.length > 0).length > 0);
+const writecall =
+  `
+      UNWIND {payload} as row 
+      MATCH (a2:Disease) where a2.gard_id = row.gard_id with a2, row 
+      CREATE (a:MainProperty:Epidemiologies) with a, a2, row 
+      SET a.field = 'epidemiology'
+      SET a.count = size(row['epidemiology'])
+      SET a.dateCreated = ${Date.now().toString()}
+      CREATE (a2)-[:Properties { dateCreated: ${Date.now().toString()} }]->(a) with a, a2, row 
+        
+      CREATE (r:MainProperty:References) 
+      SET r.field = 'references'
+      SET r.count = 0
+      SET r.dateCreated = ${Date.now().toString()}
+      CREATE (a2)-[:Properties { dateCreated: ${Date.now().toString()} }]->(r) with row, a2, a, r
+      
+      unwind row.epidemiology as epidemiology 
+      CREATE (n:Property:DisplayProperty:Epidemiology) 
+      SET n = epidemiology.epidemiology
+      SET n.dateCreated = ${Date.now().toString()}
+      CREATE p=(a)-[:DisplayValue { dateCreated: ${Date.now().toString()} }]->(n) WITH a, p, n, row ,a2, epidemiology, r
+      MATCH (a2)-[:Properties]-(dd:Sources) WITH a, p, n, row ,a2, epidemiology, r, dd
+      MERGE (dd)-[:DisplayValue]->(ds:DataSource {source: 'ORPHA'}) with a, p, n, row ,a2, epidemiology, r, ds
+      MERGE (n)-[:DataSourceReference { dateCreated: '${Date.now().toString()}' }]->(ds) with epidemiology, a2, n, r
+              
+      FOREACH (reference in epidemiology.reference |
+   CREATE (ref:Property:Reference) 
+   SET ref += reference
+   CREATE (n)-[:ReferenceSource { dateCreated: '${Date.now().toString()}'}]->(ref)  
+   SET r.count = r.count+1
+   CREATE (r)-[:DisplayValue { dateCreated: '${Date.now().toString()}'}]->(ref)  
+   ) with n, r, epidemiology
+      return true;
+  `
+
+
+
+    this.diseaseService.write('gard-data', 'mapper', writecall, {payload: payload});
   })
     ).subscribe()
 }
 
 
-
-
+  /**
+   *       FOREACH (reference in epidemiology.sources |
+   CREATE (ref:DataRef) //dataRef node for inheritance
+   SET ref += term
+   CREATE p4=(n)-[r4: ReferenceSource { dateCreated: '${Date.now().toString()}'}]->(ref)  // link disease to inheritance node
+   ) with a2
+   */
 
 
 buildGARDData() {
@@ -593,7 +648,6 @@ buildGARDData() {
        `;
   session.readTransaction(txc => txc.run(call).records()).pipe(
   map(res=> {
-      console.log(res.toObject());
       const returnArr: any[] = res.toObject()['data'].map(node => {
         const payload: any =
           {
@@ -639,13 +693,11 @@ buildGARDData() {
           payload.organizations = [{value: node.Organizations, type: 'html', source: 'GARD'}]
         }
         // const ret: Disease = res.toObject()['data'].map(dis => this.diseaseSerializer.fromJson(dis));
-        console.log(payload);
         return payload;
       })
     return returnArr;
   })
   ).subscribe(response => {
-    console.log(response);
     const writecall = `
           UNWIND {payload} as row // all hierarchy pairs
           MATCH (n:Disease {gard_id: row.disease})

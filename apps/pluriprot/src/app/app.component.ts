@@ -19,7 +19,6 @@ export class AppComponent {
 
   constructor(
   ) {
-    console.log("app constructor")
   }
 
   ngOnInit() {

@@ -32,7 +32,6 @@ export class GraphDataService {
   }
 
   setGraph(graph: SmrtGraphData) {
-    console.log(graph);
     this.nodeList = graph.nodes;
     this.edgeList = graph.edges;
     this.graph = graph;

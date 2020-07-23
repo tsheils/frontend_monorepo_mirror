@@ -5,8 +5,11 @@ const WebSockets = require('ws');
 
 
 const neo4jUser= "neo4j";
-const neo4jPassword = "vei1jeiceiK3Ohyaelai";
-const uri = "bolt://gard-dev.ncats.io:7687";
+//const neo4jPassword = "vei1jeiceiK3Ohyaelai";
+//const uri = "bolt://gard-dev.ncats.io:7687";
+
+const neo4jPassword = "tim";
+const uri = "bolt://localhost:7687";
 
 const driver = neo4j.driver(uri, neo4j.auth.basic(neo4jUser, neo4jPassword), {connectionPoolSize: 50});
 
@@ -19,7 +22,7 @@ const wss = new WebSockets.Server({ port: 1338 });
 
 wss.on('connection', ws => {
   ws.on('message', message => {
-    console.log(message);
+   // console.log(message);
     const session = driver.rxSession();
     const mes = JSON.parse(message);
     if (mes.txcType) {

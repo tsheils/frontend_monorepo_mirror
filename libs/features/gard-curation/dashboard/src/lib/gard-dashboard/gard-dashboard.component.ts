@@ -68,23 +68,8 @@ export class GardDashboardComponent implements OnInit {
     this.diseasesFacade.dispatch(fetchHierarchy({node: {value: 'MONDO:0000001'}}));
   }
 
-  //todo: should this be the main source of data subscriptions?
 
   ngOnInit(): void {
-/*     this.diseasesFacade.diseases$.subscribe(res => {
-       this.data = res;
-       this.changeRef.markForCheck()
-    });
 
-    this.diseasesFacade.stats$.subscribe(res => {
-      if(res && res.diseaseCount) {
-        this.stats = res;
-      }
-    });
-
-*/
- /*   this.diseasesFacade.loaded$.subscribe(res => {
-         this.loaded = res;
-    });*/
   }
 }

@@ -57,7 +57,6 @@ export class NavigationTreeComponent implements OnInit {
     navigationExtras.queryParams = {
       parent: node.value
     };
-    console.log(navigationExtras);
     this._navigate(navigationExtras)
   }
 

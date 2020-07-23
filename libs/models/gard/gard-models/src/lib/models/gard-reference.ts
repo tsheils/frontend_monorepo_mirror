@@ -3,6 +3,7 @@ export class GardReference {
   fullName?: string;
   url?: string;
   value?: string;
+  label?: string;
 
   constructor (obj: any) {
     Object.entries((obj)).forEach((prop) => this[prop[0]] = prop[1]);
@@ -13,8 +14,11 @@ export class GardReference {
     }
 
     if(!this.url) {
-      this.url = this._urlLookup((obj.source));
+      this.url = this._urlLookup((obj.source))+obj.value;
+    } else {
+      this.url = this.url + this.value;
     }
+    this.label = this.source;
   }
 
   private _urlLookup(source: string): string {
@@ -34,6 +38,11 @@ export class GardReference {
       case 'MONDO': {
         return 'http://purl.obolibrary.org/obo/';
       }
+
+      case 'PUBMED': {
+        return 'https://pubmed.ncbi.nlm.nih.gov/'
+      }
+
       default: {
         return null;
       }

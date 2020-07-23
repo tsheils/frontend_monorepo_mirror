@@ -52,27 +52,10 @@ export class DataPanelListComponent implements OnInit {
       map(res => {
         if (res) {
           Object.keys(this.data).forEach(key => this[key] = res[key]);
-
-          // todo: this filters out sections that don't have any data, but should a placeholder be left instead?
-          if (this.object) {
-            this.fields = this.fields.filter(field => {
-              if(this.object[field.section]){
-                return field;
-              }
-            });
-          }
           this.changeDetectorRef.markForCheck();
         }
         }
       )
     ).subscribe()
-  }
-
-  getDataType(data: any): string {
-    if (data.children || data[0].tree) {
-      return 'tree';
-    } else {
-      return 'list'
-    }
   }
 }
