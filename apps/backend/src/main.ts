@@ -19,7 +19,7 @@ const wss = new WebSockets.Server({ port: 1338 });
 
 wss.on('connection', ws => {
   ws.on('message', message => {
-   // console.log(message);
+    console.log(message);
     const session = driver.rxSession();
     const mes = JSON.parse(message);
     if (mes.txcType) {

@@ -78,6 +78,7 @@ export class PrevalenceSerializer implements Serializer {
     }
 
     delete obj.dateCreated;
+    delete obj['created'];
     return obj;
   }
 
