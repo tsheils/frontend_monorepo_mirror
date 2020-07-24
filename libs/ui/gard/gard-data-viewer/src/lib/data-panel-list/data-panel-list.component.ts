@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
-import {Disease} from "../../../../../../../models/gard/disease";
 import {map} from "rxjs/operators";
 import {BehaviorSubject} from "rxjs";
+import {Disease} from "@ncats-frontend-library/models/gard/gard-models";
 
 @Component({
   selector: 'ncats-frontend-library-data-panel-list',
@@ -48,23 +48,14 @@ export class DataPanelListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this);
     this._data.pipe(
-      map(res=> {
+      map(res => {
         if (res) {
-          Object.keys(res).forEach(key => this[key] = res[key]);
+          Object.keys(this.data).forEach(key => this[key] = res[key]);
           this.changeDetectorRef.markForCheck();
         }
         }
       )
     ).subscribe()
-  }
-
-  getDataType(data: any): string {
-    if (data.children || data[0].tree) {
-      return 'tree';
-    } else {
-      return 'list'
-    }
   }
 }

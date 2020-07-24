@@ -12,7 +12,7 @@ import {DiseasesEffects} from './diseases.effects';
 import {DiseasesFacade} from './diseases.facade';
 import * as DiseasesActions from './diseases.actions';
 import {DISEASES_FEATURE_KEY, reducer, State,} from './diseases.reducer';
-import {Disease} from "../../../../../../../models/gard/disease";
+import {Disease} from "@ncats-frontend-library/models/gard/gard-models";
 
 const page: Page = {
   total: 666,

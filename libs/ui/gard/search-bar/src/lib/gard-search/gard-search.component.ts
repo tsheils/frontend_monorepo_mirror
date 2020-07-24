@@ -11,12 +11,12 @@ import {
 } from '@angular/core';
 import {debounceTime, distinctUntilChanged, switchMap} from "rxjs/operators";
 import {of} from "rxjs";
-import {DiseaseSerializer} from "../../../../../../../models/gard/disease";
 import {FormControl} from "@angular/forms";
 import {MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from "@angular/material/autocomplete";
-import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
+import {DiseasesFacade, searchDiseases, setDiseaseStats} from "@ncats-frontend-library/stores/diseases";
 import {NavigationExtras, Router} from "@angular/router";
 import {Neo4jConnectService} from "@ncats-frontend-library/shared/data-access/neo4j-connector";
+import {DiseaseSerializer} from "@ncats-frontend-library/models/gard/gard-models";
 
 /**
  * navigation options to merge query parameters that are added on in navigation/query/facets/pagination
@@ -65,6 +65,7 @@ export class GardSearchComponent implements OnInit {
   constructor(
     private changeRef: ChangeDetectorRef,
     private diseasesFacade: DiseasesFacade,
+    private router: Router,
     private connectionService: Neo4jConnectService
   ) {}
 
@@ -76,6 +77,18 @@ export class GardSearchComponent implements OnInit {
         distinctUntilChanged()
       )
       .subscribe(term => this.typeahead(term));
+
+    this.diseasesFacade.searchDiseases$
+      .pipe(
+      switchMap(res => {
+          if(res && res.typeahead) {
+            this.filteredGroups = [{name: 'GARD names', options: res.typeahead}];
+            this.changeRef.markForCheck();
+          }
+          return of(res);
+        }
+      ),
+    ).subscribe()
   }
 
   /**
@@ -87,7 +100,10 @@ export class GardSearchComponent implements OnInit {
     navigationExtras.queryParams = {
       disease: diseaseObj.gard_id
     };
-    this.query.emit(navigationExtras);
+    navigationExtras.replaceUrl = true;
+    navigationExtras.queryParamsHandling = '';
+      this.router.navigate(['/curation'], navigationExtras);
+  //  this.query.emit(navigationExtras);
   }
 
   displayFn(option: any): string {
@@ -104,27 +120,9 @@ export class GardSearchComponent implements OnInit {
   }
 
   typeahead(event: any) {
-    if(event.length > 0) {
+    if (event.length > 0) {
       this.options = [];
-      const call = `
-      CALL db.index.fulltext.queryNodes("namesAndSynonyms", "name:${event}* OR ${event}*") YIELD node 
-      with collect(properties(node)) AS arr 
-      with arr[0..10] AS typeahead
-      RETURN typeahead
-      `;
-     // console.log(call);
-      this.connectionService.read('gard-data', call)
-        .pipe(
-          switchMap(res => {
-            if(res.typeahead) {
-              this.filteredGroups = [{name: 'GARD names', options: res.typeahead}];
-              this.changeRef.markForCheck();
-            }
-              return of(res);
-            }
-          ),
-        ).subscribe()
-    } else {
+      this.diseasesFacade.dispatch(searchDiseases({query: event}));
     }
   }
 }

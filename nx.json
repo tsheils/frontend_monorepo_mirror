@@ -70,6 +70,9 @@
     "shared-ui-object-tree": {
       "tags": []
     },
+    "shared-ui-selected-filters": {
+      "tags": []
+    },
     "shared-ui-header-template": {
       "tags": []
     },
@@ -110,6 +113,43 @@
       "tags": []
     },
     "ui-gard-navigation-tree": {
+      "tags": []
+    },
+    "models-gard-gard-models": {
+      "tags": []
+    },
+    "models-core-core-models": {
+      "tags": []
+    },
+    "models-core-interfaces": {
+      "tags": []
+    },
+    "shared-visualizations-xyplot": {
+      "tags": []
+    },
+    "pluriprot": {
+      "tags": []
+    },
+    "pluriprot-e2e": {
+      "tags": [],
+      "implicitDependencies": ["pluriprot"]
+    },
+    "models-pluriprot-pluriprot-models": {
+      "tags": []
+    },
+    "ui-pluriprot-pluriprot-filter-menu": {
+      "tags": []
+    },
+    "features-pluriprot-scatter-plot": {
+      "tags": []
+    },
+    "features-pluriprot-network": {
+      "tags": []
+    },
+    "shared-smrtgraph-smrtgraph-core": {
+      "tags": []
+    },
+    "shared-ui-ncats-datatable": {
       "tags": []
     }
   }

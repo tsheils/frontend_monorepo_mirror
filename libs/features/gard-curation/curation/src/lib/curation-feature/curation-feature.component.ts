@@ -1,10 +1,11 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, InjectionToken, OnInit} from '@angular/core';
 import RxSession from "neo4j-driver/types/session-rx";
 import {BehaviorSubject, Observable} from "rxjs";
-import {Disease, DiseaseSerializer} from "../../../../../../../models/gard/disease";
 import {PanelConfig, Position} from "@ncats-frontend-library/shared/ui/dynamic-app-layout";
 import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
 import {Neo4jConnectService} from "@ncats-frontend-library/shared/data-access/neo4j-connector";
+import {Disease, DiseaseSerializer} from "@ncats-frontend-library/models/gard/gard-models";
+import {PrevalanceViewConfig} from "../../../../../../models/gard/gard-models/src/lib/models/prevalence";
 
 
 export const GARD_HEADER_COMPONENT = new InjectionToken<string>('GardHeaderComponent');
@@ -90,12 +91,21 @@ export class CurationFeatureComponent implements OnInit {
     inheritance: []
   };
 
-  displayFields = [
-    {section: 'codes', label: 'External Identifiers'},
-    {section: 'synonyms', label: 'Synonyms'},
-    {section: 'hierarchies', label: 'Disease Hierarchy'},
-    {section: 'inheritance', label: 'Inheritance'},
-    {section: 'sources', label: 'References'}
+  displayFields: any[] = [];
+  allFields = [
+    {section: 'codes', label: 'External Identifiers', type: 'list'},
+    {section: 'synonyms', label: 'Synonyms', type: 'list'},
+    {section: 'hierarchies', label: 'Disease Hierarchy', type: 'tree'},
+    {section: 'inheritance', label: 'Inheritance', type: 'list'},
+    {section: 'epidemiology', label: 'Epidemiology', type: 'table', config: new PrevalanceViewConfig().config},
+    {section: 'causes', label: 'Cause', type: 'list'},
+    {section: 'symptoms', label: 'Symptoms', type: 'list'},
+    {section: 'treatments', label: 'Treatments', type: 'list'},
+    {section: 'prognosis', label: 'Prognosis', type: 'list'},
+    {section: 'statistics', label: 'Statistics', type: 'list'},
+    {section: 'organizations', label: 'Organizations', type: 'list'},
+    {section: 'sources', label: 'Data Sources', type: 'list'},
+    {section: 'references', label: 'References', type: 'list'}
     ];
 
 
@@ -111,8 +121,10 @@ export class CurationFeatureComponent implements OnInit {
 
   ngOnInit(): void {
     this.diseasesFacade.selectedDisease$.subscribe(res=> {
-      if(res && res.disease) {
-        this.disease = res.disease;
+      if(res) {
+        this.disease = res;
+        const keys = Object.keys(this.disease);
+        this.displayFields = this.allFields.filter(field => keys.includes(field.section));
         this._diseaseObservableSource.next({object: this.disease, fields: this.displayFields});
         this._fieldsObservableSource.next({data: this.displayFields});
       //  this.data = {object: this.disease, fields: [{section: 'inheritance'},{section: 'synonyms'}]};

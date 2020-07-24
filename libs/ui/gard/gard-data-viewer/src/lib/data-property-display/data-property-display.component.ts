@@ -1,9 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
-import {GardReference} from "../../../../../../../models/gard/gard-reference";
-import {Disease} from "../../../../../../../models/gard/disease";
 import {OmimApiService, OmimParams} from "../../../../../../shared/services/src/lib/omim-api/omim-api.service";
 import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
-import {GardDataProperty} from "../../../../../../../models/gard/gard-base";
+import {Disease, GardDataProperty} from "@ncats-frontend-library/models/gard/gard-models";
 
 @Component({
   selector: 'ncats-frontend-library-data-property-display',
@@ -28,6 +26,7 @@ export class DataPropertyDisplayComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    /*
             if(this.disease.omimCodes && (this.data)) {
               this.disease.omimCodes.forEach(code => {
                 const params: OmimParams = {
@@ -47,12 +46,16 @@ export class DataPropertyDisplayComponent implements OnInit {
               })
 
             }
+*/
   }
 
   subType():string {
 /*    if(this.data['source']) {
       return 'source'
     }*/
+  if(this.data && this.data.type === 'html') {
+    return 'html';
+  }
     if(this.data && (this.data.sources && this.data.references)) {
       return 'references';
     }

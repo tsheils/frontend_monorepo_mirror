@@ -1,7 +1,6 @@
-import { createAction, props } from '@ngrx/store';
-import {DiseasesEntity, Page} from './diseases.models';
-import {Disease} from "../../../../../../../models/gard/disease";
-import {MergedRoute} from "../../../../../store-router/src/lib/+state/merged-route";
+import {createAction, props} from '@ngrx/store';
+import {Page} from "@ncats-frontend-library/models/interfaces/core-interfaces";
+import {Disease} from "@ncats-frontend-library/models/gard/gard-models";
 
 export enum DiseasesActionsTypes {
   loadDiseases = '[Diseases] Load Diseases',
@@ -19,15 +18,30 @@ export enum DiseasesActionsTypes {
   setDiseaseStats = '[Diseases] Set Disease Stats',
   setDiseaseStatsSuccess = '[Diseases] Set Disease Stats Success',
   setDiseaseStatsFailure = '[Diseases] Set Disease Stats Failure',
+
+  fetchHierarchy = '[Diseases] Fetch Hierarchy',
+  fetchHierarchySuccess = '[Diseases] Fetch Hierarchy Success',
+  fetchHierarchyFailure = '[Diseases] Fetch Hierarchy Failure',
+
+  setFilters = '[Diseases] Set Filters',
+  setFiltersSuccess = '[Diseases] Set Filters Success',
+  setFiltersFailure = '[Diseases] Set Filters Failure',
+
+  setPage = '[Diseases] Set Page'
 }
 
 export const loadDiseases = createAction(
   DiseasesActionsTypes.loadDiseases
 );
 
+export const setPage = createAction(
+  DiseasesActionsTypes.setPage,
+  props<{page: Page }>()
+);
+
 export const loadDiseasesSuccess = createAction(
   DiseasesActionsTypes.loadDiseasesSuccess,
-  props<{ diseases: DiseasesEntity[], page: Page }>()
+  props<{ diseases: Disease[]}>()
 );
 
 export const loadDiseasesFailure = createAction(
@@ -44,7 +58,7 @@ export const searchDiseases = createAction(
 //output
 export const searchDiseasesSuccess = createAction(
   DiseasesActionsTypes.searchDiseasesSuccess,
-  props<{ diseases: DiseasesEntity[] }>()
+  props<{ typeahead: any }>()
 );
 //errors
 export const searchDiseasesFailure = createAction(
@@ -60,7 +74,7 @@ export const setDisease = createAction(
 //output
 export const setDiseaseSuccess = createAction(
   DiseasesActionsTypes.setDiseaseSuccess,
-  props<{ disease: DiseasesEntity }>()
+  props<{ disease: Disease }>()
 );
 //errors
 export const setDiseaseFailure = createAction(
@@ -81,5 +95,36 @@ export const setDiseaseStatsSuccess = createAction(
 //errors
 export const setDiseaseStatsFailure = createAction(
   DiseasesActionsTypes.setDiseaseStatsFailure,
+  props<{ error: any }>()
+);
+
+//input
+export const fetchHierarchy = createAction(
+  DiseasesActionsTypes.fetchHierarchy,
+  props<{node: any }>()
+);
+//output
+export const fetchHierarchySuccess = createAction(
+  DiseasesActionsTypes.fetchHierarchySuccess,
+  props<{ hierarchy: any }>()
+);
+//errors
+export const fetchHierarchyFailure = createAction(
+  DiseasesActionsTypes.fetchHierarchyFailure,
+  props<{ error: any }>()
+);
+
+//input
+export const setFilters = createAction(
+  DiseasesActionsTypes.setFilters
+);
+//output
+export const setFiltersSuccess = createAction(
+  DiseasesActionsTypes.setFiltersSuccess,
+  props<{ filters: any }>()
+);
+//errors
+export const setFiltersFailure = createAction(
+  DiseasesActionsTypes.setFiltersFailure,
   props<{ error: any }>()
 );

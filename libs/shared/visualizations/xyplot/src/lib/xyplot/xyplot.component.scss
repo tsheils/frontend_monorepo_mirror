@@ -1,0 +1,49 @@
+
+.d3-chart {
+  margin: 0 auto;
+  height: 60vh;
+  min-width: 60vw;
+  width: 100%;
+}
+
+.line-tooltip {
+  position: absolute;
+  text-align: center;
+  padding: 2px;
+  font: 16px sans-serif;
+  background-color: rgba(255,255,255,.9);
+  border: 1px solid #f1f1f1;
+  pointer-events: none;
+  z-index: 666;
+}
+
+.axis path {
+  display: none;
+}
+
+.axis line {
+  stroke-opacity: 0.2;
+}
+
+.axis-label {
+  font-size: 14px;
+  font-weight: bold;
+  text-anchor: middle;
+}
+
+
+.line {
+  fill: none;
+  stroke: red;
+  stroke-width: .5px;
+}
+
+.voronoi-path {
+  //stroke: red;
+  //stroke-opacity: 0.2;
+  fill: none;
+  pointer-events: all;
+}
+
+
+

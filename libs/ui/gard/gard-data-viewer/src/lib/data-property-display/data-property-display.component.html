@@ -29,6 +29,9 @@
 <div *ngSwitchCase="'source'">
   <a href= {{data.source.url}} target="_blank" referrerpolicy="no-referrer">{{data.value || data['source']}}</a> <span *ngIf = "omimRefs.length > 0">{{omimRefs.length}} sources</span><br>
 </div>
+  <div *ngSwitchCase="'html'">
+  <div [innerHTML]="data.value"></div><br>
+</div>
   <div *ngSwitchDefault>
     <span>{{data.displayValue || data.value || data['source']}}</span>
   </div>

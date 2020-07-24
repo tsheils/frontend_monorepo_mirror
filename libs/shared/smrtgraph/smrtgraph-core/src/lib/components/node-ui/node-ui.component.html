@@ -1,0 +1,39 @@
+<svg:g [attr.transform]="'translate(' + node.x + ',' + node.y + ')'"
+       (click) = clickedNode($event)
+       *ngIf="node"  class="node"
+       xmlns:svg="http://www.w3.org/1999/XSL/Transform" >
+
+  <svg:circle *ngIf= "node.shape === 'circle'"
+              [ngClass]="node.classList"
+              class="node-child"
+              [attr.fill]="node.tempcolor ? node.tempcolor : node.color"
+              [attr.stroke]="node.tempcolor ? '#b0b0b0' : ''"
+              [attr.r]="node.r">
+  </svg:circle>
+
+  <svg:rect *ngIf="node.shape === 'square'"
+            [ngClass]="node.classList"
+            class="node-child"
+            [attr.width]= node.r*2
+            [attr.height]= node.r*2
+            [attr.r]="node.r"
+            [attr.fill]="node.tempcolor ? node.tempcolor : node.color"
+            [attr.stroke]="node.tempcolor ? '#b0b0b0' : ''"
+            [attr.transform]="'translate(' + -node.r + ',' + (-node.r) + ')'"
+  >
+  </svg:rect>
+
+  <svg:rect *ngIf="node.shape === 'diamond'"
+            [ngClass]="node.classList"
+            class="node-child"
+            [attr.width]= node.r*2
+            [attr.height]= node.r*2
+            [attr.r]="node.r"
+            [attr.fill]="node.tempcolor ? node.tempcolor : node.color"
+            [attr.stroke]="node.tempcolor ? '#b0b0b0' : ''"
+            [attr.transform]="'translate(' + (node.r / 2) + ',' + (-node.r / 2) + ')rotate(45 ' + node.r +' '+ -node.r+')'">
+  </svg:rect>
+
+  <svg:text [attr.transform]="'translate(' + node.r * 1.5  + ',' + -node.r + ')'"
+            class="node-text">{{node?.displayName}}</svg:text>
+</svg:g>

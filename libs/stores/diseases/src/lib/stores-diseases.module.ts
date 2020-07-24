@@ -15,6 +15,6 @@ import { DiseasesFacade } from './+state/diseases/diseases.facade';
     ),
     EffectsModule.forFeature([DiseasesEffects]),
   ],
-  providers: [DiseasesEffects, DiseasesFacade],
+  providers: [DiseasesFacade],
 })
 export class StoresDiseasesModule {}

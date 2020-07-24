@@ -1,5 +1,5 @@
 import {createFeatureSelector, createSelector} from '@ngrx/store';
-import {routerStateConfig} from "@ncats-frontend-library/stores/store-router";
+import {routerStateConfig} from "../stores-store-router.module";
 import {MergedRouteReducerState} from "./merged-route";
 
 export const getRouterReducerState = createFeatureSelector<MergedRouteReducerState>(routerStateConfig.stateKey);

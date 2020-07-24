@@ -1,0 +1,30 @@
+<div class = "scatter-menu">
+  <div>
+    <span class ="mat-display-1">Legend</span>
+  </div>
+  <br>
+  <div>
+    <mat-checkbox (click)="$event.stopPropagation()"
+                  (change)="$event ? filterSelection.toggle('gray') : null"
+                  [checked]="filterSelection.isSelected('gray')"><strong>Gray:</strong> (0.5 < R < 2, p > 0.05)
+    </mat-checkbox>
+    <br>
+    <mat-checkbox (click)="$event.stopPropagation()"
+                  (change)="$event ? filterSelection.toggle('blue') : null"
+                  [checked]="filterSelection.isSelected('blue')"><strong>Blue:</strong> (R <= 0.5, p <= 0.05)
+    </mat-checkbox>
+    <br>
+    <mat-checkbox (click)="$event.stopPropagation()"
+                  (change)="$event ? filterSelection.toggle('red') : null"
+                  [checked]="filterSelection.isSelected('red')"><strong>Red:</strong> (R >= 2, p <= 0.05)
+    </mat-checkbox>
+    <br>
+    <mat-checkbox (click)="$event.stopPropagation()"
+                  (change)="$event ? filterSelection.toggle('green') : null"
+                  [checked]="filterSelection.isSelected('green')"> <strong>Green:</strong> (0.5 < R < 2, p <= 0.05)
+    </mat-checkbox>
+    <br>
+    <br>
+    <button mat-flat-button (click)="reset()" [color]="'primary'">Reset Zoom</button>
+  </div>
+</div>

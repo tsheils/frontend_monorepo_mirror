@@ -7,8 +7,7 @@ import * as DiseasesSelectors from './diseases.selectors';
 
 @Injectable()
 export class DiseasesFacade {
-  // boolean if values are loaded
-  // action for disease pagination
+
   diseases$ = this.store.pipe(select(DiseasesSelectors.getDiseases));
 
   loaded$ = this.store.pipe(select(DiseasesSelectors.getDiseasesLoaded));
@@ -21,7 +20,11 @@ export class DiseasesFacade {
 
   searchDiseases$ = this.store.pipe(select(DiseasesSelectors.searchDiseasesEntities));
 
+  fetchHierarchy$ = this.store.pipe(select(DiseasesSelectors.getHierarchy));
+
   page$ = this.store.pipe(select(DiseasesSelectors.getPage));
+
+  filters$ = this.store.pipe(select(DiseasesSelectors.getFilters));
 
   constructor(private store: Store<fromDiseases.DiseasesPartialState>) {
   }

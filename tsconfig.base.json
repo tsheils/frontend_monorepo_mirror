@@ -1,0 +1,140 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2017", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@ncats-frontend-library/features/gard-curation/mapper": [
+        "libs/features/gard-curation/mapper/src/index.ts"
+      ],
+      "@ncats-frontend-library/features/gard-curation/curation": [
+        "libs/features/gard-curation/curation/src/index.ts"
+      ],
+      "@ncats-frontend-library/features/gard-curation/dashboard": [
+        "libs/features/gard-curation/dashboard/src/index.ts"
+      ],
+      "@ncats-frontend-library/shared/auth/ncats-firebase-auth-module": [
+        "libs/shared/auth/ncats-firebase-auth-module/src/index.ts"
+      ],
+      "@ncats-frontend-library/shared/custom-material": [
+        "libs/shared/custom-material/src/index.ts"
+      ],
+      "@ncats-frontend-library/shared/ui/sidenavs/navigation-sidepanel": [
+        "libs/shared/ui/sidenavs/navigation-sidepanel/src/index.ts"
+      ],
+      "@ncats-frontend-library/shared/ui/sidenavs/facet-sidepanel": [
+        "libs/shared/ui/sidenavs/facet-sidepanel/src/index.ts"
+      ],
+      "@ncats-frontend-library/shared/data-access/neo4j-connector": [
+        "libs/shared/data-access/neo4j-connector/src/index.ts"
+      ],
+      "@ncats-frontend-library/shared/ui/ncats-form": [
+        "libs/shared/ui/ncats-form/src/index.ts"
+      ],
+      "@ncats-frontend-library/shared/ui/search-bar": [
+        "libs/shared/ui/search-bar/src/index.ts"
+      ],
+      "@ncats-frontend-library/shared/ui/curation-matrix": [
+        "libs/shared/ui/curation-matrix/src/index.ts"
+      ],
+      "@ncats-frontend-library/shared/ui/dynamic-app-layout": [
+        "libs/shared/ui/dynamic-app-layout/src/index.ts"
+      ],
+      "@ncats-frontend-library/shared/ui/mapper-ui": [
+        "libs/shared/ui/mapper-ui/src/index.ts"
+      ],
+      "@ncats-frontend-library/shared/ui/object-tree": [
+        "libs/shared/ui/object-tree/src/index.ts"
+      ],
+      "@ncats-frontend-library/shared/ui/selected-filters": [
+        "libs/shared/ui/selected-filters/src/index.ts"
+      ],
+      "@ncats-frontend-library/shared/ui/header-template": [
+        "libs/shared/ui/header-template/src/index.ts"
+      ],
+      "@ncats-frontend-library/ui/gard/data-display": [
+        "libs/ui/gard/data-display/src/index.ts"
+      ],
+      "@ncats-frontend-library/ui/gard/curation-sidepanel": [
+        "libs/ui/gard/curation-sidepanel/src/index.ts"
+      ],
+      "@ncats-frontend-library/ui/gard/gard-data-viewer": [
+        "libs/ui/gard/gard-data-viewer/src/index.ts"
+      ],
+      "@ncats-frontend-library/ui/gard/gard-header": [
+        "libs/ui/gard/gard-header/src/index.ts"
+      ],
+      "@ncats-frontend-library/ui/gard/gard-disease-header": [
+        "libs/ui/gard/gard-disease-header/src/index.ts"
+      ],
+      "@ncats-frontend-library/ui/gard/gard-footer": [
+        "libs/ui/gard/gard-footer/src/index.ts"
+      ],
+      "@ncats-frontend-library/ui/gard/search-bar": [
+        "libs/ui/gard/search-bar/src/index.ts"
+      ],
+      "@ncats-frontend-library/ui/gard/gard-disease-list": [
+        "libs/ui/gard/gard-disease-list/src/index.ts"
+      ],
+      "@ncats-frontend-library/stores/diseases": [
+        "libs/stores/diseases/src/index.ts"
+      ],
+      "@ncats-frontend-library/stores/store-router": [
+        "libs/stores/store-router/src/index.ts"
+      ],
+      "@ncats-frontend-library/styles": ["libs/styles/src/index.ts"],
+      "@ncats-frontend-library/shared/services": [
+        "libs/shared/services/src/index.ts"
+      ],
+      "@ncats-frontend-library/stores/filters": [
+        "libs/stores/filters/src/index.ts"
+      ],
+      "@ncats-frontend-library/ui/gard/navigation-tree": [
+        "libs/ui/gard/navigation-tree/src/index.ts"
+      ],
+      "@ncats-frontend-library/models/gard/gard-models": [
+        "libs/models/gard/gard-models/src/index.ts"
+      ],
+      "@ncats-frontend-library/models/core/core-models": [
+        "libs/models/core/core-models/src/index.ts"
+      ],
+      "@ncats-frontend-library/models/pluriprot/pluriprot-models": [
+        "libs/models/core/core-models/src/index.ts"
+      ],
+      "@ncats-frontend-library/models/interfaces/core-interfaces": [
+        "libs/models/interfaces/core-interfaces/src/index.ts"
+      ],
+      "@ncats-frontend-library/shared/visualizations/xyplot": [
+        "libs/shared/visualizations/xyplot/src/index.ts"
+      ],
+      "@ncats-frontend-library/ui/pluriprot/pluriprot-filter-menu": [
+        "libs/ui/pluriprot/pluriprot-filter-menu/src/index.ts"
+      ],
+      "@ncats-frontend-library/features/pluriprot/scatter-plot": [
+        "libs/features/pluriprot/scatter-plot/src/index.ts"
+      ],
+      "@ncats-frontend-library/features/pluriprot/network": [
+        "libs/features/pluriprot/network/src/index.ts"
+      ],
+      "@ncats-frontend-library/shared/smrtgraph/smrtgraph-core": [
+        "libs/shared/smrtgraph/smrtgraph-core/src/index.ts"
+      ],
+      "@ncats-frontend-library/shared/ui/ncats-datatable": [
+        "libs/shared/ui/ncats-datatable/src/index.ts"
+      ]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

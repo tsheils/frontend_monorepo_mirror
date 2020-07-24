@@ -1,9 +1,8 @@
 /**
  * Interface for the 'Diseases' data
  */
+import {Disease, GardHierarchy} from "@ncats-frontend-library/models/gard/gard-models";
 
-// todo models should probably be a library
-import {Disease} from "../../../../../../../models/gard/disease";
 
 export interface DiseasesEntity {
   id: string | number; // Primary ID
@@ -11,8 +10,3 @@ export interface DiseasesEntity {
   disease?: Disease;
 }
 
-export interface Page {
-  pageIndex: number;
-  pageSize: number;
-  total: number;
-}

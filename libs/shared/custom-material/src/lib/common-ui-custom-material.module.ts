@@ -33,17 +33,18 @@ import {FlexLayoutModule} from "@angular/flex-layout";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {DragDropModule} from "@angular/cdk/drag-drop";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 
 @NgModule({
   imports: [CommonModule, MatButtonModule, MatAutocompleteModule, MatMenuModule, MatToolbarModule,
-    MatInputModule, MatIconModule, MatListModule, MatSliderModule,
+    MatInputModule, MatIconModule, MatListModule, MatSliderModule, MatProgressSpinnerModule,
     MatTableModule, MatSortModule, MatSidenavModule, MatSlideToggleModule, MatRadioModule,
     MatTabsModule, MatCheckboxModule, MatCardModule, MatTooltipModule, MatSelectModule, MatExpansionModule, MatPaginatorModule,
     MatChipsModule, MatGridListModule, MatDividerModule, MatDialogModule, LayoutModule, DragDropModule, ScrollingModule,
     MatProgressBarModule, MatStepperModule, PortalModule, MatFormFieldModule, MatTreeModule, FlexLayoutModule],
   exports: [MatButtonModule, MatAutocompleteModule, MatMenuModule, MatToolbarModule,
-    MatInputModule, MatIconModule, MatListModule, MatSliderModule,
+    MatInputModule, MatIconModule, MatListModule, MatSliderModule, MatProgressSpinnerModule,
     MatTableModule, MatSortModule, MatSidenavModule, MatSlideToggleModule, MatRadioModule,
     MatTabsModule, MatCheckboxModule, MatCardModule, MatTooltipModule, MatSelectModule, MatExpansionModule, MatPaginatorModule,
     MatChipsModule, MatGridListModule, MatDividerModule, MatDialogModule, ScrollingModule,DragDropModule,

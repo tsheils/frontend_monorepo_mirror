@@ -1,5 +1,25 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output
+} from '@angular/core';
 import {Neo4jConnectService} from "@ncats-frontend-library/shared/data-access/neo4j-connector";
+import {QueueAction} from "rxjs/internal/scheduler/QueueAction";
+import {BehaviorSubject} from "rxjs";
+import {NavigationExtras, Router} from "@angular/router";
+import {DiseasesFacade, fetchHierarchy} from "@ncats-frontend-library/stores/diseases";
+import {GardHierarchy} from "@ncats-frontend-library/models/gard/gard-models";
+
+/**
+ * navigation options to merge query parameters that are added on in navigation/query/facets/pagination
+ */
+const navigationExtras: NavigationExtras = {
+ // queryParamsHandling: 'preserve'
+};
 
 @Component({
   selector: 'ncats-frontend-library-navigation-tree',
@@ -9,37 +29,44 @@ import {Neo4jConnectService} from "@ncats-frontend-library/shared/data-access/ne
 })
 export class NavigationTreeComponent implements OnInit {
 
- @Input() data: any;
+ @Input() data: GardHierarchy[];
+  loading = false;
+
+  callsMap: Map<string, any> = new Map<string, any>();
 
   constructor(
+    private router: Router,
     private changeRef: ChangeDetectorRef,
-    private connectionService: Neo4jConnectService
+    private connectionService: Neo4jConnectService,
+    private diseasesFacade: DiseasesFacade
   ) { }
 
   ngOnInit(): void {
-    this.fetchLevel({value: 'http://www.orpha.net/ORDO/Orphanet_C001'})
+   // this.diseasesFacade.dispatch(fetchHierarchy({node: {value: 'MONDO:0000001'}}));
+    this.diseasesFacade.fetchHierarchy$.subscribe(res=> {
+      if(res && res.children) {
+        this.data = [res];
+        this.loading = false;
+        this.changeRef.markForCheck();
+      }
+    })
   }
 
-fetchLevel(node:any) {
-  const call = `
-match p=(e:HierarchyNode)-[:IsAParent]->(h:HierarchyNode)
-where e.value = {payload} with distinct h, e, p
-match p2=(h)-[:IsAParent]->(r) with count(p2) as count, properties(h) as props, e, p
-order by count DESC
-with e{.*, count: count(p), children: collect(props{.*, count: count})} as data
-return data
-    `;
-  this.connectionService.read('gard-data', call, {payload: node.value}).subscribe(res => {
-    if(res.data) {
-      this.data = res.data;
-      this.data.count = res.data.count.low;
-      this.data.children = res.data.children.map(child => {
-        child.count = child.count.low;
-        return child;
-      });
-      this.changeRef.markForCheck();
-    }
-  })
-}
+  nodeClicked(node) {
+    this.diseasesFacade.dispatch(fetchHierarchy({node:node}));
+    navigationExtras.queryParams = {
+      parent: node.value
+    };
+    this._navigate(navigationExtras)
+  }
+
+  /**
+   * navigate on changes, mainly just changes url, shouldn't reload entire page, just data
+   * @param {NavigationExtras} navExtras
+   * @private
+   */
+  private _navigate(navExtras: NavigationExtras): void {
+    this.router.navigate([], navExtras);
+  }
 
 }

@@ -1,0 +1,23 @@
+<div *ngIf="property">
+  <span class="" *ngIf="showLabel" matTooltip="{{property.tooltip || property.label}}"><b>{{property.label}}:&nbsp;</b></span>
+<ng-container
+  *ngIf="property.url; then link; else nolink">
+</ng-container>
+
+<ng-template #link>
+  <ng-container
+    *ngIf="property.internalLink; then facet; else externalLink">
+  </ng-container>
+  <ng-template #facet>
+    <a [routerLink] = property.internalLink [queryParams]="property?.queryParams" [matTooltip]="property.tooltip">{{property.value}}</a>
+  </ng-template>
+  <ng-template #externalLink>
+    <a href="{{property.url}}"
+       target="_blank" rel="noreferrer"
+       aria-label= 'View more information. This link opens in a new tab.'
+              class="external-link">{{property.label}}:{{property.value}}<mat-icon [inline]="true">open_in_new</mat-icon></a>
+  </ng-template>
+
+</ng-template>
+<ng-template #nolink>{{property.value}}</ng-template>
+</div>

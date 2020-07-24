@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {BehaviorSubject} from "rxjs";
-import {Disease} from "../../../../../../../models/gard/disease";
+import {Disease} from "@ncats-frontend-library/models/gard/gard-models";
 
 @Component({
   selector: 'ncats-frontend-library-gard-disease-header',

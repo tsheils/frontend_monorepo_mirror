@@ -9,11 +9,11 @@
   </div>
       <div fxLayout = "row" fxLayoutAlign="space-between center">
         <div fxFlex="75">
- <sdiv *ngIf=" disease && disease.synonyms">
+ <div *ngIf=" disease && disease.synonyms">
    <div *ngFor = "let synonym of disease?.synonyms" class = "synonyms">
      <ncats-frontend-library-data-property-display [data]="synonym" [disease]="disease"></ncats-frontend-library-data-property-display>
    </div>
- </sdiv>
+ </div>
     </div>
   </div>
 </mat-card>

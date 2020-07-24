@@ -1,205 +1,206 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter, Injectable,
+  Input,
+  Output,
+  ViewEncapsulation
+} from '@angular/core';
 import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeNestedDataSource} from "@angular/material/tree";
 import {FlatTreeControl, NestedTreeControl} from "@angular/cdk/tree";
-import {MatCheckboxChange} from "@angular/material/checkbox";
 import {SelectionModel} from "@angular/cdk/collections";
+import {BehaviorSubject} from "rxjs";
+import {Hierarchy} from "@ncats-frontend-library/models/core/core-models";
 
-/**
- * Food data with nested structure.
- * Each node has a name and an optional list of children.
- */
-interface FieldNode {
-  label: string;
-  value?: string;
-  url?: string;
-  count?: number;
-  children?: FieldNode[];
-}
-
-/** Flat to-do item node with expandable and level information */
-export class FieldFlatNode {
-  label: string;
+/** Flat tree item node with expandable and level information */
+export class HierarchyFlatNode extends Hierarchy {
   level: number;
-  value?: string;
-  url?: string;
-  count?: number;
   expandable: boolean;
 }
 
 @Component({
   selector: 'ncats-frontend-library-object-tree',
   templateUrl: './object-tree.component.html',
-  styleUrls: ['./object-tree.component.scss']
+  styleUrls: ['./object-tree.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None
 })
+
 export class ObjectTreeComponent {
   @Output() fieldSelectChange: EventEmitter<any> = new EventEmitter<any>();
   @Output() nodeExpandChange: EventEmitter<any> = new EventEmitter<any>();
 
 
   @Input() selectable = false;
+  @Input() showLinks = false;
   @Input() dynamic = false;
 
-  @Input()data: FieldNode;
-  /** Map from flat node to nested node. This helps us finding the nested node to be modified */
-  flatNodeMap = new Map<FieldFlatNode, FieldNode>();
-
-  /** Map from nested node to flattened node. This helps us to keep the same object for selection */
-  nestedNodeMap = new Map<FieldNode, FieldFlatNode>();
-
-  /** A selected parent node to be inserted */
-  selectedParent: FieldFlatNode | null = null;
-
-  /** The new item's name */
-  newItemName = '';
-
-  treeControl: FlatTreeControl<FieldFlatNode>;
-
-  treeFlattener: MatTreeFlattener<FieldNode, FieldFlatNode>;
+  @Input() loading = false;
 
 
-  dataSource = new MatTreeNestedDataSource<FieldNode>();
-  fieldSelection = new SelectionModel<FieldNode>(false /* multiple */);
+/**
+  * initialize a private variable _data, it's a BehaviorSubject
+* @type {BehaviorSubject<any>}
+* @private
+*/
+protected _data = new BehaviorSubject<any>({});
 
-  constructor() {
-    this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
-      this.isExpandable, this.getChildren);
-    this.treeControl = new FlatTreeControl<FieldFlatNode>(this.getLevel, this.isExpandable);
-    this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-  }
+/**
+* pushes changed data to {BehaviorSubject}
+* @param value
+*/
+@Input()
+set data(value: any) {
+  this._data.next(value);
+}
+
+/**
+* returns value of {BehaviorSubject}
+* @returns {any}
+*/
+get data() {
+  return this._data.getValue();
+}
+
+/** The selection for checklist */
+checklistSelection = new SelectionModel<HierarchyFlatNode>(true);
+
+  private _transformer = (node: Hierarchy, level: number) => {
+    const flatNode = new HierarchyFlatNode();
+    Object.entries((node)).forEach((prop) => flatNode[prop[0]] = prop[1]);
+   // flatNode.value = node.value;
+   // flatNode.label = node.label;
+    flatNode.expandable = (!!node.children && node.children.length > 0) ||  (!!node.count && node.count > 0);
+      flatNode.level = level;
+    return flatNode;
+  };
+
+  treeControl = new FlatTreeControl<HierarchyFlatNode>(
+    node => node.level, node => node.expandable);
+
+  treeFlattener = new MatTreeFlattener(
+    this._transformer, node => node.level, node => node.expandable, node => node.children);
+
+  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+
+constructor(
+  private changeRef: ChangeDetectorRef
+) {
+}
 
   ngOnInit() {
-    this.dataSource.data = [this.data];
-    this.treeControl.expand(this.treeControl.dataNodes[0]);
-  }
+    this._data.subscribe( res => {
+      if(res && res.length) {
+        this.dataSource.data = res;
+        this.dataSource._flattenedData.subscribe(data => {
+          this.treeControl.dataNodes = data;
+          this.treeControl.expansionModel.selected.forEach(node => {
+            const n = this.treeControl.dataNodes.find(d => d.value === node.value);
+            if(n) {
+              this.treeControl.expand(n);
+            }
+          });
+        });
 
-  getLevel = (node: FieldFlatNode) => node.level;
-
-  isExpandable = (node: FieldFlatNode) => node.expandable;
-
-  getChildren = (node: FieldNode): FieldNode[] => {
-  //  console.log(node);
-    return node.children;
-  }
-
-  hasChild = (_: number, _nodeData: FieldFlatNode) => _nodeData.expandable;
-
-  hasNoContent = (_: number, _nodeData: FieldFlatNode) => _nodeData.label === '';
-
-  /**
-   * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
-   */
-  transformer = (node: FieldNode, level: number) => {
-    const existingNode = this.nestedNodeMap.get(node);
-    const flatNode = existingNode && existingNode.label === node.label
-      ? existingNode
-      : new FieldFlatNode();
-    flatNode.label = node.label;
-    flatNode.url = node.url;
-    flatNode.level = level;
-    flatNode.value = node.value;
-    flatNode.count = node.count;
-    flatNode.expandable = !!node.children;
-    this.flatNodeMap.set(flatNode, node);
-    this.nestedNodeMap.set(node, flatNode);
-    return flatNode;
-  }
-
-  /** Whether all the descendants of the node are selected. */
-  descendantsAllSelected(node: FieldFlatNode): boolean {
-    const descendants = this.treeControl.getDescendants(node);
-    const descAllSelected = descendants.every(child =>
-      this.fieldSelection.isSelected(child)
-    );
-    return descAllSelected;
-  }
-
-  /** Whether part of the descendants are selected */
-  descendantsPartiallySelected(node: FieldFlatNode): boolean {
-    const descendants = this.treeControl.getDescendants(node);
-    const result = descendants.some(child => this.fieldSelection.isSelected(child));
-    return result && !this.descendantsAllSelected(node);
-  }
-
-  /** Toggle the to-do item selection. Select/deselect all the descendants node */
-  selectParentNode(node: FieldFlatNode): void {
-   // this.fieldSelection.toggle(node);
-/*    const descendants = this.treeControl.getDescendants(node);
-    this.fieldSelection.isSelected(node)
-      ? this.fieldSelection.select(...descendants)
-      : this.fieldSelection.deselect(...descendants);
-
-    // Force update for the parent
-    descendants.every(child =>
-      this.fieldSelection.isSelected(child)
-    );
-    this.checkAllParentsSelection(node);*/
-  }
-
-  /** Toggle a leaf to-do item selection. Check all the parents to see if they changed */
-  selectLeafNode(node: FieldFlatNode): void {
-    this.fieldSelection.toggle(node);
-    this.checkAllParentsSelection(node);
-  }
-
-  /* Checks all the parents when a leaf node is selected/unselected */
-  checkAllParentsSelection(node: FieldFlatNode): void {
-    let parent: FieldFlatNode | null = this.getParentNode(node);
-    while (parent) {
-      this.checkRootNodeSelection(parent);
-      parent = this.getParentNode(parent);
-    }
-  }
-
-  /** Check root node checked state and change it accordingly */
-  checkRootNodeSelection(node: FieldFlatNode): void {
-    const nodeSelected = this.fieldSelection.isSelected(node);
-    const descendants = this.treeControl.getDescendants(node);
-    const descAllSelected = descendants.every(child =>
-      this.fieldSelection.isSelected(child)
-    );
-    if (nodeSelected && !descAllSelected) {
-      this.fieldSelection.deselect(node);
-    } else if (!nodeSelected && descAllSelected) {
-      this.fieldSelection.select(node);
-    }
-    this.fieldSelectChange.emit(this.fieldSelection.selected);
-  }
-
-  /* Get the parent node of a node */
-  getParentNode(node: FieldFlatNode): FieldFlatNode | null {
-    const currentLevel = this.getLevel(node);
-
-    if (currentLevel < 1) {
-      return null;
-    }
-
-    const startIndex = this.treeControl.dataNodes.indexOf(node) - 1;
-
-    for (let i = startIndex; i >= 0; i--) {
-      const currentNode = this.treeControl.dataNodes[i];
-
-      if (this.getLevel(currentNode) < currentLevel) {
-        return currentNode;
+        this.treeControl.expand(this.treeControl.dataNodes[0]);
+        this.changeRef.markForCheck();
       }
-    }
+    });
+
+  }
+
+  hasChild = (_: number, _nodeData: HierarchyFlatNode) => _nodeData.expandable;
+
+/** Whether all the descendants of the node are selected. */
+descendantsAllSelected(node: HierarchyFlatNode): boolean {
+  const descendants = this.treeControl.getDescendants(node);
+  const descAllSelected = descendants.every(child =>
+    this.checklistSelection.isSelected(child)
+  );
+  return descAllSelected;
+}
+
+/** Whether part of the descendants are selected */
+descendantsPartiallySelected(node: HierarchyFlatNode): boolean {
+  const descendants = this.treeControl.getDescendants(node);
+  const result = descendants.some(child => this.checklistSelection.isSelected(child));
+  return result && !this.descendantsAllSelected(node);
+}
+
+/** Toggle the to-do item selection. Select/deselect all the descendants node */
+todoItemSelectionToggle(node: HierarchyFlatNode): void {
+  this.checklistSelection.toggle(node);
+const descendants = this.treeControl.getDescendants(node);
+this.checklistSelection.isSelected(node)
+  ? this.checklistSelection.select(...descendants)
+  : this.checklistSelection.deselect(...descendants);
+
+// Force update for the parent
+descendants.every(child =>
+  this.checklistSelection.isSelected(child)
+);
+this.checkAllParentsSelection(node);
+}
+
+/** Toggle a leaf to-do item selection. Check all the parents to see if they changed */
+todoLeafItemSelectionToggle(node: HierarchyFlatNode): void {
+  this.checklistSelection.toggle(node);
+this.checkAllParentsSelection(node);
+}
+
+/* Checks all the parents when a leaf node is selected/unselected */
+checkAllParentsSelection(node: HierarchyFlatNode): void {
+  let parent: HierarchyFlatNode | null = this.getParentNode(node);
+while (parent) {
+  this.checkRootNodeSelection(parent);
+  parent = this.getParentNode(parent);
+}
+}
+
+/** Check root node checked state and change it accordingly */
+checkRootNodeSelection(node: HierarchyFlatNode): void {
+  const nodeSelected = this.checklistSelection.isSelected(node);
+const descendants = this.treeControl.getDescendants(node);
+const descAllSelected = descendants.every(child =>
+  this.checklistSelection.isSelected(child)
+);
+if (nodeSelected && !descAllSelected) {
+  this.checklistSelection.deselect(node);
+} else if (!nodeSelected && descAllSelected) {
+  this.checklistSelection.select(node);
+}
+}
+
+/* Get the parent node of a node */
+getParentNode(node: HierarchyFlatNode): HierarchyFlatNode | null {
+  const currentLevel = node.level;
+
+  if (currentLevel < 1) {
     return null;
   }
 
-  fetchData(node: FieldFlatNode) {
-    if(this.dynamic) {
+  const startIndex = this.treeControl.dataNodes.indexOf(node) - 1;
+
+  for (let i = startIndex; i >= 0; i--) {
+    const currentNode = this.treeControl.dataNodes[i];
+
+    if (currentNode.level < currentLevel) {
+      return currentNode;
+    }
+  }
+  return null;
+}
+
+  fetchData(node: Hierarchy) {
+    if(this.dynamic  && !node.children) {
       this.nodeExpandChange.emit(node);
     }
   }
 
-  fetchLeafData(node: FieldFlatNode) {
-   // console.log('leaf');
-    if(this.dynamic) {
+  fetchLeafData(node: Hierarchy) {
+    if(this.dynamic && !node.children) {
       this.nodeExpandChange.emit(node);
     }
   }
-
-  isLink(val: string) {
-    return val.split('http').length > 1
-  }
-
 }

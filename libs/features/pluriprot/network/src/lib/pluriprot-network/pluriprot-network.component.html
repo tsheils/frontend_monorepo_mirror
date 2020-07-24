@@ -1,0 +1,41 @@
+<div fxHide fxShow.lt-sm fxLayoutAlign="center center">
+  <h1> this widget is not compatible with mobile devices. Please switch to a desktop browser</h1>
+</div>
+
+<div class = "fdg-container" fxHide.lt-sm>
+  <mat-sidenav-container class="sctl-graph-container" [hasBackdrop]="false">
+    <mat-sidenav #graphMenu [opened]="true" mode="over"
+                 class="menu-drawer">
+      <ncats-frontend-library-network-menu
+        (resetZoom)="reset()"
+        (optionsChange)="filterGraph($event)"
+        (close)="graphMenu.close()"
+      ></ncats-frontend-library-network-menu>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <button mat-button (click)="graphMenu.toggle()" class="close-button" *ngIf="graphMenu.opened">
+        <mat-icon>arrow_left</mat-icon>close
+      </button>
+      <button mat-button (click)="graphMenu.toggle()" class="open-button">
+        <mat-icon>arrow_right</mat-icon>open
+      </button>
+      <div class = "info-panel">
+        <ncats-frontend-library-node-details-box></ncats-frontend-library-node-details-box>
+      </div>
+      <div class = "sctl-fdg">
+        <div *ngIf="loading" class="loadingIcon" fxLayoutAlign="center center">
+          <mat-spinner></mat-spinner>
+        </div>
+        <smrtgraph cdkDropList
+          [graph] = graph
+          (nodeEvents)="nodeEvents($event)"
+          (linkEvents)="edgeEvents($event)"
+          (svgEvents) = "svgElementClicked($event)"
+          ></smrtgraph>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+<!--
+todo: use library search widget
+<search-component [searchProperty]="'name'" (selected)="highlightSubgraph($event)"></search-component>
+-->
