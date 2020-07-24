@@ -21,8 +21,8 @@ import {
   Neo4jConnectService
 } from "@ncats-frontend-library/shared/data-access/neo4j-connector";
 import {UiGardSearchBarModule} from "@ncats-frontend-library/ui/gard/search-bar";
+import {DiseaseService} from "@ncats-frontend-library/stores/diseases";
 import {OmimApiService} from "../../../../libs/shared/services/src/lib/omim-api/omim-api.service";
-import {DiseaseService} from "../../../../libs/stores/diseases/src/lib/disease.service";
 
 export function init_connections(diseaseService: DiseaseService) {
   return () => {

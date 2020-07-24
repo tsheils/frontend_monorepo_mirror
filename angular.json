@@ -25,6 +25,9 @@
               "apps/gard-data-hub/src/favicon.ico",
               "apps/gard-data-hub/src/assets"
             ],
+              "allowedCommonJsDependencies": [
+                "neo4j-driver"
+              ],
             "stylePreprocessorOptions": {
               "includePaths": ["libs/styles/src/styles/"]
             },

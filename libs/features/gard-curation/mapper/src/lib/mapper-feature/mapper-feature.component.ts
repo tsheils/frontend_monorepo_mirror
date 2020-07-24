@@ -419,7 +419,7 @@ RETURN collect(diseases) as data LIMIT 10
   }*/
 
   getHierarchy() {
-    const driver = neo4j.driver('bolt://gard-dev-neo4j.ncats.io:7687', neo4j.auth.basic('neo4j', 'eic1akeghaTha4OhKahr'));
+    const driver = neo4j.driver('bolt://gard-dev-neo4j.ncats.io:7687', neo4j.auth.basic('neo4j', ''));
     const session = driver.rxSession();
     const mondocall = `
 match (disease:DATA)-[:PAYLOAD]->(m:S_GARD)-[:R_exactMatch|:R_equivalentClass]-(n:S_MONDO)<-[:PAYLOAD]-(d:DATA)  with n, disease.gard_id as id, d.id as mondoId
@@ -565,7 +565,7 @@ return {disease: id, nodeId: nodeId,tree: value} as data
    }
 
 fetchEpidemiology() {
-  const driver = neo4j.driver('bolt://gard-dev-neo4j.ncats.io:7687', neo4j.auth.basic('neo4j', 'eic1akeghaTha4OhKahr'));
+  const driver = neo4j.driver('bolt://gard-dev-neo4j.ncats.io:7687', neo4j.auth.basic('neo4j', ''));
   const session = driver.rxSession();
      const call =
        `
