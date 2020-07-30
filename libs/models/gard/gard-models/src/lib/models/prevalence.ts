@@ -25,7 +25,7 @@ export class PrevalanceViewConfig {
       ['value', {field: 'value', label: 'Actual Value', sortable: true}],
       ['prevalenceClass', {field: 'prevalenceClass', label: 'Class', sortable: true}],
       ['prevalenceValidationStatus', {field: 'prevalenceValidationStatus', label: 'Validation Status', sortable: true}],
-      ['source', {field: 'source', label: 'references', sortable: true}]
+      ['source', {field: 'source', label: 'References', sortable: true}]
     ]
   );
 

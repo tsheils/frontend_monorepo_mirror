@@ -134,7 +134,7 @@ export class DiseaseSerializer implements Serializer {
             obj[prop.field] = prop.values.map(val => {
               const preval = this.prevalenceSerializer.fromJson(val.props ? val.props: val);
               if(val.references) {
-                preval.source = val.references.map(ref=> new GardReference(ref));
+                preval.source = val.references.map(ref=> new GardReference(ref)).filter((v,i,a)=>a.findIndex(t=>(t.value === v.value))===i)
               }
               return preval;
             });

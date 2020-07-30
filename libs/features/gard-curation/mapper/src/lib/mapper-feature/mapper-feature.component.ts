@@ -17,6 +17,7 @@ import {
 } from "@ncats-frontend-library/models/gard/gard-models";
 import {DiseaseService} from "@ncats-frontend-library/stores/diseases";
 import {Prevalence, PrevalenceSerializer} from "../../../../../../models/gard/gard-models/src/lib/models/prevalence";
+import {GeneSerializer} from "../../../../../../models/gard/gard-models/src/lib/models/gene";
 
 @Component({
   selector: 'ncats-frontend-library-mapper-feature',
@@ -419,7 +420,7 @@ RETURN collect(diseases) as data LIMIT 10
   }*/
 
   getHierarchy() {
-    const driver = neo4j.driver('bolt://gard-dev-neo4j.ncats.io:7687', neo4j.auth.basic('neo4j', ''));
+    const driver = neo4j.driver('bolt://gard-dev-neo4j.ncats.io:7687', neo4j.auth.basic('neo4j', 'eic1akeghaTha4OhKahr'));
     const session = driver.rxSession();
     const mondocall = `
 match (disease:DATA)-[:PAYLOAD]->(m:S_GARD)-[:R_exactMatch|:R_equivalentClass]-(n:S_MONDO)<-[:PAYLOAD]-(d:DATA)  with n, disease.gard_id as id, d.id as mondoId
@@ -499,10 +500,7 @@ return {disease: id, nodeId: nodeId,tree: value} as data
       }
    }
 
-/*
    writeTree(payload) {
-    console.log('writing tree');
-    console.log(payload);
     const call = `
           UNWIND {payload} as row // all hierarchy pairs
           MATCH (d:Disease {gard_id: row.disease})-[:Properties]->(c:Codes)
@@ -541,13 +539,9 @@ return {disease: id, nodeId: nodeId,tree: value} as data
         RETURN row.disease;
     `;
 
-
-   //  this.writesession.writeTransaction(txc => txc.run(call,{payload: payload}).records()).subscribe(res =>{
-       this.connectionService.write('gard-data', call, {payload: payload}).subscribe(res => {
-       console.log(res);
-     })
+     console.log(payload)
+     this.diseaseService.write('gard-data', 'mapper', call, {payload: payload});
    }
-*/
 
    _makeCode(codeString: string){
      const splitCode = codeString.split(':');
@@ -584,7 +578,7 @@ const payload = res.toObject()['data'].map(prevVal => ({gard_id: prevVal.gard_id
       const ref = p.source;
       delete p.source;
       return {epidemiology: p, reference: ref}
-    })}))
+    })}));
 
 const nosource = payload.filter(disease => disease.epidemiology.filter(e => e.reference.length > 0).length > 0);
 const writecall =
@@ -599,6 +593,7 @@ const writecall =
         
       CREATE (r:MainProperty:References) 
       SET r.field = 'references'
+      SET r.parentDiseaseId = row.gard_id
       SET r.count = 0
       SET r.dateCreated = ${Date.now().toString()}
       CREATE (a2)-[:Properties { dateCreated: ${Date.now().toString()} }]->(r) with row, a2, a, r
@@ -613,20 +608,22 @@ const writecall =
       MERGE (n)-[:DataSourceReference { dateCreated: '${Date.now().toString()}' }]->(ds) with epidemiology, a2, n, r
               
       FOREACH (reference in epidemiology.reference |
-   CREATE (ref:Property:Reference) 
-   SET ref += reference
+   MERGE (ref:Property:Reference {url: reference.url}) 
+   set ref = reference
    CREATE (n)-[:ReferenceSource { dateCreated: '${Date.now().toString()}'}]->(ref)  
    SET r.count = r.count+1
    CREATE (r)-[:DisplayValue { dateCreated: '${Date.now().toString()}'}]->(ref)  
    ) with n, r, epidemiology
       return true;
-  `
+  `;
 
 
-
-    this.diseaseService.write('gard-data', 'mapper', writecall, {payload: payload});
+console.log(payload);
+   // this.diseaseService.write('gard-data', 'mapper', writecall, {payload: payload});
   })
-    ).subscribe()
+    ).subscribe(res=> {
+      console.log(res)
+  });
 }
 
 
@@ -916,6 +913,79 @@ buildGARDData() {
 
     this.diseaseService.write('gard-data', 'mapper', writecall, {payload: response});
   })
+}
+
+fetchGenes() {
+  const driver = neo4j.driver('bolt://gard-dev-neo4j.ncats.io:7687', neo4j.auth.basic('neo4j', ''));
+  const session = driver.rxSession();
+  const readCall = `
+ match (d:DATA)-[:PAYLOAD]->(g:S_GARD)
+match (g)-[]->(m:S_ORDO_ORPHANET)<-[:R_subClassOf{property:'http://www.orpha.net/ORDO/Orphanet_317343'}]-(n:S_ORDO_ORPHANET) where not m:TRANSIENT and not n:TRANSIENT with n,m,d, g 
+match p = (d1:DATA)-[:PAYLOAD]->(n)-[]->(h:S_ORDO_ORPHANET) where h.I_CODE = 'ORPHANET:410298' and not h:TRANSIENT 
+with {gard_id: d.gard_id, genes: collect( {name: d1.label, id:d1.notation, symbol: d1.symbol})} as genes
+return collect(genes) as data 
+  `;
+
+  session.readTransaction(txc => txc.run(readCall).records()).pipe(
+    map(res=> {
+      console.log(res)
+      const geneSerializer = new GeneSerializer();
+      const writecall =
+        `
+      UNWIND {payload} as row 
+      MATCH (a2:Disease {gard_id: row.gard_id}) with a2, row 
+      MERGE (a:MainProperty:Genes {parentDiseaseId: row.gard_id}) with a, a2, row 
+      SET a.field = 'genes'
+      SET a.parentDiseaseId = row.gard_id
+      SET a.count = size(row['genes'])
+      SET a.dateCreated = ${Date.now().toString()}
+      CREATE (a2)-[:Properties { dateCreated: ${Date.now().toString()} }]->(a) with a, a2, row 
+        
+      MERGE (r: MainProperty:References {parentDiseaseId: row.gard_id})
+      ON CREATE
+      SET r.field = "references"
+      SET r.parentDiseaseId = row.gard_id
+      SET r.count = 0
+      SET r.dateCreated = "${Date.now().toString()}"
+      with r, row, a2, a
+      
+      MERGE (a2)-[:Properties { dateCreated: ${Date.now().toString()} }]->(r) with row, a2, a, r
+
+      // set genes
+      unwind row.genes as gene 
+      MERGE (n:Property:DisplayProperty:Gene {symbol: gene.gene.symbol}) 
+      ON CREATE
+      SET n = gene.gene
+      SET n.dateCreated = ${Date.now().toString()}
+      MERGE (a)-[:DisplayValue { dateCreated: ${Date.now().toString()} }]->(n) WITH a, n, row ,a2, gene, r
+                  
+      FOREACH (reference in gene.reference |
+   MERGE (ref:Property:Reference {url: reference.url}) 
+   set ref = reference
+   CREATE (n)-[:ReferenceSource { dateCreated: '${Date.now().toString()}'}]->(ref)  
+   SET r.count = r.count+1
+   CREATE (r)-[:DisplayValue { dateCreated: '${Date.now().toString()}'}]->(ref)  
+   ) with n, r, gene
+      return true;
+  `;
+      const payload = res.toObject()['data'].map(prevVal => ({gard_id: prevVal.gard_id, genes:
+              prevVal.genes.map(prop => {
+                const p = geneSerializer.fromJson(prop);
+              //  console.log(p)
+                const ref = p.references;
+                delete p.references;
+                return {gene: p, reference: ref}
+              })}));
+
+      const j = [];
+payload.map(disease => disease.genes.map(gene=> j.push(gene.gene.symbol)))
+console.log(new Set(j))
+      console.log(payload);
+    //  this.diseaseService.write('gard-data', 'mapper', writecall, {payload: payload});
+    })
+  ).subscribe(res=> {
+    console.log(res)
+  });
 }
 
   ngOnDestroy() {}

@@ -14,9 +14,9 @@ export class GardReference {
     }
 
     if(!this.url) {
-      this.url = this._urlLookup((obj.source));
-   /* } else {
-      this.url = this.url + this.value;*/
+        this.url = this._urlLookup((obj.source)) + this.value;
+    } else {
+      this.url = this.url + this.value;
     }
     this.label = this.source;
   }
@@ -41,6 +41,10 @@ export class GardReference {
 
       case 'PUBMED': {
         return 'https://pubmed.ncbi.nlm.nih.gov/'
+      }
+
+      case 'PHAROS': {
+        return 'https://pharos.nih.gov/targets/'
       }
 
       default: {

@@ -6,6 +6,7 @@ import {DiseasesFacade} from "@ncats-frontend-library/stores/diseases";
 import {Neo4jConnectService} from "@ncats-frontend-library/shared/data-access/neo4j-connector";
 import {Disease, DiseaseSerializer} from "@ncats-frontend-library/models/gard/gard-models";
 import {PrevalanceViewConfig} from "../../../../../../models/gard/gard-models/src/lib/models/prevalence";
+import {GeneViewConfig} from "../../../../../../models/gard/gard-models/src/lib/models/gene";
 
 
 export const GARD_HEADER_COMPONENT = new InjectionToken<string>('GardHeaderComponent');
@@ -99,6 +100,7 @@ export class CurationFeatureComponent implements OnInit {
     {section: 'inheritance', label: 'Inheritance', type: 'list'},
     {section: 'epidemiology', label: 'Epidemiology', type: 'table', config: new PrevalanceViewConfig().config},
     {section: 'causes', label: 'Cause', type: 'list'},
+    {section: 'genes', label: 'Associated Genes', type: 'table', config: new GeneViewConfig().config},
     {section: 'symptoms', label: 'Symptoms', type: 'list'},
     {section: 'treatments', label: 'Treatments', type: 'list'},
     {section: 'prognosis', label: 'Prognosis', type: 'list'},
