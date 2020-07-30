@@ -14,9 +14,9 @@ export class GardReference {
     }
 
     if(!this.url) {
-        this.url = this._urlLookup((obj.source)) + this.value;
-    } else {
-      this.url = this.url + this.value;
+        this.url = this._urlLookup((obj.source)) //+ this.value;
+   /* } else {
+      this.url = this.url + this.value;*/
     }
     this.label = this.source;
   }
