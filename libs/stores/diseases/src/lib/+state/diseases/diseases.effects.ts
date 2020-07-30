@@ -103,22 +103,23 @@ export class DiseasesEffects {
         tap((params: any) => {
           let call;
           call = `
-         MATCH (d:Disease)-[:Properties]->(p:MainProperty)-[:DisplayValue|:Value]->(pp:Property)
+        MATCH (d:Disease)-[:Properties]->(p:MainProperty)-[:DisplayValue|:Value]->(pp:Property)
          WHERE d.gard_id = '${params['disease']}' OR d.name = '${params['disease']}'
-         OPTIONAL MATCH (pp)-[:DataSourceReference]->(ds1:DataSource) WITH pp, d, p, ds1
-         OPTIONAL MATCH (pp)-[:ReferenceSource]->(rr:Reference) WITH pp, d, p, ds1, rr
-         OPTIONAL MATCH (pp)-[:ReferenceSource]-(n:DataRef)-[:DataSourceReference]->(ds:DataSource) WITH pp, d, p, ds1, n, ds, rr
-         OPTIONAL MATCH (pp)<-[:IsAParent]-(hr:HierarchyNode) WITH pp, d, p, ds1, n, ds, hr, rr
-         OPTIONAL MATCH p3=(e:HierarchyRoot)-[:IsAParent*0..]->(hr) WITH pp, d, p, ds1, n, p3, e, ds, rr
-         WITH collect(distinct p3) AS paths, d.gard_id AS id, e.id AS nodeId, d, pp, ds,  ds1, p, n, rr
+         OPTIONAL MATCH (pp)-[:DataSourceReference]->(ds1:DataSource) WITH ds1, pp, d, p
+         OPTIONAL MATCH (pp)-[:ReferenceSource]->(rr:Reference) WITH rr, pp, d, p, ds1 
+         OPTIONAL MATCH (pp)<-[:IsAParent]-(hr:HierarchyNode) WITH pp, d, p, ds1, hr, rr
+         OPTIONAL MATCH p3=(e:HierarchyRoot)-[:IsAParent*0..]->(hr) WITH pp, d, p, ds1, p3, e, rr
+         WITH collect(distinct p3) AS paths, d.gard_id AS id, e.id AS nodeId, d, pp,  ds1, p, rr
          CALL apoc.when(
             size(paths) > 0,
-              'CALL apoc.convert.toTree(paths) yield value
-              return value as tree, collect(properties(ds1)) as sources, collect(properties(rr)) as references',
-              'return properties(pp) as props, collect(properties(ds1)) as sources, collect(properties(rr)) as references',
-              {paths:paths, ds1:ds1, ds:ds, p:p, d:d, pp:pp, n:n, rr: rr})
-          YIELD value
-          with {field: p.field, values: collect(properties(value))} as datas, d
+              'CALL apoc.convert.toTree(paths) 
+              yield value
+              return value as tree',
+              '',
+              {paths:paths})
+          YIELD value     
+           with value{.*, sources: collect(properties(ds1)), references: collect(properties(rr)), props: properties(pp)} as values, p, d
+          with {field: p.field, values: collect(distinct values)} as datas, d
          with d{.*, properties: collect(datas)} as diseaseObj, d
          return diseaseObj as disease;
           `;
