@@ -1,37 +1,5 @@
-<mat-card>
-  <mat-card-header><h3>{{field.label || field.section | titlecase}}</h3></mat-card-header>
-  <mat-card-content>
-    <div *ngIf="data && !editing">
+ <div *ngIf="data && !editing">
       <div *ngFor="let value of data">
         <ncats-frontend-library-data-property-display [data]="value" [disease]="disease"></ncats-frontend-library-data-property-display>
       </div>
     </div>
-    <div fxLayout="row" fxLayoutAlign="space-around center" *ngIf="!data || data.length === 0">
-      <div fxFlex="95">
-        <h3>No {{field.label || field.section}} data found.</h3>
-      </div>
-    </div>
-    <!--
-              <gard-data-display [property] = object[field]></gard-data-display>
-    -->
-    <div *ngIf="editing">
-      <ncats-frontend-library-curation-matrix
-        [field]="field.section"
-        [data]= data
-        (curatedObjectChange)="setCuratedObject($event, field)">
-      </ncats-frontend-library-curation-matrix>
-    </div>
-    <!--<mat-card-actions fxLayoutAlign="end center" *ngIf="data && data.length > 0">
-      <div *ngIf="!editing">
-        <button mat-stroked-button [color]="'primary'" (click)="editing = true">Edit</button>
-      </div>
-      <div *ngIf="editing">
-        <button mat-stroked-button [color]="'warn'" (click)="editing = false">Cancel</button>
-        <button mat-stroked-button [color]="'primary'" (click)=setObject(data)>Save</button>
-      </div>
-    </mat-card-actions>-->
-  </mat-card-content>
-</mat-card>
-
-
-

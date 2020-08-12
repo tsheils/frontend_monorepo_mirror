@@ -1,6 +1,9 @@
 <div *ngIf = "fields" class = "grid-list">
   <div *ngFor="let field of fields">
-    <ng-container [ngSwitch]="field.type">
+    <mat-card>
+      <mat-card-header><h3>{{field.label || field.section | titlecase}}</h3></mat-card-header>
+      <mat-card-content>
+      <ng-container [ngSwitch]="field.type">
       <div *ngSwitchCase="'list'">
     <ncats-frontend-library-data-panel [field]="field" [data]="object[field.section]"></ncats-frontend-library-data-panel>
       </div>
@@ -10,7 +13,17 @@
       <div *ngSwitchCase="'tree'">
         <ncats-frontend-library-data-tree-panel [field]="field" [data]="object[field.section]"></ncats-frontend-library-data-tree-panel>
       </div>
+      <div *ngSwitchCase="'accordion'">
+        <ncats-frontend-library-data-accordion-panel [field]="field" [data] = object[field.section]></ncats-frontend-library-data-accordion-panel>
+      </div>
     </ng-container>
+    <div fxLayout="row" fxLayoutAlign="space-around center" *ngIf="!data || data.length === 0">
+      <div fxFlex="95">
+        <h3>No {{field.label || field.section}} data found.</h3>
+      </div>
+    </div>
+    </mat-card-content>
+    </mat-card>
   </div>
 </div>
 

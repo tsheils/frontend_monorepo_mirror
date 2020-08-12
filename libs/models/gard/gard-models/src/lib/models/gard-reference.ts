@@ -6,7 +6,12 @@ export class GardReference {
   label?: string;
 
   constructor (obj: any) {
-    Object.entries((obj)).forEach((prop) => this[prop[0]] = prop[1]);
+    Object.entries((obj)).forEach((prop) => {
+      if(prop[0].charAt(0) !== '_') {
+        this[prop[0]] = prop[1];
+      }
+    })
+
     if(obj.reference) {
       this.source = obj.reference;
       this.url = this._urlLookup((this.source));
@@ -14,9 +19,9 @@ export class GardReference {
     }
 
     if(!this.url) {
-        this.url = this._urlLookup((obj.source)) //+ this.value;
-   /* } else {
-      this.url = this.url + this.value;*/
+        this.url = this._urlLookup((obj.source))// + this.value;
+    } else {
+   //   this.url = this.url + this.value;
     }
     this.label = this.source;
   }

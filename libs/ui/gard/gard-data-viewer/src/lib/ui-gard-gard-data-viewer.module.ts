@@ -9,6 +9,7 @@ import {SharedUiObjectTreeModule} from "@ncats-frontend-library/shared/ui/object
 import { DataTreePanelComponent } from './data-tree-panel/data-tree-panel.component';
 import {SharedUiNcatsDatatableModule} from "@ncats-frontend-library/shared/ui/ncats-datatable";
 import { DataTablePanelComponent } from './data-table-panel/data-table-panel.component';
+import { DataAccordionPanelComponent } from './data-accordion-panel/data-accordion-panel.component';
 
 @NgModule({
   imports: [
@@ -23,7 +24,8 @@ import { DataTablePanelComponent } from './data-table-panel/data-table-panel.com
     DataPanelListComponent,
     DataPropertyDisplayComponent,
     DataTreePanelComponent,
-    DataTablePanelComponent
+    DataTablePanelComponent,
+    DataAccordionPanelComponent
   ],
   exports: [
     DataPanelComponent,

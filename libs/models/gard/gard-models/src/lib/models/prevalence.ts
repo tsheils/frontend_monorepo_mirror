@@ -9,6 +9,7 @@ export class Prevalence extends GardBase {
   prevalenceValidationStatus?: string;
   prevalenceClass?: string;
   source?: GardReference[];
+  references?: GardReference[];
   value?: string | number;
 
   constructor(){
@@ -25,7 +26,7 @@ export class PrevalanceViewConfig {
       ['value', {field: 'value', label: 'Actual Value', sortable: true}],
       ['prevalenceClass', {field: 'prevalenceClass', label: 'Class', sortable: true}],
       ['prevalenceValidationStatus', {field: 'prevalenceValidationStatus', label: 'Validation Status', sortable: true}],
-      ['source', {field: 'source', label: 'References', sortable: true}]
+      ['references', {field: 'references', label: 'References', sortable: true}]
     ]
   );
 
@@ -41,44 +42,38 @@ export class PrevalenceSerializer implements Serializer {
 
   fromJson(json: any): Prevalence {
     const obj = new Prevalence();
-    Object.entries((json)).forEach((prop) => obj[prop[0]] = prop[1]);
-    if(json.PrevalenceGeographic) {
-      obj.prevalenceGeographic = json.PrevalenceGeographic;
-      delete obj['PrevalenceGeographic'];
+ //   Object.entries((json)).forEach((prop) => obj[prop[0]] = prop[1]);
+    if(json.prevalenceGeographic) {
+      obj.prevalenceGeographic = json.prevalenceGeographic;
     }
 
-    if(json.PrevalenceType) {
-      obj.prevalenceType = json.PrevalenceType;
-      delete obj['PrevalenceType'];
+    if(json.prevalenceType) {
+      obj.prevalenceType = json.prevalenceType;
     }
 
-    if(json.PrevalenceQualification) {
-      obj.prevalenceQualification = json.PrevalenceQualification;
-      delete obj['PrevalenceQualification'];
+    if(json.prevalenceQualification) {
+      obj.prevalenceQualification = json.prevalenceQualification;
     }
 
-    if(json.PrevalenceValidationStatus) {
-      obj.prevalenceValidationStatus = json.PrevalenceValidationStatus;
-      delete obj['PrevalenceValidationStatus'];
+    if(json.prevalenceValidationStatus) {
+      obj.prevalenceValidationStatus = json.prevalenceValidationStatus;
     }
 
-    if(json.PrevalenceClass) {
-      obj.prevalenceClass = json.PrevalenceClass;
-      delete obj['PrevalenceClass'];
+    if(json.prevalenceClass) {
+      obj.prevalenceClass = json.prevalenceClass;
     }
 
     if(json.ValMoy) {
       obj.value = json.ValMoy.low ? json.ValMoy.low : json.ValMoy;
-      delete obj['ValMoy'];
     }
 
-    if(json.Source) {
-      obj.source = json.Source.map(src => new GardReference({source: 'PUBMED', value:  src.low ? src.low : src}));
-      delete obj['Source'];
+    if(json.datasourcereference) {
+      obj.source = json.datasourcereference.map(src => new GardReference(src));
     }
 
-    delete obj.dateCreated;
-    delete obj['created'];
+    if(json.referencesource) {
+      obj.references = json.referencesource.map(src => new GardReference(src));
+    }
     return obj;
   }
 

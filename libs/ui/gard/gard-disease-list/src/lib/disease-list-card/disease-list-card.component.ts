@@ -9,13 +9,16 @@ import {Disease} from "@ncats-frontend-library/models/gard/gard-models";
 })
 export class DiseaseListCardComponent implements OnInit {
 
-  @Input() disease: Disease;
+  @Input() disease: any;
+synonyms: any[];
 
   constructor(
     private router: Router
   ) { }
 
   ngOnInit(): void {
+    //todo: need to cast this back to disease
+    this.synonyms = this.disease.properties.filter(prop => prop.field === 'synonyms')[0]
   }
 
   navigate(id: string): void {

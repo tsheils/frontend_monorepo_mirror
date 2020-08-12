@@ -75,6 +75,7 @@ export class DiseasesEffects {
         ${diseaseToProperty} ${mapDataSources} ${collectObj} ${orderSkipLimit} ${returnObj}
           `
         }
+        console.log(call)
         this.diseaseService.read('gard-data', 'load-diseases', call, params);
       })
     ), {dispatch: false});
@@ -102,27 +103,63 @@ export class DiseasesEffects {
         map((r: RouterNavigationAction) => r.payload.routerState.root.queryParams),
         tap((params: any) => {
           let call;
-          call = `
-        MATCH (d:Disease)-[:Properties]->(p:MainProperty)-[:DisplayValue|:Value]->(pp:Property)
-         WHERE d.gard_id = '${params['disease']}' OR d.name = '${params['disease']}'
-         OPTIONAL MATCH (pp)-[:DataSourceReference]->(ds1:DataSource) WITH ds1, pp, d, p
-         OPTIONAL MATCH (pp)-[:ReferenceSource]->(rr:Reference) WITH rr, pp, d, p, ds1 
-         OPTIONAL MATCH (pp)<-[:IsAParent]-(hr:HierarchyNode) WITH pp, d, p, ds1, hr, rr
-         OPTIONAL MATCH p3=(e:HierarchyRoot)-[:IsAParent*0..]->(hr) WITH pp, d, p, ds1, p3, e, rr
-         WITH collect(distinct p3) AS paths, d.gard_id AS id, e.id AS nodeId, d, pp,  ds1, p, rr
-         CALL apoc.when(
-            size(paths) > 0,
-              'CALL apoc.convert.toTree(paths) 
-              yield value
-              return value as tree',
-              '',
-              {paths:paths})
-          YIELD value     
-           with value{.*, sources: collect(properties(ds1)), references: collect(properties(rr)), props: properties(pp)} as values, p, d
-          with {field: p.field, values: collect(distinct values)} as datas, d
-         with d{.*, properties: collect(datas)} as diseaseObj, d
-         return diseaseObj as disease;
+          /*call = `
+          MATCH (d:Disease)-[:Properties]->(p:MainProperty)-[:DisplayValue|:Value]->(pp:Property)
+           WHERE d.gard_id = '${params['disease']}' OR d.name = '${params['disease']}'
+           OPTIONAL MATCH (pp)-[:DataSourceReference]->(ds1:DataSource) WITH ds1, pp, d, p
+           OPTIONAL MATCH (pp)-[:ReferenceSource]->(rr:Reference) WITH rr, pp, d, p, ds1
+           OPTIONAL MATCH (pp)<-[:IsAParent]-(hr:HierarchyNode) WITH pp, d, p, ds1, hr, rr
+           OPTIONAL MATCH p3=(e:HierarchyRoot)-[:IsAParent*0..]->(hr) WITH pp, d, p, ds1, p3, e, rr
+           WITH collect(distinct p3) AS paths, d.gard_id AS id, e.id AS nodeId, d, pp,  ds1, p, rr
+           CALL apoc.when(
+              size(paths) > 0,
+                'CALL apoc.convert.toTree(paths)
+                yield value
+                return value as tree',
+                '',
+                {paths:paths})
+            YIELD value
+             with value{.*, sources: collect(properties(ds1)), references: collect(properties(rr)), props: properties(pp)} as values, p, d
+            with {field: p.field, values: collect(distinct values)} as datas, d
+           with d{.*, properties: collect(datas)} as diseaseObj, d
+           return diseaseObj as disease;
+          `;*/
+
+
+/*           call = `
+MATCH p=(d:Disease)-[:Properties]->(mp:MainProperty)-[*0..3]->(pr:Property) WHERE d.gard_id = 'GARD:0000029'
+with collect(distinct p) as path, d
+OPTIONAL MATCH (d)-[:Properties]->(:Hierarchies)-[:DisplayValue]->(hr:HierarchySource)-[:IsAChild]->(hn:HierarchyNode) with path, d, hn
+OPTIONAL MATCH p2=(hn)-[:IsAChild*0..]->(e:HierarchyRoot) with path, p2, hn
+with collect(distinct p2) as tree, path
+with path + tree as paths
+CALL apoc.convert.toTree(paths) yield value
+return collect(value) as disease;
+          `; */
+
+/*           call = `
+MATCH p=(d:Disease)-[:Properties]->(mp:MainProperty)-[*0..3]->(pr:Property)
+WHERE d.gard_id = 'GARD:0000029'
+with collect(distinct p) as path, d
+optional MATCH p2=(d)-[:Properties]->(:Hierarchies)-[:DisplayValue]->(hn:HierarchyNode)
+optional match p3=(hr:HierarchyRoot)-[:IsAParent*0..]->(hn) with d, path, p2, hn, p3
+ with collect(distinct p3) as tree, path, p2
+ with path + p2 + tree as paths
+ CALL apoc.convert.toTree(paths) yield value
+return value as disease;
+          `;*/
+
+           call = `
+MATCH p=(d:Disease)-[:Properties]->(mp:MainProperty)-[*0..3]->(pr:Property)
+WHERE d.gard_id = 'GARD:0000029'
+with collect(distinct p) as path, d
+optional MATCH p2=(d)-[:Properties]->(:Hierarchies)-[:DisplayValue]->(hn:HierarchyNode)-[:IsAChild*0..]->(hr:HierarchyRoot) with d, path, p2
+ with collect(distinct p2) as tree, path
+ with path + tree as paths
+ CALL apoc.convert.toTree(paths) yield value
+return value as disease;
           `;
+
           this.diseaseService.read('gard-data', 'set-disease', call);
       }))
   ,{dispatch: false});
