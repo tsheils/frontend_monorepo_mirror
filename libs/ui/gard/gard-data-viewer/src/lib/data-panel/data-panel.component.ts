@@ -44,6 +44,7 @@ export class DataPanelComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+  //  console.log(this);
    /* // todo unsubscribe on destroy
     this.diseaseFacade.selectedDisease$.subscribe(res=> {
       if(res && res.disease) {

@@ -18,6 +18,7 @@ import {
 import {DiseaseService} from "@ncats-frontend-library/stores/diseases";
 import {Prevalence, PrevalenceSerializer} from "../../../../../../models/gard/gard-models/src/lib/models/prevalence";
 import {GeneSerializer} from "../../../../../../models/gard/gard-models/src/lib/models/gene";
+import {Gene} from "@ncats-frontend-library/models/core/core-models";
 
 @Component({
   selector: 'ncats-frontend-library-mapper-feature',
@@ -568,7 +569,7 @@ where not exists(d.reason_for_obsolescence) with count(e) as s, dd.gard_id as ga
 where s > 2 
 match (m:S_ORDO_ORPHANET)<-[:PREVALENCE]-(d2:DATA) with m, gard_id, collect(properties(d2)) as props
 return collect({gard_id: gard_id, properties: props}) as data
-       `
+       `;
   session.readTransaction(txc => txc.run(call).records()).pipe(
   map(res=> {
     const prevalenceSerializer = new PrevalenceSerializer();
@@ -919,69 +920,124 @@ fetchGenes() {
   const driver = neo4j.driver('bolt://gard-dev-neo4j.ncats.io:7687', neo4j.auth.basic('neo4j', ''));
   const session = driver.rxSession();
   const readCall = `
- match (d:DATA)-[:PAYLOAD]->(g:S_GARD)
-match (g)-[]->(m:S_ORDO_ORPHANET)<-[:R_subClassOf{property:'http://www.orpha.net/ORDO/Orphanet_317343'}]-(n:S_ORDO_ORPHANET) where not m:TRANSIENT and not n:TRANSIENT with n,m,d, g 
-match p = (d1:DATA)-[:PAYLOAD]->(n)-[]->(h:S_ORDO_ORPHANET) where h.I_CODE = 'ORPHANET:410298' and not h:TRANSIENT 
-with {gard_id: d.gard_id, genes: collect( {name: d1.label, id:d1.notation, symbol: d1.symbol})} as genes
-return collect(genes) as data 
+match (d1:DATA)-[:PAYLOAD]->(g:S_GARD)-[e:I_CODE|:N_Name]-(n:S_ORDO_ORPHANET)<-[:PAYLOAD]-(d2:DATA) 
+where not exists(d2.reason_for_obsolescence) with count(e) as s, d1.gard_id as gard_id, n
+where s > 2 
+match (n:S_ORDO_ORPHANET)-[e:R_rel{name:'disease_associated_with_gene'}]->(m:S_ORDO_ORPHANET)-[:PAYLOAD]-(d:DATA) 
+with {name: d.label, id:d.notation, symbol: d.symbol} as geneList, gard_id, e
+with {geneAssociationType: e.DisorderGeneAssociationType, gene: geneList} as gl, gard_id, e
+ORDER BY e.DisorderGeneAssociationType
+with {gard_id: gard_id, genes: collect(gl)} as genes 
+return collect(genes) as data
   `;
 
   session.readTransaction(txc => txc.run(readCall).records()).pipe(
     map(res=> {
-      console.log(res)
+      console.log(res.toObject()['data']);
+      const payload = [];
       const geneSerializer = new GeneSerializer();
-      const writecall =
-        `
-      UNWIND {payload} as row 
+      res.toObject()['data'].map(disease => {
+        const assocMap: Map<string, any[]> = new Map<string, any[]>();
+        const assocArr = [];
+        disease.genes.forEach(gene => {
+          let arr: any[];
+          let associations = gene.geneAssociationType;
+          if (!Array.isArray(associations)) {
+            associations = [associations];
+          }
+          associations.forEach(association => {
+            if (assocMap.has(association)) {
+              arr = assocMap.get(association);
+            } else {
+              arr = [];
+            }
+            const g = geneSerializer.fromJson(gene.gene);
+            const ref = g.references;
+            delete g.references;
+            arr.push({gene: g, reference: ref});
+            assocMap.set(association, arr)
+          });
+        });
+          Array.from(assocMap.keys()).forEach(key => {
+            assocArr.push({geneAssociationType: key, genes: assocMap.get(key)})
+          });
+        payload.push({gard_id: disease.gard_id, associations: assocArr});
+        })
+console.log(payload);
+     // })
+      const now = Date.now().toString();
+
+      const writePropList = `
+         UNWIND {payload} as row 
       MATCH (a2:Disease {gard_id: row.gard_id}) with a2, row 
+      
       MERGE (a:MainProperty:Genes {parentDiseaseId: row.gard_id}) with a, a2, row 
       SET a.field = 'genes'
       SET a.parentDiseaseId = row.gard_id
       SET a.count = size(row['genes'])
-      SET a.dateCreated = ${Date.now().toString()}
-      CREATE (a2)-[:Properties { dateCreated: ${Date.now().toString()} }]->(a) with a, a2, row 
+      SET a.dateCreated = ${now}
+      MERGE (a2)-[:Properties { dateCreated: ${now} }]->(a) with a, a2, row 
         
       MERGE (r: MainProperty:References {parentDiseaseId: row.gard_id})
       ON CREATE
       SET r.field = "references"
       SET r.parentDiseaseId = row.gard_id
       SET r.count = 0
-      SET r.dateCreated = "${Date.now().toString()}"
+      SET r.dateCreated = "${now}"
       with r, row, a2, a
       
-      MERGE (a2)-[:Properties { dateCreated: ${Date.now().toString()} }]->(r) with row, a2, a, r
+      MERGE (a2)-[:Properties { dateCreated: ${now} }]->(r) with row, a2, a, r
+      `;
 
-      // set genes
-      unwind row.genes as gene 
+      const writeGenes = `
+      UNWIND {payload} as row 
+
+      `
+
+      const writecall =
+        `
+           UNWIND {payload} as row 
+      MATCH (a2:Disease {gard_id: row.gard_id}) with a2, row 
+      
+      MERGE (a:MainProperty:Genes {parentDiseaseId: row.gard_id}) with a, a2, row 
+      SET a.field = 'genes'
+      SET a.parentDiseaseId = row.gard_id
+      SET a.count = size(row['genes'])
+      SET a.dateCreated = ${now}
+      MERGE (a2)-[:Properties { dateCreated: ${now} }]->(a) with a, a2, row 
+        
+      MERGE (r: MainProperty:References {parentDiseaseId: row.gard_id})
+      ON CREATE
+      SET r.field = "references"
+      SET r.parentDiseaseId = row.gard_id
+      SET r.count = 0
+      SET r.dateCreated = "${now}"
+      with r, row, a2, a
+      
+      MERGE (a2)-[:Properties { dateCreated: ${now} }]->(r) with row, a2, a, r
+
+      // set associations
+      unwind row.associations as association 
+      MERGE (da:PropertyList:GeneAssociation {parentDiseaseId: row.gard_id, geneAssociationType: association.geneAssociationType}) 
+      MERGE (a)-[:PropertyListValue { dateCreated: ${now} }]->(da) WITH a, row ,a2, association, r, da
+
+      unwind  association.genes as gene 
       MERGE (n:Property:DisplayProperty:Gene {symbol: gene.gene.symbol}) 
       ON CREATE
       SET n = gene.gene
-      SET n.dateCreated = ${Date.now().toString()}
-      MERGE (a)-[:DisplayValue { dateCreated: ${Date.now().toString()} }]->(n) WITH a, n, row ,a2, gene, r
+      SET n.dateCreated = "${now}"
+      MERGE (da)-[:DisplayValue { dateCreated: ${now} }]->(n) WITH row, association, n, r, gene, da
                   
-      FOREACH (reference in gene.reference |
+      UNWIND gene.reference as reference
    MERGE (ref:Property:Reference {url: reference.url}) 
    set ref = reference
-   CREATE (n)-[:ReferenceSource { dateCreated: '${Date.now().toString()}'}]->(ref)  
+   MERGE (n)-[:ReferenceSource { dateCreated: '${now}'}]->(ref)  
    SET r.count = r.count+1
-   CREATE (r)-[:DisplayValue { dateCreated: '${Date.now().toString()}'}]->(ref)  
-   ) with n, r, gene
+   MERGE (r)-[:DisplayValue { dateCreated: '${now}'}]->(ref)  with n, r, association, gene
       return true;
   `;
-      const payload = res.toObject()['data'].map(prevVal => ({gard_id: prevVal.gard_id, genes:
-              prevVal.genes.map(prop => {
-                const p = geneSerializer.fromJson(prop);
-              //  console.log(p)
-                const ref = p.references;
-                delete p.references;
-                return {gene: p, reference: ref}
-              })}));
 
-      const j = [];
-payload.map(disease => disease.genes.map(gene=> j.push(gene.gene.symbol)))
-console.log(new Set(j))
-      console.log(payload);
-    //  this.diseaseService.write('gard-data', 'mapper', writecall, {payload: payload});
+      this.diseaseService.write('gard-data', 'mapper', writecall, {payload: payload});
     })
   ).subscribe(res=> {
     console.log(res)
@@ -990,3 +1046,48 @@ console.log(new Set(j))
 
   ngOnDestroy() {}
 }
+
+
+
+
+/**
+ *       const writecall =
+ `
+ UNWIND {payload} as row
+ MATCH (a2:Disease {gard_id: row.gard_id}) with a2, row
+ MERGE (a:MainProperty:Genes {parentDiseaseId: row.gard_id}) with a, a2, row
+ SET a.field = 'genes'
+ SET a.parentDiseaseId = row.gard_id
+ SET a.count = size(row['genes'])
+ SET a.dateCreated = ${Date.now().toString()}
+ CREATE (a2)-[:Properties { dateCreated: ${Date.now().toString()} }]->(a) with a, a2, row
+
+ MERGE (r: MainProperty:References {parentDiseaseId: row.gard_id})
+ ON CREATE
+ SET r.field = "references"
+ SET r.parentDiseaseId = row.gard_id
+ SET r.count = 0
+ SET r.dateCreated = "${Date.now().toString()}"
+ with r, row, a2, a
+
+ MERGE (a2)-[:Properties { dateCreated: ${Date.now().toString()} }]->(r) with row, a2, a, r
+
+ // set genes
+ unwind row.genes as gene
+ MERGE (n:Property:DisplayProperty:Gene {symbol: gene.gene.symbol})
+ ON CREATE
+ SET n = gene.gene
+ SET n.dateCreated = ${Date.now().toString()}
+ MERGE (a)-[:DisplayValue { dateCreated: ${Date.now().toString()} }]->(n) WITH a, n, row ,a2, gene, r
+
+ FOREACH (reference in gene.reference |
+ MERGE (ref:Property:Reference {url: reference.url})
+ set ref = reference
+ CREATE (n)-[:ReferenceSource { dateCreated: '${Date.now().toString()}'}]->(ref)
+ SET r.count = r.count+1
+ CREATE (r)-[:DisplayValue { dateCreated: '${Date.now().toString()}'}]->(ref)
+ ) with n, r, gene
+ return true;
+ *
+ *
+ */

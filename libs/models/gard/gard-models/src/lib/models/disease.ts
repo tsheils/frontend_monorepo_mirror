@@ -4,6 +4,7 @@ import {Inject, Optional, SecurityContext} from "@angular/core";
 import {GardReference} from "./gard-reference";
 import {Serializer} from "@ncats-frontend-library/models/interfaces/core-interfaces";
 import {Prevalence, PrevalenceSerializer} from "./prevalence";
+import {GeneAssociationSerializer} from "./gene";
 
 enum AGE_OF_ONSET {
   none = 'no_age_of_onset_information',
@@ -114,9 +115,9 @@ export class Disease extends GardBase {
 export class DiseaseSerializer implements Serializer {
   private gardPropertySerializer = new GardDataPropertySerializer();
   private prevalenceSerializer = new PrevalenceSerializer();
+  private geneAssociationSerializer = new GeneAssociationSerializer();
 
-  constructor(
-  ) {
+  constructor() {
   }
 
   fromJson(json: any): Disease {
@@ -127,28 +128,58 @@ export class DiseaseSerializer implements Serializer {
       json.properties.forEach(prop => {
         switch (prop.field) {
           case 'references': {
-            obj[prop.field] = prop.values.map(val => new GardReference(val.props ? val.props: val));
+            if (prop.displayvalue) {
+              obj[prop.field] = prop.displayvalue.map(val => {
+                const ref = new GardReference(val);
+                const data = {
+                  value: ref.label,
+                  references: [ref],
+                  type: 'reference'
+                };
+                return this.gardPropertySerializer.fromJson(data);
+              });
+            }
             break;
           }
           case 'epidemiology': {
-            obj[prop.field] = prop.values.map(val => {
-              const preval = this.prevalenceSerializer.fromJson(val.props ? val.props: val);
-              if(val.references) {
-                preval.source = val.references.map(ref=> new GardReference(ref)).filter((v,i,a)=>a.findIndex(t=>(t.value === v.value))===i)
-              }
-              return preval;
-            });
+            if (prop.displayvalue) {
+              obj[prop.field] = prop.displayvalue.map(val => this.prevalenceSerializer.fromJson(val));
+            }
+            break;
+          }
+
+          case 'genes': {
+            if (prop.propertylistvalue) {
+              obj[prop.field] = prop.propertylistvalue.map(val => this.geneAssociationSerializer.fromJson(val));
+            }
+            break;
+          }
+
+          case 'hierarchies': {
+            if (prop.displayvalue) {
+              obj[prop.field] = prop.displayvalue.map(val => this._mapEntry(val, 0));
+              obj.hierarchies.forEach(hier => {
+               if (hier.value.split('MONDO').length > 1) {
+                 hier.source = 'MONDO'
+               } else {
+                 hier.source = 'Orphanet'
+               }
+              })
+            }
             break;
           }
           default: {
-            obj[prop.field] = prop.values.map(val => {
+            if (prop.displayvalue) {
+              obj[prop.field] = prop.displayvalue.map(val => this.gardPropertySerializer.fromJson(val));
+            }
+            /*obj[prop.field] = prop.values.map(val => {
               if (val.tree) {
                 val.tree = this._mapEntry(val.tree)
               } else {
                 val = this.gardPropertySerializer.fromJson(val);
               }
               return val;
-            });
+            });*/
             break;
           }
         }
@@ -159,82 +190,16 @@ export class DiseaseSerializer implements Serializer {
       // obj.dateCreated = json.dateCreated.toString()
     }
 
-
-    /*  // array of strings
-      if (json.categories) {
-        obj.categories = json.categories.map(val => gardPropertySerializer.fromJson({value: val}));
-      }
-
-      // array of strings
-      if (json.xrefs) {
-        obj.xrefs = json.xrefs.map(val => gardPropertySerializer.fromJson({value: val}));
-      }
-
-      // array of strings
-      if (json.HPO) {
-        obj.hpo = json.HPO.map(val => gardPropertySerializer.fromJson({value: val}));
-        delete obj['HPO'];
-      }
-
-      if (json.created) {
-        obj.created = new Date(json.created.low).toString();
-      }*/
-
-    /*  if (json.Cause) {
-        obj.cause = json.Cause.map(val => val = this.gardPropertySerializer.fromJson(val));
-        delete obj['Cause'];
-      }
-
-      if (json.Diagnosis) {
-        obj.diagnosis = json.Diagnosis.map(val => gardPropertySerializer.fromJson({value: val, propertyType: 'html'}));
-        delete obj['Diagnosis'];
-      }
-
-
-
-      if (json.Statistics) {
-        obj.statistics = [json.Statistics].map(val => gardPropertySerializer.fromJson({value: val, propertyType: 'html'}));
-        delete obj['Statistics'];
-      }*/
     return obj;
   }
 
-  /*  /!**
-     * recursive mapping function
-     * @param obj
-     * @return {{}}
-     * @private
-     *!/
-    private _mapField(obj: any) {
-      const retObj: any = Object.assign({}, obj);
-      Object.keys(obj).map(objField => {
-        if (Array.isArray(obj[objField])) {
-          retObj[objField] = obj[objField].map(arrObj => this._mapField(arrObj));
-        } else {
-          retObj[objField] = gardPropertySerializer.fromJson({value: objField, references: []});
-        }
-      });
-      if (obj.__typename) {
-        delete retObj.__typename;
-      }
-      return retObj;
-    }*/
-  private _mapEntry(entry) {
+
+  private _mapEntry(entry, level) {
     return {
       value: entry.value,
-      label: entry.label,
+      label: level === 0 ? entry.label : 'is a ' + entry.label,
       url: entry.url,
-      children: entry.isaparent ? entry.isaparent.map(subentry => this._mapEntry(subentry)) : undefined
+      children: entry.isachild ? entry.isachild.map(subentry => this._mapEntry(subentry, level+1)) : undefined
     };
   }
-
-  /*  private _flattenTree(tree, level, parent?) {
-      if(parent && tree) {
-        this.pairs.push({parent: tree.node, child: parent, level: level - 1});
-      }
-      if(tree.parents) {
-        tree.parents.forEach(parent => this.flattenTree(parent, level + 1,  tree.node));
-      }*/
-  // }
-
 }

@@ -61,7 +61,6 @@ export class DiseaseService  {
           break;
         }
         case 'set-disease': {
-          console.log(response);
           const diseases = this.diseaseSerializer.fromJson(response.data.disease);
           this.diseaseFacade.dispatch(DiseaseActions.setDiseaseSuccess({disease: diseases}));
           break;

@@ -1,5 +1,5 @@
 <mat-card>
-  <div fxLayout = "row" fxLayoutAlign="space-between start">
+  <div fxLayout = "row" fxLayoutAlign="space-between start" (click)="navigate(disease.gard_id)" class = "link-row">
     <div fxFlex="75">
   <h3 class ="disease-name">{{disease?.name}}</h3>
     </div>
@@ -9,8 +9,8 @@
   </div>
       <div fxLayout = "row" fxLayoutAlign="space-between center">
         <div fxFlex="75">
- <div *ngIf=" disease && disease.synonyms">
-   <div *ngFor = "let synonym of disease?.synonyms" class = "synonyms">
+ <div *ngIf=" disease && synonyms">
+   <div *ngFor = "let synonym of synonyms.values"  class = "synonyms">
      <ncats-frontend-library-data-property-display [data]="synonym" [disease]="disease"></ncats-frontend-library-data-property-display>
    </div>
  </div>

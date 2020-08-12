@@ -1,0 +1,20 @@
+<mat-accordion class="example-headers-align" multi>
+  <mat-expansion-panel *ngFor="let object of data" [expanded]="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <b>{{object[field.config[0].field]}}</b>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <ng-container [ngSwitch]="field.config[1].type">
+      <div *ngSwitchCase="'list'">
+        <ncats-frontend-library-data-panel [field]="field.config[1]" [data]="object[field.config[1].field]"></ncats-frontend-library-data-panel>
+      </div>
+      <div *ngSwitchCase="'table'">
+        <ncats-frontend-library-data-table-panel [field]="field.config[1]" [data]="object[field.config[1].field]"></ncats-frontend-library-data-table-panel>
+      </div>
+      <div *ngSwitchCase="'tree'">
+        <ncats-frontend-library-data-tree-panel [field]="field.config[1]" [data]="object[field.config[1].field]"></ncats-frontend-library-data-tree-panel>
+      </div>
+    </ng-container>
+  </mat-expansion-panel>
+</mat-accordion>
