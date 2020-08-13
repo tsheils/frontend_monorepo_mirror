@@ -151,7 +151,7 @@ return value as disease;
 
            call = `
 MATCH p=(d:Disease)-[:Properties]->(mp:MainProperty)-[*0..3]->(pr:Property)
-WHERE d.gard_id = 'GARD:0000029'
+           WHERE d.gard_id = '${params['disease']}' OR d.name = '${params['disease']}'
 with collect(distinct p) as path, d
 optional MATCH p2=(d)-[:Properties]->(:Hierarchies)-[:DisplayValue]->(hn:HierarchyNode)-[:IsAChild*0..]->(hr:HierarchyRoot) with d, path, p2
  with collect(distinct p2) as tree, path
